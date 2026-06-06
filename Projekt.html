@@ -1,0 +1,3478 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Bartłomiej Stola, Lidia Gozdecka">
+
+<title>Predykcja zgonu z powodu raka piersi z wykorzystaniem danych klinicznych i genomowych — analiza porównawcza modeli uczenia maszynowego na zbiorze METABRIC</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="Projekt_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Projekt_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Projekt_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Projekt_files/libs/quarto-html/popper.min.js"></script>
+<script src="Projekt_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Projekt_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Projekt_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Projekt_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Projekt_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Projekt_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Projekt_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#wstęp" id="toc-wstęp" class="nav-link active" data-scroll-target="#wstęp"><span class="header-section-number">1</span> Wstęp</a>
+  <ul class="collapse">
+  <li><a href="#temat-projektu" id="toc-temat-projektu" class="nav-link" data-scroll-target="#temat-projektu"><span class="header-section-number">1.1</span> Temat projektu</a></li>
+  <li><a href="#opis-zbioru" id="toc-opis-zbioru" class="nav-link" data-scroll-target="#opis-zbioru"><span class="header-section-number">1.2</span> Opis zbioru</a></li>
+  <li><a href="#braki-danych" id="toc-braki-danych" class="nav-link" data-scroll-target="#braki-danych"><span class="header-section-number">1.3</span> Braki danych</a></li>
+  </ul></li>
+  <li><a href="#eksploracja-zbioru" id="toc-eksploracja-zbioru" class="nav-link" data-scroll-target="#eksploracja-zbioru"><span class="header-section-number">2</span> Eksploracja zbioru</a>
+  <ul class="collapse">
+  <li><a href="#mechanizm-braków-danych" id="toc-mechanizm-braków-danych" class="nav-link" data-scroll-target="#mechanizm-braków-danych"><span class="header-section-number">2.1</span> Mechanizm braków danych</a></li>
+  <li><a href="#przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii" id="toc-przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii" class="nav-link" data-scroll-target="#przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii"><span class="header-section-number">2.2</span> Przeżywalność, grupa wiekowa, typ operacji i kombinacja terapii</a></li>
+  <li><a href="#rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii" id="toc-rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii" class="nav-link" data-scroll-target="#rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii"><span class="header-section-number">2.3</span> Rozkład zmiennej wynikowej ze względu na rodzaj terapii</a></li>
+  <li><a href="#lata-przeżycia-od-diagnozy" id="toc-lata-przeżycia-od-diagnozy" class="nav-link" data-scroll-target="#lata-przeżycia-od-diagnozy"><span class="header-section-number">2.4</span> Lata przeżycia od diagnozy</a></li>
+  <li><a href="#korelacja-zmiennych-klinicznych" id="toc-korelacja-zmiennych-klinicznych" class="nav-link" data-scroll-target="#korelacja-zmiennych-klinicznych"><span class="header-section-number">2.5</span> Korelacja zmiennych klinicznych</a></li>
+  <li><a href="#balans-zmiennej-wynikowej" id="toc-balans-zmiennej-wynikowej" class="nav-link" data-scroll-target="#balans-zmiennej-wynikowej"><span class="header-section-number">2.6</span> Balans zmiennej wynikowej</a></li>
+  <li><a href="#rozkład-zmiennych-klinicznych" id="toc-rozkład-zmiennych-klinicznych" class="nav-link" data-scroll-target="#rozkład-zmiennych-klinicznych"><span class="header-section-number">2.7</span> Rozkład zmiennych klinicznych</a></li>
+  </ul></li>
+  <li><a href="#redukcja-wymiarowości" id="toc-redukcja-wymiarowości" class="nav-link" data-scroll-target="#redukcja-wymiarowości"><span class="header-section-number">3</span> Redukcja wymiarowości</a>
+  <ul class="collapse">
+  <li><a href="#pca" id="toc-pca" class="nav-link" data-scroll-target="#pca"><span class="header-section-number">3.1</span> PCA</a></li>
+  <li><a href="#ica" id="toc-ica" class="nav-link" data-scroll-target="#ica"><span class="header-section-number">3.2</span> ICA</a>
+  <ul class="collapse">
+  <li><a href="#interpretacja-pierwszych-pięciu-komponentów" id="toc-interpretacja-pierwszych-pięciu-komponentów" class="nav-link" data-scroll-target="#interpretacja-pierwszych-pięciu-komponentów"><span class="header-section-number">3.2.1</span> Interpretacja pierwszych pięciu komponentów</a></li>
+  <li><a href="#zróżnicowanie-genowe-komponentów" id="toc-zróżnicowanie-genowe-komponentów" class="nav-link" data-scroll-target="#zróżnicowanie-genowe-komponentów"><span class="header-section-number">3.2.2</span> Zróżnicowanie genowe komponentów</a></li>
+  </ul></li>
+  <li><a href="#wizualizacja-pacjentów-w-przestrzeni-umap" id="toc-wizualizacja-pacjentów-w-przestrzeni-umap" class="nav-link" data-scroll-target="#wizualizacja-pacjentów-w-przestrzeni-umap"><span class="header-section-number">3.3</span> Wizualizacja pacjentów w przestrzeni UMAP</a></li>
+  </ul></li>
+  <li><a href="#budowa-modelu-przewidującego-poziom-zmiennej-wynikowej" id="toc-budowa-modelu-przewidującego-poziom-zmiennej-wynikowej" class="nav-link" data-scroll-target="#budowa-modelu-przewidującego-poziom-zmiennej-wynikowej"><span class="header-section-number">4</span> Budowa modelu przewidującego poziom zmiennej wynikowej</a>
+  <ul class="collapse">
+  <li><a href="#cat-boost" id="toc-cat-boost" class="nav-link" data-scroll-target="#cat-boost"><span class="header-section-number">4.1</span> Cat boost</a>
+  <ul class="collapse">
+  <li><a href="#budowa-pierwszego-modelu" id="toc-budowa-pierwszego-modelu" class="nav-link" data-scroll-target="#budowa-pierwszego-modelu"><span class="header-section-number">4.1.1</span> Budowa pierwszego modelu</a></li>
+  <li><a href="#budowa-modelu-po-usunięciu-zmiennej-unnamed-0" id="toc-budowa-modelu-po-usunięciu-zmiennej-unnamed-0" class="nav-link" data-scroll-target="#budowa-modelu-po-usunięciu-zmiennej-unnamed-0"><span class="header-section-number">4.1.2</span> Budowa modelu po usunięciu zmiennej <em>Unnamed: 0</em></a></li>
+  <li><a href="#model-zawierający-jedynie-zmienne-kliniczne" id="toc-model-zawierający-jedynie-zmienne-kliniczne" class="nav-link" data-scroll-target="#model-zawierający-jedynie-zmienne-kliniczne"><span class="header-section-number">4.1.3</span> Model zawierający jedynie zmienne kliniczne</a></li>
+  </ul></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">4.2</span> Random Forest</a></li>
+  <li><a href="#xg-boost" id="toc-xg-boost" class="nav-link" data-scroll-target="#xg-boost"><span class="header-section-number">4.3</span> XG Boost</a></li>
+  <li><a href="#model-losowy" id="toc-model-losowy" class="nav-link" data-scroll-target="#model-losowy"><span class="header-section-number">4.4</span> Model losowy</a></li>
+  </ul></li>
+  <li><a href="#porównanie-modeli-na-zbiorze-testowym" id="toc-porównanie-modeli-na-zbiorze-testowym" class="nav-link" data-scroll-target="#porównanie-modeli-na-zbiorze-testowym"><span class="header-section-number">5</span> Porównanie modeli na zbiorze testowym</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Predykcja zgonu z powodu raka piersi z wykorzystaniem danych klinicznych i genomowych — analiza porównawcza modeli uczenia maszynowego na zbiorze METABRIC</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Bartłomiej Stola, Lidia Gozdecka </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="wstęp" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Wstęp</h1>
+<section id="temat-projektu" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="temat-projektu"><span class="header-section-number">1.1</span> Temat projektu</h2>
+<p>Tematem projektu jest analiza zbioru danych Breast Cancer Gene Expression Profiles (METABRIC) zawierającego informacje dotyczące cech klinicznych pacjentów oraz molekularnych oraz budowa modelu prognozującego przeżywalność pacjenta.</p>
+</section>
+<section id="opis-zbioru" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="opis-zbioru"><span class="header-section-number">1.2</span> Opis zbioru</h2>
+<p>Zbiór składa się z 30 zmiennych klinicznych 173 zmiennych binarnych informujące o braku lub mutacji danego genu i 489 zmiennych dotyczących poziomu ekspresji genów.</p>
+<div id="d9cafa74" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">zmienna</th>
+<th data-quarto-table-cell-role="th">opis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>patient_id</td>
+<td>Identyfikator pacjenta</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>age_at_diagnosis</td>
+<td>Wiek przy diagnozie</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>type_of_breast_surgery</td>
+<td>Typ operacji piersi</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>cancer_type</td>
+<td>Typ nowotworu</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>cancer_type_detailed</td>
+<td>Szczegółowy typ nowotworu</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>cellularity</td>
+<td>Komórkowość guza</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>chemotherapy</td>
+<td>Chemioterapia (tak/nie)</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>pam50_+_claudin-low_subtype</td>
+<td>Podtyp molekularny PAM50/Claudin-low</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>cohort</td>
+<td>Grupa badawcza</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>er_status_measured_by_ihc</td>
+<td>Status ER mierzony IHC</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>er_status</td>
+<td>Status receptorów estrogenowych</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>neoplasm_histologic_grade</td>
+<td>Stopień histologiczny guza</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>her2_status_measured_by_snp6</td>
+<td>Status HER2 mierzony SNP6</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>her2_status</td>
+<td>Status HER2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>tumor_other_histologic_subtype</td>
+<td>Podtyp histologiczny nowotworu</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>hormone_therapy</td>
+<td>Terapia hormonalna (tak/nie)</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>inferred_menopausal_state</td>
+<td>Status menopauzalny</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>integrative_cluster</td>
+<td>Klaster molekularny</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>primary_tumor_laterality</td>
+<td>Lokalizacja guza (lewa/prawa pierś)</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>lymph_nodes_examined_positive</td>
+<td>Liczba zajętych węzłów chłonnych</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">20</th>
+<td>mutation_count</td>
+<td>Liczba mutacji</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">21</th>
+<td>nottingham_prognostic_index</td>
+<td>Indeks prognostyczny Nottingham</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">22</th>
+<td>oncotree_code</td>
+<td>Kod klasyfikacji OncoTree</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">23</th>
+<td>overall_survival_months</td>
+<td>Prognozowany czas przeżycia w miesiącach</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">24</th>
+<td>overall_survival</td>
+<td>Status przeżycia</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">25</th>
+<td>pr_status</td>
+<td>Status receptorów progesteronowych</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">26</th>
+<td>radio_therapy</td>
+<td>Radioterapia (tak/nie)</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">27</th>
+<td>3-gene_classifier_subtype</td>
+<td>Podtyp klasyfikatora 3-genowego</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">28</th>
+<td>tumor_size</td>
+<td>Rozmiar guza</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">29</th>
+<td>tumor_stage</td>
+<td>Stadium nowotworu</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">30</th>
+<td>death_from_cancer</td>
+<td>Przyczyna zgonu / status życia</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="braki-danych" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="braki-danych"><span class="header-section-number">1.3</span> Braki danych</h2>
+<p>Poniższa ramka zawiera liczbę braków danych w kolumnach i ich udział procentowy</p>
+<div id="307cc88a" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th data-quarto-table-cell-role="th">liczba_brakow</th>
+<th data-quarto-table-cell-role="th">procent_brakow</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>tumor_stage</td>
+<td>501</td>
+<td>26.313025</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>3-gene_classifier_subtype</td>
+<td>204</td>
+<td>10.714286</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>primary_tumor_laterality</td>
+<td>106</td>
+<td>5.567227</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>neoplasm_histologic_grade</td>
+<td>72</td>
+<td>3.781513</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>cellularity</td>
+<td>54</td>
+<td>2.836134</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>ep300_mut</td>
+<td>54</td>
+<td>2.836134</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>myo1a_mut</td>
+<td>47</td>
+<td>2.468487</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>fanca_mut</td>
+<td>46</td>
+<td>2.415966</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>mutation_count</td>
+<td>45</td>
+<td>2.363445</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>myo3a_mut</td>
+<td>45</td>
+<td>2.363445</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>ptprm_mut</td>
+<td>37</td>
+<td>1.943277</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>gldc_mut</td>
+<td>35</td>
+<td>1.838235</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>sbno1_mut</td>
+<td>32</td>
+<td>1.680672</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>kdm3a_mut</td>
+<td>32</td>
+<td>1.680672</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>er_status_measured_by_ihc</td>
+<td>30</td>
+<td>1.575630</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>fam20c_mut</td>
+<td>28</td>
+<td>1.470588</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>npnt_mut</td>
+<td>26</td>
+<td>1.365546</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>nek1_mut</td>
+<td>25</td>
+<td>1.313025</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>sik1_mut</td>
+<td>24</td>
+<td>1.260504</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>type_of_breast_surgery</td>
+<td>22</td>
+<td>1.155462</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">20</th>
+<td>stk11_mut</td>
+<td>21</td>
+<td>1.102941</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">21</th>
+<td>sik2_mut</td>
+<td>21</td>
+<td>1.102941</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">22</th>
+<td>ptpn22_mut</td>
+<td>20</td>
+<td>1.050420</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">23</th>
+<td>tumor_size</td>
+<td>20</td>
+<td>1.050420</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">24</th>
+<td>flt3_mut</td>
+<td>19</td>
+<td>0.997899</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">25</th>
+<td>taf4b_mut</td>
+<td>18</td>
+<td>0.945378</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">26</th>
+<td>hdac9_mut</td>
+<td>18</td>
+<td>0.945378</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">27</th>
+<td>prkacg_mut</td>
+<td>17</td>
+<td>0.892857</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">28</th>
+<td>large1_mut</td>
+<td>16</td>
+<td>0.840336</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">29</th>
+<td>tumor_other_histologic_subtype</td>
+<td>15</td>
+<td>0.787815</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">30</th>
+<td>oncotree_code</td>
+<td>15</td>
+<td>0.787815</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">31</th>
+<td>cancer_type_detailed</td>
+<td>15</td>
+<td>0.787815</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">32</th>
+<td>ppp2r2a_mut</td>
+<td>13</td>
+<td>0.682773</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">33</th>
+<td>nf2_mut</td>
+<td>12</td>
+<td>0.630252</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">34</th>
+<td>ldlrap1_mut</td>
+<td>12</td>
+<td>0.630252</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">35</th>
+<td>clrn2_mut</td>
+<td>12</td>
+<td>0.630252</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">36</th>
+<td>prr16_mut</td>
+<td>11</td>
+<td>0.577731</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">37</th>
+<td>dtwd2_mut</td>
+<td>11</td>
+<td>0.577731</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">38</th>
+<td>ctnna1_mut</td>
+<td>11</td>
+<td>0.577731</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">39</th>
+<td>agtr2_mut</td>
+<td>11</td>
+<td>0.577731</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">40</th>
+<td>magea8_mut</td>
+<td>11</td>
+<td>0.577731</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">41</th>
+<td>foxo1_mut</td>
+<td>10</td>
+<td>0.525210</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">42</th>
+<td>nt5e_mut</td>
+<td>10</td>
+<td>0.525210</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">43</th>
+<td>braf_mut</td>
+<td>10</td>
+<td>0.525210</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">44</th>
+<td>ccnd3_mut</td>
+<td>9</td>
+<td>0.472689</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">45</th>
+<td>nr3c1_mut</td>
+<td>9</td>
+<td>0.472689</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">46</th>
+<td>tbl1xr1_mut</td>
+<td>8</td>
+<td>0.420168</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">47</th>
+<td>rasgef1b_mut</td>
+<td>7</td>
+<td>0.367647</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">48</th>
+<td>spaca1_mut</td>
+<td>7</td>
+<td>0.367647</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">49</th>
+<td>smad2_mut</td>
+<td>7</td>
+<td>0.367647</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">50</th>
+<td>sgcd_mut</td>
+<td>7</td>
+<td>0.367647</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">51</th>
+<td>hist1h2bc_mut</td>
+<td>6</td>
+<td>0.315126</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">52</th>
+<td>nr2f1_mut</td>
+<td>5</td>
+<td>0.262605</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">53</th>
+<td>klrg1_mut</td>
+<td>5</td>
+<td>0.262605</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">54</th>
+<td>mbl2_mut</td>
+<td>4</td>
+<td>0.210084</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">55</th>
+<td>ppp2cb_mut</td>
+<td>4</td>
+<td>0.210084</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">56</th>
+<td>smarcd1_mut</td>
+<td>4</td>
+<td>0.210084</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">57</th>
+<td>nras_mut</td>
+<td>3</td>
+<td>0.157563</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">58</th>
+<td>hras_mut</td>
+<td>2</td>
+<td>0.105042</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">59</th>
+<td>smarcb1_mut</td>
+<td>2</td>
+<td>0.105042</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">60</th>
+<td>stmn2_mut</td>
+<td>2</td>
+<td>0.105042</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">61</th>
+<td>death_from_cancer</td>
+<td>1</td>
+<td>0.052521</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">62</th>
+<td>siah1_mut</td>
+<td>1</td>
+<td>0.052521</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="c1a19822" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">liczba_braków</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1907</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Tyle komórek zawiera brak.</p>
+<div id="c24e4ca9" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">puste rekordy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Brak całkowicie pustych wierszy.</p>
+<div id="bcfb4a77" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Procent wierszy zawierających przynajmniej jeden brak</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>60.451681</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Tylko około 40% wierszy jest całkowicie pełnych</p>
+</section>
+</section>
+<section id="eksploracja-zbioru" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Eksploracja zbioru</h1>
+<section id="mechanizm-braków-danych" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="mechanizm-braków-danych"><span class="header-section-number">2.1</span> Mechanizm braków danych</h2>
+<p>Rodzaj braków danych będzie decydował o sposobie ich uzupełnienia dlatego została zbadana zależność braków od zmiennych kategorycznych za pomocą testu <span class="math inline">\(\chi^2\)</span></p>
+<div id="a54c5c1b" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">missing in:</th>
+<th data-quarto-table-cell-role="th">chi2:</th>
+<th data-quarto-table-cell-role="th">p_value</th>
+<th data-quarto-table-cell-role="th">category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>tumor_stage</td>
+<td>1232.591922</td>
+<td>1.369488e-265</td>
+<td>cohort</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>tumor_size</td>
+<td>1904.000000</td>
+<td>2.837066e-227</td>
+<td>nottingham_prognostic_index</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>taf4b_mut</td>
+<td>894.526099</td>
+<td>1.710882e-105</td>
+<td>ahnak_mut</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>dtwd2_mut</td>
+<td>775.859067</td>
+<td>1.242236e-104</td>
+<td>birc6_mut</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>magea8_mut</td>
+<td>689.992221</td>
+<td>1.060860e-101</td>
+<td>atr_mut</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>tbl1xr1_mut</td>
+<td>950.224663</td>
+<td>2.442776e-100</td>
+<td>map3k1_mut</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>primary_tumor_laterality</td>
+<td>432.628339</td>
+<td>2.471940e-92</td>
+<td>cohort</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>tbl1xr1_mut</td>
+<td>712.343264</td>
+<td>9.848451e-90</td>
+<td>herc2_mut</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>dtwd2_mut</td>
+<td>690.088736</td>
+<td>1.107892e-87</td>
+<td>tg_mut</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>neoplasm_histologic_grade</td>
+<td>1087.443421</td>
+<td>3.110273e-87</td>
+<td>nottingham_prognostic_index</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Uwzględniono jedynie zmienne charakteryzujące się liczbą braków większą od mediany liczby brakujących obserwacji.</p>
+<p>Jednak ilość wykonanych testów:</p>
+<div id="83f5411f" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">liczba_testów_chi2:</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>6987</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Sprawia, że prawdopodobieństwa niesłusznego odrzucenia hipotezy zerowej o naturze MCAR (<em>Missing completely at random</em>) wynosi:</p>
+<div id="9dd92192" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-stdout">
+<pre><code>1.000000e+00</code></pre>
+</div>
+</div>
+<p>Jest niemal pewne, że uznamy odrzucimy hipotezę zerową niesłusznie przynajmniej raz. Dlatego zastosowano poprawkę Benjaminiego-Hochberga.</p>
+<p>Dodatkowo każdą parę sklasyfikowano według typu relacji: gene–gene, clinic–clinic, gene–clinic lub clinic–gene, co umożliwiło ocenę zależności pomiędzy brakami danych w obrębie oraz pomiędzy grupami zmiennych. Nowy wynik po korekcie:</p>
+<div id="37584569" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">missing in:</th>
+<th data-quarto-table-cell-role="th">chi2:</th>
+<th data-quarto-table-cell-role="th">p_value</th>
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th">p_adj</th>
+<th data-quarto-table-cell-role="th">type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>tumor_stage</td>
+<td>1232.591922</td>
+<td>1.369488e-265</td>
+<td>cohort</td>
+<td>9.568613e-262</td>
+<td>clinic-clinic</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>tumor_size</td>
+<td>1904.000000</td>
+<td>2.837066e-227</td>
+<td>nottingham_prognostic_index</td>
+<td>9.911289e-224</td>
+<td>clinic-clinic</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>taf4b_mut</td>
+<td>894.526099</td>
+<td>1.710882e-105</td>
+<td>ahnak_mut</td>
+<td>3.984645e-102</td>
+<td>gene-gene</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>dtwd2_mut</td>
+<td>775.859067</td>
+<td>1.242236e-104</td>
+<td>birc6_mut</td>
+<td>2.169875e-101</td>
+<td>gene-gene</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>magea8_mut</td>
+<td>689.992221</td>
+<td>1.060860e-101</td>
+<td>atr_mut</td>
+<td>1.482446e-98</td>
+<td>gene-gene</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Zmienne które nie znajdują się w kolumnie <em>missing in</em> zostały oznaczone jako zmienne zawierające losowe braki danych, te które się w niej znajdują będą wymagały bardziej przemyślanego uzupełnienia aby nie wprowadzać stronniczości do zbioru. Odpowiednia obsługa braków znajduje się w dalszej części.</p>
+</section>
+<section id="przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii"><span class="header-section-number">2.2</span> Przeżywalność, grupa wiekowa, typ operacji i kombinacja terapii</h2>
+<p>Na wykresie przedstawiono rozkłady czasu przeżycia całkowitego w miesiącach dla różnych kombinacji terapii, z podziałem na grupy wiekowe oraz rodzaj przeprowadzonego zabiegu chirurgicznego. <img src="fig.png" class="img-fluid" alt="Czas przeżycia w zależności od terapii, wieku i rodzaju operacji"></p>
+<p><em>Do uzupełnienia dla Lidii</em></p>
+</section>
+<section id="rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii"><span class="header-section-number">2.3</span> Rozkład zmiennej wynikowej ze względu na rodzaj terapii</h2>
+<p><img src="Terapia-przezywalnosc.png" class="img-fluid"></p>
+<p>Udziały poziomów zmiennej wynikowej różnią się pomiędzy rodzajami terapii, jednak niekoniecznie oznacza to różnice w skuteczności, ponieważ pacjenci mogli być leczeni niektórymi kombinacjami w zależności od powagi ich sytuacji.</p>
+</section>
+<section id="lata-przeżycia-od-diagnozy" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="lata-przeżycia-od-diagnozy"><span class="header-section-number">2.4</span> Lata przeżycia od diagnozy</h2>
+<p>Dla pacjentów którzy zmarli w wyniku raka poniższy wykres przedstawia rozkład prawdopodobieństwa lat przeżytych od diagnozy</p>
+<p><img src="Czas_przezycia.png" class="img-fluid"></p>
+</section>
+<section id="korelacja-zmiennych-klinicznych" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="korelacja-zmiennych-klinicznych"><span class="header-section-number">2.5</span> Korelacja zmiennych klinicznych</h2>
+<p>Zbadano współzmienność zmiennych klinicznych.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="korelacja_kli.png" class="img-fluid figure-img"></p>
+<figcaption>Korelacja zmiennych klinicznych</figcaption>
+</figure>
+</div>
+<p>Współczynniki korelacji nie przedstawiają znaczących wartośći, jednak wnioski które można wyciągnąć są raczej zgodne z ogólną intuicją. Na przykład średnia ilość prognozowanych misięcy przeżycia zmniejsza się wraz ze wzrostem liczby zajętych węzłów chłonnych (<em>overall survival months</em> ~ <em>lymph_nodes_examined_positive</em>), identycznie dla miesięcy przeżycia i rozmiaru guza (<em>overall survival months</em> ~ <em>tumor size</em>). Niskie współczynniki korelacji, mogą wskazywać na wpływ innych czynników na ogólny dobrostan pacjentów.</p>
+</section>
+<section id="balans-zmiennej-wynikowej" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="balans-zmiennej-wynikowej"><span class="header-section-number">2.6</span> Balans zmiennej wynikowej</h2>
+<div id="b7776b99" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">death_from_cancer</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Living</th>
+<td>801</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Died of Disease</th>
+<td>622</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Died of Other Causes</th>
+<td>480</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Liczności poziomów zmiennej wynikowej są w miarę podobne, przynajmniej akceptowalne i nie wymagają modyfikacji.</p>
+</section>
+<section id="rozkład-zmiennych-klinicznych" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="rozkład-zmiennych-klinicznych"><span class="header-section-number">2.7</span> Rozkład zmiennych klinicznych</h2>
+<p>Tabela przedstawia ogólny rozkład numerycznych zmiennych klinicznych <img src="opisowe_heatmap.png" class="img-fluid" alt="Rozkład zmiennych klinicznych"></p>
+<p>Jako, że rozmiar guza potrafi przyjmować bardzo wysokie wartości, postanowiono zbadać obecność obserwacji odstających. Przyjęto wariant wielowymiarowy aby uwzględnić relacje pomiędzy zmiennymi. Wykorzystano do tego odległość mahalanobisa.</p>
+<p>Kwadraty odległości mahalanobisa większe niż 99 kwantyl rozkładu <span class="math inline">\(\chi^2\)</span> uznano za wartości odstające i nadano im odpowiednią flagę w zbiorze danych.</p>
+<div id="156b7f6d" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_92574 table {
+  border-collapse: collapse;
+}
+#T_92574 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_92574  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_92574" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_92574_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Liczba odstających</th>
+<th id="T_92574_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Pozostałe</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_92574_row0_col0" class="data row0 col0">152</td>
+<td id="T_92574_row0_col1" class="data row0 col1">1752</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Wielowymiarowe obserwacje odstające stanowią niewielką część zbioru, ale samo bycie obserwacją odstające może być informacją samą w sobie dlatego nie zostaną usunięte.</p>
+</section>
+</section>
+<section id="redukcja-wymiarowości" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Redukcja wymiarowości</h1>
+<section id="pca" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="pca"><span class="header-section-number">3.1</span> PCA</h2>
+<p>Zbiór posiada 489 zmiennych dotyczących ekspresji genów, co jest bardzo dużą liczbą zmiennych mogących nieść tą samą informację. Sama korelacja zmiennych dotyczących ekspresji genów nie została zbadana, więc jako narzędzie eksploracyjne zastosowano analizę składowych głównych (<em>Principal component analysis</em>) aby zredukować wymiarowość i otrzmać nieskorelowane komponenty przy zachowaniu jak największej zmienności oryginalnych danych.</p>
+<p>Dane zostały przeskalowane oraz oczyszczone z braków (tylko dla PCA)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="PCA_wariancja_wyj.png" class="img-fluid figure-img"></p>
+<figcaption>Wykres zsumowanej wariancji współdzielonej</figcaption>
+</figure>
+</div>
+<p>Niestety aby zachować przynajmniej 90% wariancji wyjaśnionej, otrzymano 360 komponentów. Naszym zdaniem redukcja z 489 zmiennych do 360 komponentów jest niewystarczająca i nie poprawia sytuacji.</p>
+</section>
+<section id="ica" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="ica"><span class="header-section-number">3.2</span> ICA</h2>
+<p>Analiza niezależnych składowych, teoretycznie wydaje się lepszym wyborem. Założono, że zmienne dotyczący ekspresji genów można opisać za pomocą mniejszej liczby komponentów reprezentujących niezależne procesy biologiczne. Niech:</p>
+<p><span class="math display">\[
+X \in \mathbb{R}^{n \times p}
+\]</span></p>
+<p>oznacza macierz danych wejściowych, gdzie <span class="math inline">\(n\)</span> jest liczbą obserwacji, a <span class="math inline">\(p\)</span> liczbą zmiennych. Metoda ICA aproksymuje macierz danych zależnością:</p>
+<p><span class="math display">\[
+X \approx SA
+\]</span></p>
+<p>gdzie:</p>
+<p><span class="math inline">\(S\)</span> – macierz składowych niezależnych, <span class="math inline">\(A\)</span> – macierz wag (mixing matrix).</p>
+<p>Po wyznaczeniu określonej liczby składowych możliwe jest odtworzenie przybliżonej wersji danych wejściowych:</p>
+<p><span class="math display">\[
+\hat{X} = SA
+\]</span></p>
+<p>Jako miarę jakości rekonstrukcji wykorzystano średni błąd kwadratowy (Mean Squared Error, MSE):</p>
+<p><span class="math display">\[
+MSE = \frac{1}{np}
+\sum_{i=1}^{n}
+\sum_{j=1}^{p}
+\left(
+X_{ij} - \hat{X}_{ij}
+\right)^2
+\]</span></p>
+<p>gdzie:</p>
+<p><span class="math inline">\(X_{ij}\)</span> oznacza rzeczywistą wartość zmiennej, <span class="math inline">\(\hat{X}_{ij}\)</span> oznacza wartość odtworzoną na podstawie modelu ICA.</p>
+<p>Błąd rekonstrukcji informuje o stopniu utraty informacji wynikającej z redukcji wymiarowości.</p>
+<p>Dane zostały odpowiednio przetworzone i zbadane pod kątem skośności i kurtozy.</p>
+<div id="36266842" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-stdout">
+<pre><code>Moda skośności:
+1.194189471865714e-16
+
+Moda kurtozy:
+-1.2000006620297008
+
+Opis skośności:
+count    490.000000
+mean       0.834287
+std        1.197301
+min       -1.833278
+25%        0.149774
+50%        0.521214
+75%        1.224449
+max        8.156119
+dtype: float64
+
+Opis kurtozy:
+count    490.000000
+mean       4.703530
+std       11.316665
+min       -1.200001
+25%        0.531609
+50%        1.256374
+75%        3.594279
+max      124.703488
+dtype: float64</code></pre>
+</div>
+</div>
+<p>Dominuje prawoskośność przy zróżnicowanym współczynniku kurtozy. Właściwości te są korzystne z punktu widzenia metody ICA, która opiera się na identyfikacji statystycznie niezależnych i niegaussowskich sygnałów ukrytych w danych.</p>
+<p>Poniżej wykres błędu w zależności od liczby wybranych składowych: <img src="ICA_elbow.png" class="img-fluid"></p>
+<p>Wybrano 60 składowych niezależnych aby zredukować wymiar jak najbardziej przy akceptowalnym błędzie rekonstrukcji.</p>
+<section id="interpretacja-pierwszych-pięciu-komponentów" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="interpretacja-pierwszych-pięciu-komponentów"><span class="header-section-number">3.2.1</span> Interpretacja pierwszych pięciu komponentów</h3>
+<p>W celu interpretacji biologicznej wyodrębnionych komponentów ICA przeanalizowano geny o najwyższych dodatnich i ujemnych wartościach wag. Na podstawie literatury naukowej przypisano poszczególnym komponentom najbardziej prawdopodobne procesy biologiczne i szlaki sygnałowe. Należy podkreślić, że zaproponowane nazwy komponentów mają charakter interpretacyjny i wynikają z dominujących genów oraz ich funkcji biologicznych.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 19%">
+<col style="width: 24%">
+<col style="width: 24%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>IC</th>
+<th>Nazwa</th>
+<th>Geny (+)</th>
+<th>Geny (-)</th>
+<th>Proces</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>IC1</td>
+<td>TGF-β/BMP i EMT</td>
+<td>SMAD6, BMP2, BMP15</td>
+<td>GDF2, MTAP, BBC3</td>
+<td>EMT, progresja nowotworu</td>
+</tr>
+<tr class="even">
+<td>IC2</td>
+<td>FGF i angiogeneza</td>
+<td>FGF2, ITGB3, SERPINI1</td>
+<td>RAF1, CDK8</td>
+<td>Angiogeneza</td>
+</tr>
+<tr class="odd">
+<td>IC3</td>
+<td>SWI/SNF</td>
+<td>ARID1A, PBRM1, KDM6A</td>
+<td>MAML3, E2F1</td>
+<td>Stabilność genomu</td>
+</tr>
+<tr class="even">
+<td>IC4</td>
+<td>Notch</td>
+<td>RBPJ, MAML1, ADAM10</td>
+<td>MAML2, NOX4</td>
+<td>Różnicowanie komórek</td>
+</tr>
+<tr class="odd">
+<td>IC5</td>
+<td>Metabolizm steroidów</td>
+<td>—</td>
+<td>UGT2B7, UGT2B15, UGT2B17</td>
+<td>Glukuronidacja</td>
+</tr>
+</tbody>
+</table>
+<p>IC1 – Sygnalizacja TGF-β/BMP i EMT</p>
+<p>Komponent IC1 zdominowany jest przez geny należące do rodziny BMP oraz regulatorów szlaku TGF-β. Szczególnie wysokie dodatnie wagi uzyskały geny SMAD6, BMP2 oraz BMP15, natomiast ujemne wartości odnotowano między innymi dla GDF2, MTAP i BBC3. Wskazuje to na obecność osi biologicznej związanej z sygnalizacją TGF-β/BMP.</p>
+<p>Szlak TGF-β pełni podwójną funkcję w nowotworach. We wczesnych etapach może działać supresorowo poprzez indukcję apoptozy i zatrzymanie cyklu komórkowego, natomiast w zaawansowanych stadiach wspiera proces przejścia nabłonkowo-mezenchymalnego (EMT), inwazję i tworzenie przerzutów. Wysokie wartości IC1 można zatem interpretować jako zwiększoną aktywność procesów związanych z EMT i progresją nowotworu.</p>
+<p>IC2 – Angiogeneza i sygnalizacja FGF</p>
+<p>Największe dodatnie wagi w komponencie IC2 uzyskały geny FGF2, ITGB3, SERPINI1 oraz BMP4. W literaturze FGF2 uznawany jest za jeden z kluczowych regulatorów proliferacji komórek nowotworowych oraz angiogenezy.</p>
+<p>Wysokie wartości komponentu mogą odpowiadać nasileniu procesów wzrostu guza, tworzenia naczyń krwionośnych oraz zwiększonej aktywności mikrośrodowiska nowotworowego. Ujemne wagi genów takich jak RAF1 czy CDK8 sugerują obecność przeciwstawnych mechanizmów regulacyjnych.</p>
+<p>IC3 – Remodelowanie chromatyny i kontrola stabilności genomu</p>
+<p>Komponent IC3 skupia geny związane z kompleksem remodelującym chromatynę SWI/SNF, w szczególności ARID1A, PBRM1 i KDM6A. Dodatkowo wysoką wagę uzyskał gen FBXW7, będący ważnym supresorem nowotworowym odpowiedzialnym za degradację wielu onkoprotein.</p>
+<p>Interpretacja biologiczna tego komponentu wskazuje na procesy związane z regulacją transkrypcji, naprawą DNA oraz utrzymaniem stabilności genomowej. Wysokie wartości IC3 mogą odpowiadać zachowaniu funkcji supresorowych, natomiast niskie wartości mogą wskazywać na utratę kontroli nad proliferacją komórkową.</p>
+<p>IC4 – Aktywacja szlaku Notch</p>
+<p>Wysokie dodatnie wagi genów RBPJ, MAML1, ADAM10 i HES5 wskazują na silny związek komponentu IC4 z aktywnością szlaku Notch. Białko RBPJ stanowi centralny element kompleksu transkrypcyjnego Notch, natomiast MAML1 działa jako jego koaktywator.</p>
+<p>Aktywacja szlaku Notch jest związana między innymi z utrzymaniem komórek macierzystych nowotworu, regulacją różnicowania komórkowego oraz kontrolą proliferacji. Wysokie wartości IC4 mogą wskazywać na zwiększoną aktywność tych procesów.</p>
+<p>IC5 – Metabolizm hormonów steroidowych</p>
+<p>Komponent IC5 charakteryzuje się dominacją genów UGT2B7, UGT2B15 oraz UGT2B17, które uczestniczą w procesach glukuronidacji hormonów steroidowych.</p>
+<p>Enzymy UGT odpowiadają za sprzęganie estrogenów i androgenów, prowadząc do ich inaktywacji i usuwania z komórki. Wysokie wartości komponentu można interpretować jako zwiększony metabolizm hormonów płciowych, natomiast niskie wartości mogą sprzyjać utrzymaniu wyższej aktywności sygnalizacji hormonalnej w komórkach nowotworowych.</p>
+<p>Bibliografia:</p>
+<ol type="1">
+<li><p><em>Liu J., Wang C. i wsp. TGF-β in Tumor Development and Progression: Mechanisms and Therapeutics. Molecular Biomedicine, 2026.</em></p></li>
+<li><p><em>Santolla M.F., Maggiolini M. The FGF/FGFR System in Breast Cancer: Oncogenic Features and Therapeutic Perspectives. Cancers, 2020.</em></p></li>
+<li><p><em>Gopalakrishnan S., Patel D., Shah M., Relan S. A Review of ARID1A’s Role in Breast Cancer Progression. Cancers, 2026.</em></p></li>
+<li><p><em>Huang Z., Zhou J. i wsp. RBPJ Maintains Brain Tumor-Initiating Cells Through CDK9-Mediated Transcriptional Elongation. Journal of Clinical Investigation, 2016.</em></p></li>
+<li><p><em>Harrington W.R., Sengupta S. i wsp. Estrogen Regulation of the Glucuronidation Enzyme UGT2B15 in Estrogen Receptor-Positive Breast Cancer Cells. Endocrinology, 2006.</em></p></li>
+<li><p><em>Jiang X., Xiang W., Wang X. i wsp. Tumor Suppressor FBXW7 and Its Regulation of DNA Damage Response and Repair. Frontiers in Cell and Developmental Biology, 2021.</em></p></li>
+</ol>
+</section>
+<section id="zróżnicowanie-genowe-komponentów" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="zróżnicowanie-genowe-komponentów"><span class="header-section-number">3.2.2</span> Zróżnicowanie genowe komponentów</h3>
+<p>Dla każdej z 1770 kombinacji komponentów zbadano ich podobieńtwo za pomocą indeksu Jaccarda</p>
+<p><span class="math display">\[
+Jaccard(IC{i}IC{j})=\frac{IC{i} \cap IC{j}}{IC{i} \cup IC{j}}
+\]</span></p>
+<p>Poniższa macierz przedstawia podobieństwo: <img src="Podobienstwo_comp.png" class="img-fluid"></p>
+<p>Maksymalna wartość indeksu Jaccarda wynosząca około 0.16 wskazuje na niewielkie nakładanie się genów dominujących w poszczególnych komponentach. Oznacza to, że większość składowych jest związana z odmiennymi zestawami genów i prawdopodobnie reprezentuje różne mechanizmy biologiczne.</p>
+</section>
+</section>
+<section id="wizualizacja-pacjentów-w-przestrzeni-umap" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="wizualizacja-pacjentów-w-przestrzeni-umap"><span class="header-section-number">3.3</span> Wizualizacja pacjentów w przestrzeni UMAP</h2>
+<p>W celu oceny, czy wyznaczone komponenty ICA zawierają informację pozwalającą na rozróżnianie molekularnych podtypów nowotworu, zastosowano algorytm UMAP (Uniform Manifold Approximation and Projection). Metoda ta umożliwia nieliniową redukcję wymiarowości przy zachowaniu lokalnej struktury danych.</p>
+<p>Jako dane wejściowe wykorzystano 60 składowych uzyskanych metodą ICA. Następnie dokonano projekcji pacjentów do przestrzeni dwuwymiarowej. Punkty na wykresie odpowiadają pojedynczym pacjentom, natomiast kolor oznacza przynależność do podtypu molekularnego określonego przez zmienną *pam50_+_claudin-low_subtype*.</p>
+<p>Zmienna domyślnie składa się z 7 kategorii:</p>
+<div id="1aab30ab" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>&lt;StringArray&gt;
+['claudin-low', 'LumA', 'LumB', 'Her2', 'Normal', 'Basal', 'NC']
+Length: 7, dtype: str</code></pre>
+</div>
+</div>
+<p>Przypisano cyfry: 1. <em>Claudin-low</em></p>
+<ol start="2" type="1">
+<li><p><em>LumA</em></p></li>
+<li><p><em>LumB</em></p></li>
+<li><p><em>Her2</em></p></li>
+<li><p><em>Normal</em></p></li>
+<li><p><em>Basal</em></p></li>
+<li><p><em>NC</em></p></li>
+</ol>
+<p>Celem analizy nie była interpretacja osi UMAP1 i UMAP2, ponieważ nie posiadają one bezpośredniego znaczenia biologicznego. Analizie poddano natomiast rozmieszczenie pacjentów w przestrzeni UMAP oraz stopień grupowania obserwacji należących do tych samych podtypów molekularnych.</p>
+<p><img src="UMAP_PAM50.png" class="img-fluid"></p>
+<p>Na wykresie zaobserwowano częściową separację poszczególnych klas. Pacjenci należący do niektórych podtypów wykazują tendencję do zajmowania określonych regionów przestrzeni UMAP, jednak nie występują całkowicie rozłączne klastry. Oznacza to, że informacje zawarte w komponentach ICA pozwalają na częściowe różnicowanie podtypów PAM50, choć granice pomiędzy klasami pozostają w znacznym stopniu nakładające się.</p>
+<p>Wynik ten jest zgodny z biologicznym charakterem klasyfikacji PAM50. Poszczególne podtypy raka piersi nie stanowią całkowicie odrębnych jednostek, lecz reprezentują kontinuum zmian molekularnych. Obserwowane grupowanie sugeruje, że komponenty ICA uchwyciły część sygnałów odpowiadających za zróżnicowanie profili ekspresji genów pomiędzy podtypami nowotworu.</p>
+</section>
+</section>
+<section id="budowa-modelu-przewidującego-poziom-zmiennej-wynikowej" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Budowa modelu przewidującego poziom zmiennej wynikowej</h1>
+<section id="cat-boost" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="cat-boost"><span class="header-section-number">4.1</span> Cat boost</h2>
+<p>Z powodu dużej ilości zmiennych kategorycznych zawierających po kilka lub kilkanaście kategorii (szczególnie zmienne dotyczące mutacji potrafią składać się z wielu poziomów zakodowanych jednocześnie jako liczby i nazwy) zastosowanie OneHotEncodingu byłoby trudne i jeszcze bardziej zwiększałoby wymiarowość. Dla zbioru testowego czy walidacyjnego liczba zmiennych mogłaby nawet przekraczać liczbę obserwacji.</p>
+<p>Optymalnym rozwiązaniem wydawał się Cat boosting.</p>
+<p>Dane podzielono na zbiór treningowy, walidacyjny i testowy w proporcji 3:1:1.</p>
+<section id="budowa-pierwszego-modelu" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="budowa-pierwszego-modelu"><span class="header-section-number">4.1.1</span> Budowa pierwszego modelu</h3>
+<p>Model zbuodwano na poniższych parametrach:</p>
+<div id="b87e6556" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_1689e table {
+  border-collapse: collapse;
+}
+#T_1689e th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_1689e  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_1689e" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_1689e_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_1689e_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">iterations</th>
+<th id="T_1689e_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">learning_rate</th>
+<th id="T_1689e_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">depth</th>
+<th id="T_1689e_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">l2_leaf_reg</th>
+<th id="T_1689e_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">loss_function</th>
+<th id="T_1689e_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">border_count</th>
+<th id="T_1689e_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">random_seed</th>
+<th id="T_1689e_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">verbose</th>
+<th id="T_1689e_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">random_strength</th>
+<th id="T_1689e_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">custom_metric</th>
+<th id="T_1689e_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">eval_metric</th>
+<th id="T_1689e_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">min_data_in_leaf</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_1689e_row0_col0" class="data row0 col0">0</td>
+<td id="T_1689e_row0_col1" class="data row0 col1">1000</td>
+<td id="T_1689e_row0_col2" class="data row0 col2">0.030000</td>
+<td id="T_1689e_row0_col3" class="data row0 col3">4</td>
+<td id="T_1689e_row0_col4" class="data row0 col4">10</td>
+<td id="T_1689e_row0_col5" class="data row0 col5">MultiClass</td>
+<td id="T_1689e_row0_col6" class="data row0 col6">20</td>
+<td id="T_1689e_row0_col7" class="data row0 col7">2026</td>
+<td id="T_1689e_row0_col8" class="data row0 col8">100</td>
+<td id="T_1689e_row0_col9" class="data row0 col9">5</td>
+<td id="T_1689e_row0_col10" class="data row0 col10">Accuracy</td>
+<td id="T_1689e_row0_col11" class="data row0 col11">TotalF1</td>
+<td id="T_1689e_row0_col12" class="data row0 col12">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Poniżej wagi cech:</p>
+<div id="d90879cc" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_ccca1 table {
+  border-collapse: collapse;
+}
+#T_ccca1 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_ccca1  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_ccca1" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_ccca1_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_ccca1_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_ccca1_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_ccca1_row0_col0" class="data row0 col0">3</td>
+<td id="T_ccca1_row0_col1" class="data row0 col1">29.344662</td>
+<td id="T_ccca1_row0_col2" class="data row0 col2">overall_survival_months</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row1_col0" class="data row1 col0">1</td>
+<td id="T_ccca1_row1_col1" class="data row1 col1">22.129998</td>
+<td id="T_ccca1_row1_col2" class="data row1 col2">age_at_diagnosis</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row2_col0" class="data row2 col0">9</td>
+<td id="T_ccca1_row2_col1" class="data row2 col1">6.545552</td>
+<td id="T_ccca1_row2_col2" class="data row2 col2">IC3</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row3_col0" class="data row3 col0">0</td>
+<td id="T_ccca1_row3_col1" class="data row3 col1">3.541668</td>
+<td id="T_ccca1_row3_col2" class="data row3 col2">Unnamed: 0</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row4_col0" class="data row4 col0">2</td>
+<td id="T_ccca1_row4_col1" class="data row4 col1">2.727808</td>
+<td id="T_ccca1_row4_col2" class="data row4 col2">lymph_nodes_examined_positive</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row5_col0" class="data row5 col0">8</td>
+<td id="T_ccca1_row5_col1" class="data row5 col1">2.015436</td>
+<td id="T_ccca1_row5_col2" class="data row5 col2">IC2</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row6_col0" class="data row6 col0">4</td>
+<td id="T_ccca1_row6_col1" class="data row6 col1">1.584302</td>
+<td id="T_ccca1_row6_col2" class="data row6 col2">nottingham_prognostic_index</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row7_col0" class="data row7 col0">14</td>
+<td id="T_ccca1_row7_col1" class="data row7 col1">1.254747</td>
+<td id="T_ccca1_row7_col2" class="data row7 col2">IC8</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row8_col0" class="data row8 col0">224</td>
+<td id="T_ccca1_row8_col1" class="data row8 col1">1.223695</td>
+<td id="T_ccca1_row8_col2" class="data row8 col2">npnt_mut</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row9_col0" class="data row9 col0">228</td>
+<td id="T_ccca1_row9_col1" class="data row9 col1">1.146634</td>
+<td id="T_ccca1_row9_col2" class="data row9 col2">sik1_mut</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row10_col0" class="data row10 col0">13</td>
+<td id="T_ccca1_row10_col1" class="data row10 col1">0.919151</td>
+<td id="T_ccca1_row10_col2" class="data row10 col2">IC7</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row11_col0" class="data row11 col0">5</td>
+<td id="T_ccca1_row11_col1" class="data row11 col1">0.826027</td>
+<td id="T_ccca1_row11_col2" class="data row11 col2">tumor_size</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row12_col0" class="data row12 col0">186</td>
+<td id="T_ccca1_row12_col1" class="data row12 col1">0.796600</td>
+<td id="T_ccca1_row12_col2" class="data row12 col2">prkce_mut</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row13_col0" class="data row13 col0">210</td>
+<td id="T_ccca1_row13_col1" class="data row13 col1">0.718436</td>
+<td id="T_ccca1_row13_col2" class="data row13 col2">nr3c1_mut</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row14_col0" class="data row14 col0">174</td>
+<td id="T_ccca1_row14_col1" class="data row14 col1">0.704558</td>
+<td id="T_ccca1_row14_col2" class="data row14 col2">men1_mut</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row15_col0" class="data row15 col0">234</td>
+<td id="T_ccca1_row15_col1" class="data row15 col1">0.695741</td>
+<td id="T_ccca1_row15_col2" class="data row15 col2">type_of_breast_surgery</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row16_col0" class="data row16 col0">201</td>
+<td id="T_ccca1_row16_col1" class="data row16 col1">0.658685</td>
+<td id="T_ccca1_row16_col2" class="data row16 col2">dtwd2_mut</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row17_col0" class="data row17 col0">241</td>
+<td id="T_ccca1_row17_col1" class="data row17 col1">0.596192</td>
+<td id="T_ccca1_row17_col2" class="data row17 col2">ep300_mut</td>
+</tr>
+<tr class="odd">
+<td id="T_ccca1_row18_col0" class="data row18 col0">183</td>
+<td id="T_ccca1_row18_col1" class="data row18 col1">0.588691</td>
+<td id="T_ccca1_row18_col2" class="data row18 col2">clk3_mut</td>
+</tr>
+<tr class="even">
+<td id="T_ccca1_row19_col0" class="data row19 col0">204</td>
+<td id="T_ccca1_row19_col1" class="data row19 col1">0.569203</td>
+<td id="T_ccca1_row19_col2" class="data row19 col2">primary_tumor_laterality</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Dość wysoką wagę ma zmienna <em>Unnamed:0</em> która jest zmienną zawierającą informację o niczym tak naprawdę bo jest to numer wiersza. Cały model zostanie wytrenowany ponownie bez tej zmiennej jednak mimo wszystko poniżej znajdują się ogólne metryki.</p>
+<div id="2cfd40f7" class="cell" data-execution_count="16">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_2fd69 table {
+  border-collapse: collapse;
+}
+#T_2fd69 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_2fd69  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_2fd69" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_2fd69_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_2fd69_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
+<th id="T_2fd69_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_2fd69_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_2fd69_row0_col1" class="data row0 col1">0.808940</td>
+<td id="T_2fd69_row0_col2" class="data row0 col2">0.658793</td>
+</tr>
+<tr class="even">
+<td id="T_2fd69_row1_col0" class="data row1 col0">TotalF1</td>
+<td id="T_2fd69_row1_col1" class="data row1 col1">0.806587</td>
+<td id="T_2fd69_row1_col2" class="data row1 col2">0.652512</td>
+</tr>
+<tr class="odd">
+<td id="T_2fd69_row2_col0" class="data row2 col0">MultiClass</td>
+<td id="T_2fd69_row2_col1" class="data row2 col1">0.554971</td>
+<td id="T_2fd69_row2_col2" class="data row2 col2">0.827648</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="budowa-modelu-po-usunięciu-zmiennej-unnamed-0" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="budowa-modelu-po-usunięciu-zmiennej-unnamed-0"><span class="header-section-number">4.1.2</span> Budowa modelu po usunięciu zmiennej <em>Unnamed: 0</em></h3>
+<p>Po usunięciu zmiennej model wytrenowano na identycznych parametrach:</p>
+<p>Przebieg wartości metryk podczas treningu na 1000 iteracji:</p>
+<p><img src="Metryki_over_drzewa2.png" class="img-fluid"></p>
+<p>Lista wag zmiennych:</p>
+<div id="e83b3530" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_104ed table {
+  border-collapse: collapse;
+}
+#T_104ed th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_104ed  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_104ed" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_104ed_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_104ed_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_104ed_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_104ed_row0_col0" class="data row0 col0">2</td>
+<td id="T_104ed_row0_col1" class="data row0 col1">27.194109</td>
+<td id="T_104ed_row0_col2" class="data row0 col2">overall_survival_months</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row1_col0" class="data row1 col0">0</td>
+<td id="T_104ed_row1_col1" class="data row1 col1">21.827896</td>
+<td id="T_104ed_row1_col2" class="data row1 col2">age_at_diagnosis</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row2_col0" class="data row2 col0">8</td>
+<td id="T_104ed_row2_col1" class="data row2 col1">8.345248</td>
+<td id="T_104ed_row2_col2" class="data row2 col2">cohort</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row3_col0" class="data row3 col0">1</td>
+<td id="T_104ed_row3_col1" class="data row3 col1">2.518802</td>
+<td id="T_104ed_row3_col2" class="data row3 col2">lymph_nodes_examined_positive</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row4_col0" class="data row4 col0">3</td>
+<td id="T_104ed_row4_col1" class="data row4 col1">2.136793</td>
+<td id="T_104ed_row4_col2" class="data row4 col2">nottingham_prognostic_index</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row5_col0" class="data row5 col0">7</td>
+<td id="T_104ed_row5_col1" class="data row5 col1">1.723083</td>
+<td id="T_104ed_row5_col2" class="data row5 col2">pam50_+_claudin-low_subtype</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row6_col0" class="data row6 col0">12</td>
+<td id="T_104ed_row6_col1" class="data row6 col1">1.639950</td>
+<td id="T_104ed_row6_col2" class="data row6 col2">inferred_menopausal_state</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row7_col0" class="data row7 col0">173</td>
+<td id="T_104ed_row7_col1" class="data row7 col1">1.426379</td>
+<td id="T_104ed_row7_col2" class="data row7 col2">type_of_breast_surgery</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row8_col0" class="data row8 col0">13</td>
+<td id="T_104ed_row8_col1" class="data row8 col1">1.400039</td>
+<td id="T_104ed_row8_col2" class="data row8 col2">integrative_cluster</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row9_col0" class="data row9 col0">227</td>
+<td id="T_104ed_row9_col1" class="data row9 col1">1.312188</td>
+<td id="T_104ed_row9_col2" class="data row9 col2">IC45</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row10_col0" class="data row10 col0">223</td>
+<td id="T_104ed_row10_col1" class="data row10 col1">1.238368</td>
+<td id="T_104ed_row10_col2" class="data row10 col2">IC41</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row11_col0" class="data row11 col0">209</td>
+<td id="T_104ed_row11_col1" class="data row11 col1">0.887856</td>
+<td id="T_104ed_row11_col2" class="data row11 col2">IC27</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row12_col0" class="data row12 col0">233</td>
+<td id="T_104ed_row12_col1" class="data row12 col1">0.863983</td>
+<td id="T_104ed_row12_col2" class="data row12 col2">IC51</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row13_col0" class="data row13 col0">189</td>
+<td id="T_104ed_row13_col1" class="data row13 col1">0.798668</td>
+<td id="T_104ed_row13_col2" class="data row13 col2">IC7</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row14_col0" class="data row14 col0">230</td>
+<td id="T_104ed_row14_col1" class="data row14 col1">0.751670</td>
+<td id="T_104ed_row14_col2" class="data row14 col2">IC48</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row15_col0" class="data row15 col0">240</td>
+<td id="T_104ed_row15_col1" class="data row15 col1">0.687359</td>
+<td id="T_104ed_row15_col2" class="data row15 col2">IC58</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row16_col0" class="data row16 col0">222</td>
+<td id="T_104ed_row16_col1" class="data row16 col1">0.678106</td>
+<td id="T_104ed_row16_col2" class="data row16 col2">IC40</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row17_col0" class="data row17 col0">185</td>
+<td id="T_104ed_row17_col1" class="data row17 col1">0.640620</td>
+<td id="T_104ed_row17_col2" class="data row17 col2">IC3</td>
+</tr>
+<tr class="odd">
+<td id="T_104ed_row18_col0" class="data row18 col0">200</td>
+<td id="T_104ed_row18_col1" class="data row18 col1">0.636656</td>
+<td id="T_104ed_row18_col2" class="data row18 col2">IC18</td>
+</tr>
+<tr class="even">
+<td id="T_104ed_row19_col0" class="data row19 col0">143</td>
+<td id="T_104ed_row19_col1" class="data row19 col1">0.569896</td>
+<td id="T_104ed_row19_col2" class="data row19 col2">primary_tumor_laterality</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Jak widzimy najwyższe wagi posiadają zmienne kliniczne.</p>
+<p>Pierwsze drzewo:</p>
+<p><img src="cat_tree1.png" class="img-fluid"></p>
+<p>Ostateczne metryki:</p>
+<div id="8c3f7b22" class="cell" data-execution_count="18">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_d4fbc table {
+  border-collapse: collapse;
+}
+#T_d4fbc th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_d4fbc  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_d4fbc" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_d4fbc_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_d4fbc_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
+<th id="T_d4fbc_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_d4fbc_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_d4fbc_row0_col1" class="data row0 col1">0.816827</td>
+<td id="T_d4fbc_row0_col2" class="data row0 col2">0.643045</td>
+</tr>
+<tr class="even">
+<td id="T_d4fbc_row1_col0" class="data row1 col0">TotalF1</td>
+<td id="T_d4fbc_row1_col1" class="data row1 col1">0.814816</td>
+<td id="T_d4fbc_row1_col2" class="data row1 col2">0.636073</td>
+</tr>
+<tr class="odd">
+<td id="T_d4fbc_row2_col0" class="data row2 col0">MultiClass</td>
+<td id="T_d4fbc_row2_col1" class="data row2 col1">0.556007</td>
+<td id="T_d4fbc_row2_col2" class="data row2 col2">0.824167</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Co dziwne po usunięciu niepotrzebnej zmiennej ważone f1 modelu spadło.</p>
+</section>
+<section id="model-zawierający-jedynie-zmienne-kliniczne" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="model-zawierający-jedynie-zmienne-kliniczne"><span class="header-section-number">4.1.3</span> Model zawierający jedynie zmienne kliniczne</h3>
+<p>Ponieważ najwyższe wagi należą i tak do zmiennych klinicznych, zbudowano model zawierający wyłącznie zmienne kliniczne.</p>
+<p>Parametry modelu są identyczne.</p>
+<p>Przebieg wartości metryk podczas treningu:</p>
+<p><img src="Metryki_over_drzewa_clin.png" class="img-fluid"></p>
+<p>Lista wag zmiennych:</p>
+<div id="76513c1c" class="cell" data-execution_count="19">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_99f39 table {
+  border-collapse: collapse;
+}
+#T_99f39 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_99f39  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_99f39" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_99f39_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_99f39_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_99f39_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_99f39_row0_col0" class="data row0 col0">2</td>
+<td id="T_99f39_row0_col1" class="data row0 col1">31.397845</td>
+<td id="T_99f39_row0_col2" class="data row0 col2">overall_survival_months</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row1_col0" class="data row1 col0">0</td>
+<td id="T_99f39_row1_col1" class="data row1 col1">20.618216</td>
+<td id="T_99f39_row1_col2" class="data row1 col2">age_at_diagnosis</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row2_col0" class="data row2 col0">8</td>
+<td id="T_99f39_row2_col1" class="data row2 col1">10.344717</td>
+<td id="T_99f39_row2_col2" class="data row2 col2">cohort</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row3_col0" class="data row3 col0">13</td>
+<td id="T_99f39_row3_col1" class="data row3 col1">5.479458</td>
+<td id="T_99f39_row3_col2" class="data row3 col2">integrative_cluster</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row4_col0" class="data row4 col0">7</td>
+<td id="T_99f39_row4_col1" class="data row4 col1">4.984526</td>
+<td id="T_99f39_row4_col2" class="data row4 col2">pam50_+_claudin-low_subtype</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row5_col0" class="data row5 col0">24</td>
+<td id="T_99f39_row5_col1" class="data row5 col1">3.987972</td>
+<td id="T_99f39_row5_col2" class="data row5 col2">3-gene_classifier_subtype</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row6_col0" class="data row6 col0">1</td>
+<td id="T_99f39_row6_col1" class="data row6 col1">3.087854</td>
+<td id="T_99f39_row6_col2" class="data row6 col2">lymph_nodes_examined_positive</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row7_col0" class="data row7 col0">17</td>
+<td id="T_99f39_row7_col1" class="data row7 col1">2.463155</td>
+<td id="T_99f39_row7_col2" class="data row7 col2">neoplasm_histologic_grade</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row8_col0" class="data row8 col0">3</td>
+<td id="T_99f39_row8_col1" class="data row8 col1">2.022021</td>
+<td id="T_99f39_row8_col2" class="data row8 col2">nottingham_prognostic_index</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row9_col0" class="data row9 col0">15</td>
+<td id="T_99f39_row9_col1" class="data row9 col1">1.920809</td>
+<td id="T_99f39_row9_col2" class="data row9 col2">tumor_stage</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row10_col0" class="data row10 col0">22</td>
+<td id="T_99f39_row10_col1" class="data row10 col1">1.799992</td>
+<td id="T_99f39_row10_col2" class="data row10 col2">type_of_breast_surgery</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row11_col0" class="data row11 col0">23</td>
+<td id="T_99f39_row11_col1" class="data row11 col1">1.685885</td>
+<td id="T_99f39_row11_col2" class="data row11 col2">cellularity</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row12_col0" class="data row12 col0">10</td>
+<td id="T_99f39_row12_col1" class="data row12 col1">1.671679</td>
+<td id="T_99f39_row12_col2" class="data row12 col2">her2_status_measured_by_snp6</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row13_col0" class="data row13 col0">4</td>
+<td id="T_99f39_row13_col1" class="data row13 col1">1.592813</td>
+<td id="T_99f39_row13_col2" class="data row13 col2">tumor_size</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row14_col0" class="data row14 col0">5</td>
+<td id="T_99f39_row14_col1" class="data row14 col1">1.460499</td>
+<td id="T_99f39_row14_col2" class="data row14 col2">mutation_count</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row15_col0" class="data row15 col0">14</td>
+<td id="T_99f39_row15_col1" class="data row15 col1">1.045784</td>
+<td id="T_99f39_row15_col2" class="data row15 col2">pr_status</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row16_col0" class="data row16 col0">19</td>
+<td id="T_99f39_row16_col1" class="data row16 col1">0.924415</td>
+<td id="T_99f39_row16_col2" class="data row16 col2">oncotree_code</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row17_col0" class="data row17 col0">16</td>
+<td id="T_99f39_row17_col1" class="data row17 col1">0.863381</td>
+<td id="T_99f39_row17_col2" class="data row17 col2">primary_tumor_laterality</td>
+</tr>
+<tr class="odd">
+<td id="T_99f39_row18_col0" class="data row18 col0">20</td>
+<td id="T_99f39_row18_col1" class="data row18 col1">0.795841</td>
+<td id="T_99f39_row18_col2" class="data row18 col2">tumor_other_histologic_subtype</td>
+</tr>
+<tr class="even">
+<td id="T_99f39_row19_col0" class="data row19 col0">18</td>
+<td id="T_99f39_row19_col1" class="data row19 col1">0.757549</td>
+<td id="T_99f39_row19_col2" class="data row19 col2">cancer_type_detailed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ostateczne metryki:</p>
+<div id="016b1c05" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_d0b98 table {
+  border-collapse: collapse;
+}
+#T_d0b98 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_d0b98  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_d0b98" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_d0b98_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_d0b98_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
+<th id="T_d0b98_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_d0b98_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_d0b98_row0_col1" class="data row0 col1">0.767748</td>
+<td id="T_d0b98_row0_col2" class="data row0 col2">0.669291</td>
+</tr>
+<tr class="even">
+<td id="T_d0b98_row1_col0" class="data row1 col0">TotalF1</td>
+<td id="T_d0b98_row1_col1" class="data row1 col1">0.764206</td>
+<td id="T_d0b98_row1_col2" class="data row1 col2">0.665777</td>
+</tr>
+<tr class="odd">
+<td id="T_d0b98_row2_col0" class="data row2 col0">MultiClass</td>
+<td id="T_d0b98_row2_col1" class="data row2 col1">0.612132</td>
+<td id="T_d0b98_row2_col2" class="data row2 col2">0.763700</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Model zbudowany tylko na zmiennych klinicznych jest nieznacznie lepszy.</p>
+</section>
+</section>
+<section id="random-forest" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">4.2</span> Random Forest</h2>
+<p>Konkurentem dla Cat boost jest Random Forest. Zastosowano porządkowe zakodowanie klas zmiennych kategorycznych, ponieważ OneHotEncoder zwiększył by wymiarowość.</p>
+<p>Parametry:</p>
+<div id="a24ac975" class="cell" data-execution_count="21">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_f8af3 table {
+  border-collapse: collapse;
+}
+#T_f8af3 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_f8af3  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_f8af3" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_f8af3_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_f8af3_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_f8af3_row0_col0" class="data row0 col0">bootstrap</td>
+<td id="T_f8af3_row0_col1" class="data row0 col1">True</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row1_col0" class="data row1 col0">ccp_alpha</td>
+<td id="T_f8af3_row1_col1" class="data row1 col1">0.0</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row2_col0" class="data row2 col0">class_weight</td>
+<td id="T_f8af3_row2_col1" class="data row2 col1">balanced</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row3_col0" class="data row3 col0">criterion</td>
+<td id="T_f8af3_row3_col1" class="data row3 col1">gini</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row4_col0" class="data row4 col0">max_depth</td>
+<td id="T_f8af3_row4_col1" class="data row4 col1">8</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row5_col0" class="data row5 col0">max_features</td>
+<td id="T_f8af3_row5_col1" class="data row5 col1">sqrt</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row6_col0" class="data row6 col0">max_leaf_nodes</td>
+<td id="T_f8af3_row6_col1" class="data row6 col1">nan</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row7_col0" class="data row7 col0">max_samples</td>
+<td id="T_f8af3_row7_col1" class="data row7 col1">nan</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row8_col0" class="data row8 col0">min_impurity_decrease</td>
+<td id="T_f8af3_row8_col1" class="data row8 col1">0.0</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row9_col0" class="data row9 col0">min_samples_leaf</td>
+<td id="T_f8af3_row9_col1" class="data row9 col1">3</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row10_col0" class="data row10 col0">min_samples_split</td>
+<td id="T_f8af3_row10_col1" class="data row10 col1">5</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row11_col0" class="data row11 col0">min_weight_fraction_leaf</td>
+<td id="T_f8af3_row11_col1" class="data row11 col1">0.0</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row12_col0" class="data row12 col0">monotonic_cst</td>
+<td id="T_f8af3_row12_col1" class="data row12 col1">nan</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row13_col0" class="data row13 col0">n_estimators</td>
+<td id="T_f8af3_row13_col1" class="data row13 col1">1000</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row14_col0" class="data row14 col0">n_jobs</td>
+<td id="T_f8af3_row14_col1" class="data row14 col1">-1</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row15_col0" class="data row15 col0">oob_score</td>
+<td id="T_f8af3_row15_col1" class="data row15 col1">False</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row16_col0" class="data row16 col0">random_state</td>
+<td id="T_f8af3_row16_col1" class="data row16 col1">2026</td>
+</tr>
+<tr class="even">
+<td id="T_f8af3_row17_col0" class="data row17 col0">verbose</td>
+<td id="T_f8af3_row17_col1" class="data row17 col1">1</td>
+</tr>
+<tr class="odd">
+<td id="T_f8af3_row18_col0" class="data row18 col0">warm_start</td>
+<td id="T_f8af3_row18_col1" class="data row18 col1">False</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Wagi cech:</p>
+<div id="79f223bd" class="cell" data-execution_count="22">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_822bf table {
+  border-collapse: collapse;
+}
+#T_822bf th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_822bf  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_822bf" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_822bf_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_822bf_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_822bf_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_822bf_row0_col0" class="data row0 col0">2</td>
+<td id="T_822bf_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_822bf_row0_col2" class="data row0 col2">0.090415</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row1_col0" class="data row1 col0">0</td>
+<td id="T_822bf_row1_col1" class="data row1 col1">age_at_diagnosis</td>
+<td id="T_822bf_row1_col2" class="data row1 col2">0.083109</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row2_col0" class="data row2 col0">3</td>
+<td id="T_822bf_row2_col1" class="data row2 col1">nottingham_prognostic_index</td>
+<td id="T_822bf_row2_col2" class="data row2 col2">0.027629</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row3_col0" class="data row3 col0">1</td>
+<td id="T_822bf_row3_col1" class="data row3 col1">lymph_nodes_examined_positive</td>
+<td id="T_822bf_row3_col2" class="data row3 col2">0.020052</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row4_col0" class="data row4 col0">12</td>
+<td id="T_822bf_row4_col1" class="data row4 col1">inferred_menopausal_state</td>
+<td id="T_822bf_row4_col2" class="data row4 col2">0.019570</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row5_col0" class="data row5 col0">8</td>
+<td id="T_822bf_row5_col1" class="data row5 col1">cohort</td>
+<td id="T_822bf_row5_col2" class="data row5 col2">0.017243</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row6_col0" class="data row6 col0">223</td>
+<td id="T_822bf_row6_col1" class="data row6 col1">IC41</td>
+<td id="T_822bf_row6_col2" class="data row6 col2">0.016248</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row7_col0" class="data row7 col0">200</td>
+<td id="T_822bf_row7_col1" class="data row7 col1">IC18</td>
+<td id="T_822bf_row7_col2" class="data row7 col2">0.014132</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row8_col0" class="data row8 col0">4</td>
+<td id="T_822bf_row8_col1" class="data row8 col1">tumor_size</td>
+<td id="T_822bf_row8_col2" class="data row8 col2">0.013537</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row9_col0" class="data row9 col0">242</td>
+<td id="T_822bf_row9_col1" class="data row9 col1">IC60</td>
+<td id="T_822bf_row9_col2" class="data row9 col2">0.012720</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row10_col0" class="data row10 col0">209</td>
+<td id="T_822bf_row10_col1" class="data row10 col1">IC27</td>
+<td id="T_822bf_row10_col2" class="data row10 col2">0.012688</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row11_col0" class="data row11 col0">201</td>
+<td id="T_822bf_row11_col1" class="data row11 col1">IC19</td>
+<td id="T_822bf_row11_col2" class="data row11 col2">0.012657</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row12_col0" class="data row12 col0">185</td>
+<td id="T_822bf_row12_col1" class="data row12 col1">IC3</td>
+<td id="T_822bf_row12_col2" class="data row12 col2">0.012365</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row13_col0" class="data row13 col0">240</td>
+<td id="T_822bf_row13_col1" class="data row13 col1">IC58</td>
+<td id="T_822bf_row13_col2" class="data row13 col2">0.011881</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row14_col0" class="data row14 col0">188</td>
+<td id="T_822bf_row14_col1" class="data row14 col1">IC6</td>
+<td id="T_822bf_row14_col2" class="data row14 col2">0.011821</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row15_col0" class="data row15 col0">187</td>
+<td id="T_822bf_row15_col1" class="data row15 col1">IC5</td>
+<td id="T_822bf_row15_col2" class="data row15 col2">0.011774</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row16_col0" class="data row16 col0">217</td>
+<td id="T_822bf_row16_col1" class="data row16 col1">IC35</td>
+<td id="T_822bf_row16_col2" class="data row16 col2">0.011723</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row17_col0" class="data row17 col0">228</td>
+<td id="T_822bf_row17_col1" class="data row17 col1">IC46</td>
+<td id="T_822bf_row17_col2" class="data row17 col2">0.011172</td>
+</tr>
+<tr class="odd">
+<td id="T_822bf_row18_col0" class="data row18 col0">189</td>
+<td id="T_822bf_row18_col1" class="data row18 col1">IC7</td>
+<td id="T_822bf_row18_col2" class="data row18 col2">0.011146</td>
+</tr>
+<tr class="even">
+<td id="T_822bf_row19_col0" class="data row19 col0">190</td>
+<td id="T_822bf_row19_col1" class="data row19 col1">IC8</td>
+<td id="T_822bf_row19_col2" class="data row19 col2">0.011045</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ostateczne metryki:</p>
+<div id="bddff131" class="cell" data-execution_count="23">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_e72f0 table {
+  border-collapse: collapse;
+}
+#T_e72f0 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_e72f0  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_e72f0" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_e72f0_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_e72f0_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_e72f0_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_e72f0_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_e72f0_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_e72f0_row0_col0" class="data row0 col0">Died of Disease</td>
+<td id="T_e72f0_row0_col1" class="data row0 col1">0.720430</td>
+<td id="T_e72f0_row0_col2" class="data row0 col2">0.540323</td>
+<td id="T_e72f0_row0_col3" class="data row0 col3">0.617512</td>
+<td id="T_e72f0_row0_col4" class="data row0 col4">124.000000</td>
+</tr>
+<tr class="even">
+<td id="T_e72f0_row1_col0" class="data row1 col0">Died of Other Causes</td>
+<td id="T_e72f0_row1_col1" class="data row1 col1">0.450450</td>
+<td id="T_e72f0_row1_col2" class="data row1 col2">0.520833</td>
+<td id="T_e72f0_row1_col3" class="data row1 col3">0.483092</td>
+<td id="T_e72f0_row1_col4" class="data row1 col4">96.000000</td>
+</tr>
+<tr class="odd">
+<td id="T_e72f0_row2_col0" class="data row2 col0">Living</td>
+<td id="T_e72f0_row2_col1" class="data row2 col1">0.655367</td>
+<td id="T_e72f0_row2_col2" class="data row2 col2">0.720497</td>
+<td id="T_e72f0_row2_col3" class="data row2 col3">0.686391</td>
+<td id="T_e72f0_row2_col4" class="data row2 col4">161.000000</td>
+</tr>
+<tr class="even">
+<td id="T_e72f0_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_e72f0_row3_col1" class="data row3 col1">0.611549</td>
+<td id="T_e72f0_row3_col2" class="data row3 col2">0.611549</td>
+<td id="T_e72f0_row3_col3" class="data row3 col3">0.611549</td>
+<td id="T_e72f0_row3_col4" class="data row3 col4">0.611549</td>
+</tr>
+<tr class="odd">
+<td id="T_e72f0_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_e72f0_row4_col1" class="data row4 col1">0.608749</td>
+<td id="T_e72f0_row4_col2" class="data row4 col2">0.593884</td>
+<td id="T_e72f0_row4_col3" class="data row4 col3">0.595665</td>
+<td id="T_e72f0_row4_col4" class="data row4 col4">381.000000</td>
+</tr>
+<tr class="even">
+<td id="T_e72f0_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_e72f0_row5_col1" class="data row5 col1">0.624910</td>
+<td id="T_e72f0_row5_col2" class="data row5 col2">0.611549</td>
+<td id="T_e72f0_row5_col3" class="data row5 col3">0.612748</td>
+<td id="T_e72f0_row5_col4" class="data row5 col4">381.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Random forest sprawdza się delikatnie gorzej niż Cat boost, winowajcą może być <em>ordinal encoding</em></p>
+<p>Model zbudowany na identycznych parametrach tylko dla zmiennych klinicznych.</p>
+<div id="9683df47" class="cell" data-execution_count="24">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_71daa table {
+  border-collapse: collapse;
+}
+#T_71daa th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_71daa  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_71daa" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_71daa_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_71daa_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_71daa_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_71daa_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_71daa_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_71daa_row0_col0" class="data row0 col0">Died of Disease</td>
+<td id="T_71daa_row0_col1" class="data row0 col1">0.686275</td>
+<td id="T_71daa_row0_col2" class="data row0 col2">0.564516</td>
+<td id="T_71daa_row0_col3" class="data row0 col3">0.619469</td>
+<td id="T_71daa_row0_col4" class="data row0 col4">124.000000</td>
+</tr>
+<tr class="even">
+<td id="T_71daa_row1_col0" class="data row1 col0">Died of Other Causes</td>
+<td id="T_71daa_row1_col1" class="data row1 col1">0.483607</td>
+<td id="T_71daa_row1_col2" class="data row1 col2">0.614583</td>
+<td id="T_71daa_row1_col3" class="data row1 col3">0.541284</td>
+<td id="T_71daa_row1_col4" class="data row1 col4">96.000000</td>
+</tr>
+<tr class="odd">
+<td id="T_71daa_row2_col0" class="data row2 col0">Living</td>
+<td id="T_71daa_row2_col1" class="data row2 col1">0.719745</td>
+<td id="T_71daa_row2_col2" class="data row2 col2">0.701863</td>
+<td id="T_71daa_row2_col3" class="data row2 col3">0.710692</td>
+<td id="T_71daa_row2_col4" class="data row2 col4">161.000000</td>
+</tr>
+<tr class="even">
+<td id="T_71daa_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_71daa_row3_col1" class="data row3 col1">0.635171</td>
+<td id="T_71daa_row3_col2" class="data row3 col2">0.635171</td>
+<td id="T_71daa_row3_col3" class="data row3 col3">0.635171</td>
+<td id="T_71daa_row3_col4" class="data row3 col4">0.635171</td>
+</tr>
+<tr class="odd">
+<td id="T_71daa_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_71daa_row4_col1" class="data row4 col1">0.629875</td>
+<td id="T_71daa_row4_col2" class="data row4 col2">0.626988</td>
+<td id="T_71daa_row4_col3" class="data row4 col3">0.623815</td>
+<td id="T_71daa_row4_col4" class="data row4 col4">381.000000</td>
+</tr>
+<tr class="even">
+<td id="T_71daa_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_71daa_row5_col1" class="data row5 col1">0.649352</td>
+<td id="T_71daa_row5_col2" class="data row5 col2">0.635171</td>
+<td id="T_71daa_row5_col3" class="data row5 col3">0.638317</td>
+<td id="T_71daa_row5_col4" class="data row5 col4">381.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ponownie model zbudowany tylko na klinicznych jest lepszy.</p>
+<p>Wagi cech:</p>
+<div id="a2382c93" class="cell" data-execution_count="25">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_e6be9 table {
+  border-collapse: collapse;
+}
+#T_e6be9 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_e6be9  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_e6be9" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_e6be9_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_e6be9_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_e6be9_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_e6be9_row0_col0" class="data row0 col0">2</td>
+<td id="T_e6be9_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_e6be9_row0_col2" class="data row0 col2">0.249429</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row1_col0" class="data row1 col0">0</td>
+<td id="T_e6be9_row1_col1" class="data row1 col1">age_at_diagnosis</td>
+<td id="T_e6be9_row1_col2" class="data row1 col2">0.193995</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row2_col0" class="data row2 col0">3</td>
+<td id="T_e6be9_row2_col1" class="data row2 col1">nottingham_prognostic_index</td>
+<td id="T_e6be9_row2_col2" class="data row2 col2">0.083439</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row3_col0" class="data row3 col0">8</td>
+<td id="T_e6be9_row3_col1" class="data row3 col1">cohort</td>
+<td id="T_e6be9_row3_col2" class="data row3 col2">0.055457</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row4_col0" class="data row4 col0">4</td>
+<td id="T_e6be9_row4_col1" class="data row4 col1">tumor_size</td>
+<td id="T_e6be9_row4_col2" class="data row4 col2">0.054705</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row5_col0" class="data row5 col0">1</td>
+<td id="T_e6be9_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
+<td id="T_e6be9_row5_col2" class="data row5 col2">0.053635</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row6_col0" class="data row6 col0">5</td>
+<td id="T_e6be9_row6_col1" class="data row6 col1">mutation_count</td>
+<td id="T_e6be9_row6_col2" class="data row6 col2">0.043035</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row7_col0" class="data row7 col0">13</td>
+<td id="T_e6be9_row7_col1" class="data row7 col1">integrative_cluster</td>
+<td id="T_e6be9_row7_col2" class="data row7 col2">0.037137</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row8_col0" class="data row8 col0">7</td>
+<td id="T_e6be9_row8_col1" class="data row8 col1">pam50_+_claudin-low_subtype</td>
+<td id="T_e6be9_row8_col2" class="data row8 col2">0.031351</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row9_col0" class="data row9 col0">12</td>
+<td id="T_e6be9_row9_col1" class="data row9 col1">inferred_menopausal_state</td>
+<td id="T_e6be9_row9_col2" class="data row9 col2">0.030932</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row10_col0" class="data row10 col0">24</td>
+<td id="T_e6be9_row10_col1" class="data row10 col1">3-gene_classifier_subtype</td>
+<td id="T_e6be9_row10_col2" class="data row10 col2">0.022698</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row11_col0" class="data row11 col0">22</td>
+<td id="T_e6be9_row11_col1" class="data row11 col1">type_of_breast_surgery</td>
+<td id="T_e6be9_row11_col2" class="data row11 col2">0.018562</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row12_col0" class="data row12 col0">23</td>
+<td id="T_e6be9_row12_col1" class="data row12 col1">cellularity</td>
+<td id="T_e6be9_row12_col2" class="data row12 col2">0.015633</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row13_col0" class="data row13 col0">17</td>
+<td id="T_e6be9_row13_col1" class="data row13 col1">neoplasm_histologic_grade</td>
+<td id="T_e6be9_row13_col2" class="data row13 col2">0.014445</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row14_col0" class="data row14 col0">10</td>
+<td id="T_e6be9_row14_col1" class="data row14 col1">her2_status_measured_by_snp6</td>
+<td id="T_e6be9_row14_col2" class="data row14 col2">0.013256</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row15_col0" class="data row15 col0">16</td>
+<td id="T_e6be9_row15_col1" class="data row15 col1">primary_tumor_laterality</td>
+<td id="T_e6be9_row15_col2" class="data row15 col2">0.011566</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row16_col0" class="data row16 col0">14</td>
+<td id="T_e6be9_row16_col1" class="data row16 col1">pr_status</td>
+<td id="T_e6be9_row16_col2" class="data row16 col2">0.011338</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row17_col0" class="data row17 col0">21</td>
+<td id="T_e6be9_row17_col1" class="data row17 col1">er_status_measured_by_ihc</td>
+<td id="T_e6be9_row17_col2" class="data row17 col2">0.010517</td>
+</tr>
+<tr class="odd">
+<td id="T_e6be9_row18_col0" class="data row18 col0">9</td>
+<td id="T_e6be9_row18_col1" class="data row18 col1">er_status</td>
+<td id="T_e6be9_row18_col2" class="data row18 col2">0.009971</td>
+</tr>
+<tr class="even">
+<td id="T_e6be9_row19_col0" class="data row19 col0">15</td>
+<td id="T_e6be9_row19_col1" class="data row19 col1">tumor_stage</td>
+<td id="T_e6be9_row19_col2" class="data row19 col2">0.009896</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ponownie dominuje <em>overall_survival_months</em>.</p>
+</section>
+<section id="xg-boost" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="xg-boost"><span class="header-section-number">4.3</span> XG Boost</h2>
+<p>Kolejnym modelem będzie <em>eXtreme Gradient Boosting</em>. W tym wypadku nie tylko kategoryczne predyktory zostały zakodowane porządkowo ale również zmienna wyjściowa przyjmuje teraz wartości 0,1,2 odpowiednio dla <em>Died of Disease</em>, <em>Died of Other Causes</em>, <em>Living</em>.</p>
+<p>Parametry:</p>
+<div id="5510cdf2" class="cell" data-execution_count="26">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_dbc1a table {
+  border-collapse: collapse;
+}
+#T_dbc1a th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_dbc1a  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_dbc1a" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_dbc1a_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_dbc1a_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">objective</th>
+<th id="T_dbc1a_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">colsample_bytree</th>
+<th id="T_dbc1a_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">early_stopping_rounds</th>
+<th id="T_dbc1a_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">enable_categorical</th>
+<th id="T_dbc1a_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">eval_metric</th>
+<th id="T_dbc1a_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">learning_rate</th>
+<th id="T_dbc1a_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">max_depth</th>
+<th id="T_dbc1a_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">n_estimators</th>
+<th id="T_dbc1a_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">n_jobs</th>
+<th id="T_dbc1a_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">random_state</th>
+<th id="T_dbc1a_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">reg_alpha</th>
+<th id="T_dbc1a_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">reg_lambda</th>
+<th id="T_dbc1a_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">subsample</th>
+<th id="T_dbc1a_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">num_class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_dbc1a_row0_col0" class="data row0 col0">0</td>
+<td id="T_dbc1a_row0_col1" class="data row0 col1">multi:softprob</td>
+<td id="T_dbc1a_row0_col2" class="data row0 col2">0.600000</td>
+<td id="T_dbc1a_row0_col3" class="data row0 col3">300</td>
+<td id="T_dbc1a_row0_col4" class="data row0 col4">False</td>
+<td id="T_dbc1a_row0_col5" class="data row0 col5">mlogloss</td>
+<td id="T_dbc1a_row0_col6" class="data row0 col6">0.010000</td>
+<td id="T_dbc1a_row0_col7" class="data row0 col7">5</td>
+<td id="T_dbc1a_row0_col8" class="data row0 col8">1500</td>
+<td id="T_dbc1a_row0_col9" class="data row0 col9">-1</td>
+<td id="T_dbc1a_row0_col10" class="data row0 col10">2026</td>
+<td id="T_dbc1a_row0_col11" class="data row0 col11">4</td>
+<td id="T_dbc1a_row0_col12" class="data row0 col12">10</td>
+<td id="T_dbc1a_row0_col13" class="data row0 col13">0.600000</td>
+<td id="T_dbc1a_row0_col14" class="data row0 col14">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Metryki:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_681c7 table {
+  border-collapse: collapse;
+}
+#T_681c7 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_681c7  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_681c7" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_681c7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_681c7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_681c7_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_681c7_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_681c7_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_681c7_row0_col0" class="data row0 col0">0</td>
+<td id="T_681c7_row0_col1" class="data row0 col1">0.684685</td>
+<td id="T_681c7_row0_col2" class="data row0 col2">0.612903</td>
+<td id="T_681c7_row0_col3" class="data row0 col3">0.646809</td>
+<td id="T_681c7_row0_col4" class="data row0 col4">124.000000</td>
+</tr>
+<tr class="even">
+<td id="T_681c7_row1_col0" class="data row1 col0">1</td>
+<td id="T_681c7_row1_col1" class="data row1 col1">0.487805</td>
+<td id="T_681c7_row1_col2" class="data row1 col2">0.416667</td>
+<td id="T_681c7_row1_col3" class="data row1 col3">0.449438</td>
+<td id="T_681c7_row1_col4" class="data row1 col4">96.000000</td>
+</tr>
+<tr class="odd">
+<td id="T_681c7_row2_col0" class="data row2 col0">2</td>
+<td id="T_681c7_row2_col1" class="data row2 col1">0.654255</td>
+<td id="T_681c7_row2_col2" class="data row2 col2">0.763975</td>
+<td id="T_681c7_row2_col3" class="data row2 col3">0.704871</td>
+<td id="T_681c7_row2_col4" class="data row2 col4">161.000000</td>
+</tr>
+<tr class="even">
+<td id="T_681c7_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_681c7_row3_col1" class="data row3 col1">0.627297</td>
+<td id="T_681c7_row3_col2" class="data row3 col2">0.627297</td>
+<td id="T_681c7_row3_col3" class="data row3 col3">0.627297</td>
+<td id="T_681c7_row3_col4" class="data row3 col4">0.627297</td>
+</tr>
+<tr class="odd">
+<td id="T_681c7_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_681c7_row4_col1" class="data row4 col1">0.608915</td>
+<td id="T_681c7_row4_col2" class="data row4 col2">0.597848</td>
+<td id="T_681c7_row4_col3" class="data row4 col3">0.600373</td>
+<td id="T_681c7_row4_col4" class="data row4 col4">381.000000</td>
+</tr>
+<tr class="even">
+<td id="T_681c7_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_681c7_row5_col1" class="data row5 col1">0.622219</td>
+<td id="T_681c7_row5_col2" class="data row5 col2">0.627297</td>
+<td id="T_681c7_row5_col3" class="data row5 col3">0.621613</td>
+<td id="T_681c7_row5_col4" class="data row5 col4">381.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Wagi cech:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_a0bbf table {
+  border-collapse: collapse;
+}
+#T_a0bbf th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_a0bbf  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_a0bbf" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_a0bbf_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_a0bbf_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_a0bbf_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_a0bbf_row0_col0" class="data row0 col0">2</td>
+<td id="T_a0bbf_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_a0bbf_row0_col2" class="data row0 col2">0.025567</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row1_col0" class="data row1 col0">0</td>
+<td id="T_a0bbf_row1_col1" class="data row1 col1">age_at_diagnosis</td>
+<td id="T_a0bbf_row1_col2" class="data row1 col2">0.022160</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row2_col0" class="data row2 col0">12</td>
+<td id="T_a0bbf_row2_col1" class="data row2 col1">inferred_menopausal_state</td>
+<td id="T_a0bbf_row2_col2" class="data row2 col2">0.021976</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row3_col0" class="data row3 col0">8</td>
+<td id="T_a0bbf_row3_col1" class="data row3 col1">cohort</td>
+<td id="T_a0bbf_row3_col2" class="data row3 col2">0.016248</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row4_col0" class="data row4 col0">113</td>
+<td id="T_a0bbf_row4_col1" class="data row4 col1">men1_mut</td>
+<td id="T_a0bbf_row4_col2" class="data row4 col2">0.012291</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row5_col0" class="data row5 col0">1</td>
+<td id="T_a0bbf_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
+<td id="T_a0bbf_row5_col2" class="data row5 col2">0.010847</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row6_col0" class="data row6 col0">117</td>
+<td id="T_a0bbf_row6_col1" class="data row6 col1">ttyh1_mut</td>
+<td id="T_a0bbf_row6_col2" class="data row6 col2">0.010407</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row7_col0" class="data row7 col0">173</td>
+<td id="T_a0bbf_row7_col1" class="data row7 col1">type_of_breast_surgery</td>
+<td id="T_a0bbf_row7_col2" class="data row7 col2">0.009806</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row8_col0" class="data row8 col0">3</td>
+<td id="T_a0bbf_row8_col1" class="data row8 col1">nottingham_prognostic_index</td>
+<td id="T_a0bbf_row8_col2" class="data row8 col2">0.008788</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row9_col0" class="data row9 col0">94</td>
+<td id="T_a0bbf_row9_col1" class="data row9 col1">chd1_mut</td>
+<td id="T_a0bbf_row9_col2" class="data row9 col2">0.008478</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row10_col0" class="data row10 col0">119</td>
+<td id="T_a0bbf_row10_col1" class="data row10 col1">map3k13_mut</td>
+<td id="T_a0bbf_row10_col2" class="data row10 col2">0.008399</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row11_col0" class="data row11 col0">124</td>
+<td id="T_a0bbf_row11_col1" class="data row11 col1">lipi_mut</td>
+<td id="T_a0bbf_row11_col2" class="data row11 col2">0.007729</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row12_col0" class="data row12 col0">34</td>
+<td id="T_a0bbf_row12_col1" class="data row12 col1">tg_mut</td>
+<td id="T_a0bbf_row12_col2" class="data row12 col2">0.007684</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row13_col0" class="data row13 col0">75</td>
+<td id="T_a0bbf_row13_col1" class="data row13 col1">apc_mut</td>
+<td id="T_a0bbf_row13_col2" class="data row13 col2">0.007682</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row14_col0" class="data row14 col0">52</td>
+<td id="T_a0bbf_row14_col1" class="data row14 col1">myh9_mut</td>
+<td id="T_a0bbf_row14_col2" class="data row14 col2">0.007532</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row15_col0" class="data row15 col0">100</td>
+<td id="T_a0bbf_row15_col1" class="data row15 col1">smarcc2_mut</td>
+<td id="T_a0bbf_row15_col2" class="data row15 col2">0.007059</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row16_col0" class="data row16 col0">111</td>
+<td id="T_a0bbf_row16_col1" class="data row16 col1">cdkn1b_mut</td>
+<td id="T_a0bbf_row16_col2" class="data row16 col2">0.007050</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row17_col0" class="data row17 col0">107</td>
+<td id="T_a0bbf_row17_col1" class="data row17 col1">smarcc1_mut</td>
+<td id="T_a0bbf_row17_col2" class="data row17 col2">0.006934</td>
+</tr>
+<tr class="odd">
+<td id="T_a0bbf_row18_col0" class="data row18 col0">108</td>
+<td id="T_a0bbf_row18_col1" class="data row18 col1">palld_mut</td>
+<td id="T_a0bbf_row18_col2" class="data row18 col2">0.006916</td>
+</tr>
+<tr class="even">
+<td id="T_a0bbf_row19_col0" class="data row19 col0">61</td>
+<td id="T_a0bbf_row19_col1" class="data row19 col1">shank2_mut</td>
+<td id="T_a0bbf_row19_col2" class="data row19 col2">0.006817</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ponownie dominują te same cechy:</p>
+<p>Model zbudowany tylko na zmiennych klinicznych:</p>
+<div id="dd647759" class="cell" data-execution_count="27">
+<div class="cell-output cell-output-stdout">
+<pre><code>Parametry:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_91806 table {
+  border-collapse: collapse;
+}
+#T_91806 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_91806  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_91806" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_91806_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_91806_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">objective</th>
+<th id="T_91806_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">colsample_bytree</th>
+<th id="T_91806_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">early_stopping_rounds</th>
+<th id="T_91806_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">enable_categorical</th>
+<th id="T_91806_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">eval_metric</th>
+<th id="T_91806_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">learning_rate</th>
+<th id="T_91806_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">max_depth</th>
+<th id="T_91806_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">n_estimators</th>
+<th id="T_91806_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">n_jobs</th>
+<th id="T_91806_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">random_state</th>
+<th id="T_91806_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">reg_alpha</th>
+<th id="T_91806_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">reg_lambda</th>
+<th id="T_91806_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">subsample</th>
+<th id="T_91806_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">num_class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_91806_row0_col0" class="data row0 col0">0</td>
+<td id="T_91806_row0_col1" class="data row0 col1">multi:softprob</td>
+<td id="T_91806_row0_col2" class="data row0 col2">0.600000</td>
+<td id="T_91806_row0_col3" class="data row0 col3">300</td>
+<td id="T_91806_row0_col4" class="data row0 col4">False</td>
+<td id="T_91806_row0_col5" class="data row0 col5">mlogloss</td>
+<td id="T_91806_row0_col6" class="data row0 col6">0.010000</td>
+<td id="T_91806_row0_col7" class="data row0 col7">5</td>
+<td id="T_91806_row0_col8" class="data row0 col8">1500</td>
+<td id="T_91806_row0_col9" class="data row0 col9">-1</td>
+<td id="T_91806_row0_col10" class="data row0 col10">2026</td>
+<td id="T_91806_row0_col11" class="data row0 col11">4</td>
+<td id="T_91806_row0_col12" class="data row0 col12">10</td>
+<td id="T_91806_row0_col13" class="data row0 col13">0.600000</td>
+<td id="T_91806_row0_col14" class="data row0 col14">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Metryki:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_87e54 table {
+  border-collapse: collapse;
+}
+#T_87e54 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_87e54  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_87e54" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_87e54_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_87e54_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_87e54_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_87e54_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_87e54_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_87e54_row0_col0" class="data row0 col0">0</td>
+<td id="T_87e54_row0_col1" class="data row0 col1">0.660870</td>
+<td id="T_87e54_row0_col2" class="data row0 col2">0.612903</td>
+<td id="T_87e54_row0_col3" class="data row0 col3">0.635983</td>
+<td id="T_87e54_row0_col4" class="data row0 col4">124.000000</td>
+</tr>
+<tr class="even">
+<td id="T_87e54_row1_col0" class="data row1 col0">1</td>
+<td id="T_87e54_row1_col1" class="data row1 col1">0.571429</td>
+<td id="T_87e54_row1_col2" class="data row1 col2">0.541667</td>
+<td id="T_87e54_row1_col3" class="data row1 col3">0.556150</td>
+<td id="T_87e54_row1_col4" class="data row1 col4">96.000000</td>
+</tr>
+<tr class="odd">
+<td id="T_87e54_row2_col0" class="data row2 col0">2</td>
+<td id="T_87e54_row2_col1" class="data row2 col1">0.725714</td>
+<td id="T_87e54_row2_col2" class="data row2 col2">0.788820</td>
+<td id="T_87e54_row2_col3" class="data row2 col3">0.755952</td>
+<td id="T_87e54_row2_col4" class="data row2 col4">161.000000</td>
+</tr>
+<tr class="even">
+<td id="T_87e54_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_87e54_row3_col1" class="data row3 col1">0.669291</td>
+<td id="T_87e54_row3_col2" class="data row3 col2">0.669291</td>
+<td id="T_87e54_row3_col3" class="data row3 col3">0.669291</td>
+<td id="T_87e54_row3_col4" class="data row3 col4">0.669291</td>
+</tr>
+<tr class="odd">
+<td id="T_87e54_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_87e54_row4_col1" class="data row4 col1">0.652671</td>
+<td id="T_87e54_row4_col2" class="data row4 col2">0.647797</td>
+<td id="T_87e54_row4_col3" class="data row4 col3">0.649362</td>
+<td id="T_87e54_row4_col4" class="data row4 col4">381.000000</td>
+</tr>
+<tr class="even">
+<td id="T_87e54_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_87e54_row5_col1" class="data row5 col1">0.665735</td>
+<td id="T_87e54_row5_col2" class="data row5 col2">0.669291</td>
+<td id="T_87e54_row5_col3" class="data row5 col3">0.666563</td>
+<td id="T_87e54_row5_col4" class="data row5 col4">381.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Wagi cech:</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_69d94 table {
+  border-collapse: collapse;
+}
+#T_69d94 th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_69d94  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_69d94" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_69d94_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_69d94_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_69d94_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_69d94_row0_col0" class="data row0 col0">2</td>
+<td id="T_69d94_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_69d94_row0_col2" class="data row0 col2">0.107362</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row1_col0" class="data row1 col0">12</td>
+<td id="T_69d94_row1_col1" class="data row1 col1">inferred_menopausal_state</td>
+<td id="T_69d94_row1_col2" class="data row1 col2">0.084799</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row2_col0" class="data row2 col0">0</td>
+<td id="T_69d94_row2_col1" class="data row2 col1">age_at_diagnosis</td>
+<td id="T_69d94_row2_col2" class="data row2 col2">0.079936</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row3_col0" class="data row3 col0">8</td>
+<td id="T_69d94_row3_col1" class="data row3 col1">cohort</td>
+<td id="T_69d94_row3_col2" class="data row3 col2">0.067453</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row4_col0" class="data row4 col0">22</td>
+<td id="T_69d94_row4_col1" class="data row4 col1">type_of_breast_surgery</td>
+<td id="T_69d94_row4_col2" class="data row4 col2">0.055697</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row5_col0" class="data row5 col0">1</td>
+<td id="T_69d94_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
+<td id="T_69d94_row5_col2" class="data row5 col2">0.046406</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row6_col0" class="data row6 col0">9</td>
+<td id="T_69d94_row6_col1" class="data row6 col1">er_status</td>
+<td id="T_69d94_row6_col2" class="data row6 col2">0.038933</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row7_col0" class="data row7 col0">3</td>
+<td id="T_69d94_row7_col1" class="data row7 col1">nottingham_prognostic_index</td>
+<td id="T_69d94_row7_col2" class="data row7 col2">0.037413</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row8_col0" class="data row8 col0">16</td>
+<td id="T_69d94_row8_col1" class="data row8 col1">primary_tumor_laterality</td>
+<td id="T_69d94_row8_col2" class="data row8 col2">0.037383</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row9_col0" class="data row9 col0">14</td>
+<td id="T_69d94_row9_col1" class="data row9 col1">pr_status</td>
+<td id="T_69d94_row9_col2" class="data row9 col2">0.037008</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row10_col0" class="data row10 col0">11</td>
+<td id="T_69d94_row10_col1" class="data row10 col1">her2_status</td>
+<td id="T_69d94_row10_col2" class="data row10 col2">0.034389</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row11_col0" class="data row11 col0">24</td>
+<td id="T_69d94_row11_col1" class="data row11 col1">3-gene_classifier_subtype</td>
+<td id="T_69d94_row11_col2" class="data row11 col2">0.033565</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row12_col0" class="data row12 col0">21</td>
+<td id="T_69d94_row12_col1" class="data row12 col1">er_status_measured_by_ihc</td>
+<td id="T_69d94_row12_col2" class="data row12 col2">0.033024</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row13_col0" class="data row13 col0">10</td>
+<td id="T_69d94_row13_col1" class="data row13 col1">her2_status_measured_by_snp6</td>
+<td id="T_69d94_row13_col2" class="data row13 col2">0.032536</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row14_col0" class="data row14 col0">13</td>
+<td id="T_69d94_row14_col1" class="data row14 col1">integrative_cluster</td>
+<td id="T_69d94_row14_col2" class="data row14 col2">0.030003</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row15_col0" class="data row15 col0">17</td>
+<td id="T_69d94_row15_col1" class="data row15 col1">neoplasm_histologic_grade</td>
+<td id="T_69d94_row15_col2" class="data row15 col2">0.029797</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row16_col0" class="data row16 col0">4</td>
+<td id="T_69d94_row16_col1" class="data row16 col1">tumor_size</td>
+<td id="T_69d94_row16_col2" class="data row16 col2">0.029324</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row17_col0" class="data row17 col0">7</td>
+<td id="T_69d94_row17_col1" class="data row17 col1">pam50_+_claudin-low_subtype</td>
+<td id="T_69d94_row17_col2" class="data row17 col2">0.029170</td>
+</tr>
+<tr class="odd">
+<td id="T_69d94_row18_col0" class="data row18 col0">5</td>
+<td id="T_69d94_row18_col1" class="data row18 col1">mutation_count</td>
+<td id="T_69d94_row18_col2" class="data row18 col2">0.028672</td>
+</tr>
+<tr class="even">
+<td id="T_69d94_row19_col0" class="data row19 col0">23</td>
+<td id="T_69d94_row19_col1" class="data row19 col1">cellularity</td>
+<td id="T_69d94_row19_col2" class="data row19 col2">0.027480</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ponownie model zbudowany na klinicznych jest lepszy</p>
+</section>
+<section id="model-losowy" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="model-losowy"><span class="header-section-number">4.4</span> Model losowy</h2>
+<p>Jako punkt odniesienia wykonano 1000 losowych permutacji na zbiorze testowym, przydzielono oryginalne indeksy zmiennej wynikowej i policzono średnie metryki:</p>
+<div id="53cc7a71" class="cell" data-execution_count="28">
+<div class="cell-output cell-output-display">
+<style type="text/css">
+#T_8dedc table {
+  border-collapse: collapse;
+}
+#T_8dedc th {
+  border: 1px solid black;
+  padding: 5px;
+}
+#T_8dedc  td {
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<table id="T_8dedc" class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th id="T_8dedc_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_8dedc_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_8dedc_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_8dedc_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_8dedc_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td id="T_8dedc_row0_col0" class="data row0 col0">Died of Disease</td>
+<td id="T_8dedc_row0_col1" class="data row0 col1">0.370968</td>
+<td id="T_8dedc_row0_col2" class="data row0 col2">0.370968</td>
+<td id="T_8dedc_row0_col3" class="data row0 col3">0.370968</td>
+<td id="T_8dedc_row0_col4" class="data row0 col4">124.000000</td>
+</tr>
+<tr class="even">
+<td id="T_8dedc_row1_col0" class="data row1 col0">Died of Other Causes</td>
+<td id="T_8dedc_row1_col1" class="data row1 col1">0.218750</td>
+<td id="T_8dedc_row1_col2" class="data row1 col2">0.218750</td>
+<td id="T_8dedc_row1_col3" class="data row1 col3">0.218750</td>
+<td id="T_8dedc_row1_col4" class="data row1 col4">96.000000</td>
+</tr>
+<tr class="odd">
+<td id="T_8dedc_row2_col0" class="data row2 col0">Living</td>
+<td id="T_8dedc_row2_col1" class="data row2 col1">0.378882</td>
+<td id="T_8dedc_row2_col2" class="data row2 col2">0.378882</td>
+<td id="T_8dedc_row2_col3" class="data row2 col3">0.378882</td>
+<td id="T_8dedc_row2_col4" class="data row2 col4">161.000000</td>
+</tr>
+<tr class="even">
+<td id="T_8dedc_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_8dedc_row3_col1" class="data row3 col1">0.335958</td>
+<td id="T_8dedc_row3_col2" class="data row3 col2">0.335958</td>
+<td id="T_8dedc_row3_col3" class="data row3 col3">0.335958</td>
+<td id="T_8dedc_row3_col4" class="data row3 col4">0.335958</td>
+</tr>
+<tr class="odd">
+<td id="T_8dedc_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_8dedc_row4_col1" class="data row4 col1">0.322867</td>
+<td id="T_8dedc_row4_col2" class="data row4 col2">0.322867</td>
+<td id="T_8dedc_row4_col3" class="data row4 col3">0.322867</td>
+<td id="T_8dedc_row4_col4" class="data row4 col4">381.000000</td>
+</tr>
+<tr class="even">
+<td id="T_8dedc_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_8dedc_row5_col1" class="data row5 col1">0.335958</td>
+<td id="T_8dedc_row5_col2" class="data row5 col2">0.335958</td>
+<td id="T_8dedc_row5_col3" class="data row5 col3">0.335958</td>
+<td id="T_8dedc_row5_col4" class="data row5 col4">381.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Losowy model jest bardzo słaby pod względem metryk.</p>
+</section>
+</section>
+<section id="porównanie-modeli-na-zbiorze-testowym" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Porównanie modeli na zbiorze testowym</h1>
+<p>Powyższe metryki były badane jedynie na zbiorze walidacyjnym do których dostrajane były parametry w ten sposób aby ograniczyć przetrenowanie i otrzymać jak najlepsze wyniki na owym zbiorze. Poniżej ostateczne porównanie modeli na zbiorze testowym:</p>
+<p><img src="Por%C3%B3wnanie_metryk.png" class="img-fluid"></p>
+<p>Co ciekawe wbrew oczekiwaniom dodanie komponentów ICA i mutacji genowych poprawia model.</p>
+<p>Precyzja przeżywalności to <em>Precision</em> dla klasy <em>Living</em>, ma za zadanie pokazywać jak bardzo należy się cieszyć prognozą - wyższe wartości sugerują, że prawie na pewno pacjent przeżyje.</p>
+<p>Poniżej wizualizacja modeli pod względem f1-score i dokładności:</p>
+<p><img src="Metryki.png" class="img-fluid"></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

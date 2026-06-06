@@ -1,0 +1,289 @@
+chemotherapy;hormone_therapy;radio_therapy;type_of_breast_surgery;cancer_type_detailed;age_group;count
+0;1;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;205
+0;1;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;178
+0;1;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;142
+0;0;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;103
+0;1;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;92
+0;0;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;80
+0;0;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;72
+0;0;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;67
+0;1;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;61
+1;0;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;56
+1;1;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;45
+1;0;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;40
+0;1;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;35
+1;1;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;34
+0;1;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;29
+0;1;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;28
+0;1;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;24
+0;1;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;23
+0;0;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;23
+1;0;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;23
+1;1;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;22
+1;0;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;20
+0;1;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;19
+0;1;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;18
+0;1;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;17
+0;0;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;17
+0;0;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;17
+1;0;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;16
+0;1;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;15
+0;0;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;15
+0;0;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;14
+1;0;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;14
+0;1;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;12
+1;1;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;12
+1;1;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;12
+0;0;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;11
+1;0;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;11
+0;1;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;10
+0;1;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;10
+0;0;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;10
+0;0;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;10
+0;1;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;9
+0;0;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;9
+1;1;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;9
+0;1;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;8
+1;1;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;8
+1;0;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;8
+0;1;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;7
+0;0;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;40-60;7
+0;0;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;7
+1;1;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;7
+0;0;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;6
+0;0;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;6
+0;1;1;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;5
+1;1;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;5
+0;1;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;4
+0;1;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;4
+1;1;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;4
+0;1;0;MASTECTOMY;Breast;60+;3
+0;0;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;3
+1;1;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;3
+1;1;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;3
+1;1;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;3
+1;1;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;3
+1;0;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;3
+1;0;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;60+;3
+0;1;1;MASTECTOMY;Breast;60+;2
+0;1;1;BREAST CONSERVING;Breast;60+;2
+0;1;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;2
+0;1;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;2
+0;0;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;2
+0;0;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;2
+0;0;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;2
+0;0;1;BREAST CONSERVING;Breast;60+;2
+0;0;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;2
+0;0;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;2
+0;0;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;2
+0;0;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;2
+1;1;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;2
+1;0;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;2
+1;0;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;40-60;2
+0;1;1;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;1
+0;1;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;1
+0;1;1;MASTECTOMY;Breast;20-40;1
+0;1;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;1
+0;1;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;1
+0;1;0;MASTECTOMY;Breast Invasive Ductal Carcinoma;20-40;1
+0;1;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;1
+0;1;0;MASTECTOMY;Breast;40-60;1
+0;1;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;1
+0;1;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;1
+0;1;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;1
+0;0;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;1
+0;0;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;1
+0;0;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;1
+0;0;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;1
+0;0;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;1
+0;0;1;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;1
+0;0;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;1
+0;0;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;1
+0;0;0;MASTECTOMY;Breast;60+;1
+0;0;0;MASTECTOMY;Breast;40-60;1
+0;0;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;1
+0;0;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;1
+0;0;0;BREAST CONSERVING;Breast;60+;1
+1;1;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;1
+1;1;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;1
+1;1;1;BREAST CONSERVING;Breast;60+;1
+1;1;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;1
+1;1;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;1
+1;1;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;1
+1;1;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;1
+1;0;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;1
+1;0;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;1
+1;0;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;1
+1;0;1;MASTECTOMY;Breast;60+;1
+1;0;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;1
+1;0;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;1
+1;0;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;1
+1;0;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;1
+0;1;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+0;1;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+0;1;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+0;1;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;1;1;MASTECTOMY;Breast;40-60;0
+0;1;1;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+0;1;1;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+0;1;1;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+0;1;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;0
+0;1;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;1;1;BREAST CONSERVING;Breast;40-60;0
+0;1;1;BREAST CONSERVING;Breast;20-40;0
+0;1;1;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+0;1;1;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+0;1;1;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+0;1;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+0;1;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;1;0;MASTECTOMY;Breast;20-40;0
+0;1;0;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+0;1;0;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+0;1;0;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+0;1;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;0
+0;1;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+0;1;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;0
+0;1;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+0;1;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+0;1;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;1;0;BREAST CONSERVING;Breast;60+;0
+0;1;0;BREAST CONSERVING;Breast;40-60;0
+0;1;0;BREAST CONSERVING;Breast;20-40;0
+0;1;0;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+0;1;0;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+0;1;0;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+0;0;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+0;0;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;0
+0;0;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+0;0;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+0;0;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+0;0;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;0;1;MASTECTOMY;Breast;60+;0
+0;0;1;MASTECTOMY;Breast;40-60;0
+0;0;1;MASTECTOMY;Breast;20-40;0
+0;0;1;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+0;0;1;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+0;0;1;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+0;0;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+0;0;1;BREAST CONSERVING;Breast;40-60;0
+0;0;1;BREAST CONSERVING;Breast;20-40;0
+0;0;1;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+0;0;1;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+0;0;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+0;0;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+0;0;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;0;0;MASTECTOMY;Breast;20-40;0
+0;0;0;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+0;0;0;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+0;0;0;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+0;0;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+0;0;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;40-60;0
+0;0;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;0
+0;0;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+0;0;0;BREAST CONSERVING;Breast;40-60;0
+0;0;0;BREAST CONSERVING;Breast;20-40;0
+0;0;0;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+0;0;0;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+0;0;0;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+1;1;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+1;1;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+1;1;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;1;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;1;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;1;1;MASTECTOMY;Breast;60+;0
+1;1;1;MASTECTOMY;Breast;40-60;0
+1;1;1;MASTECTOMY;Breast;20-40;0
+1;1;1;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+1;1;1;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+1;1;1;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+1;1;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;1;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+1;1;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;0
+1;1;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;1;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;1;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;1;1;BREAST CONSERVING;Breast;40-60;0
+1;1;1;BREAST CONSERVING;Breast;20-40;0
+1;1;1;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+1;1;1;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+1;1;1;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+1;1;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;1;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;40-60;0
+1;1;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+1;1;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;0
+1;1;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+1;1;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;1;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;1;0;MASTECTOMY;Breast;60+;0
+1;1;0;MASTECTOMY;Breast;40-60;0
+1;1;0;MASTECTOMY;Breast;20-40;0
+1;1;0;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+1;1;0;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+1;1;0;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+1;1;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;0
+1;1;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;1;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;0
+1;1;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+1;1;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;0
+1;1;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;0
+1;1;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;1;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;1;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;1;0;BREAST CONSERVING;Breast;60+;0
+1;1;0;BREAST CONSERVING;Breast;40-60;0
+1;1;0;BREAST CONSERVING;Breast;20-40;0
+1;1;0;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+1;1;0;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+1;1;0;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+1;0;1;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;0;1;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+1;0;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;0;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;0;1;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;0;1;MASTECTOMY;Breast;40-60;0
+1;0;1;MASTECTOMY;Breast;20-40;0
+1;0;1;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+1;0;1;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+1;0;1;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+1;0;1;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;0;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;0
+1;0;1;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;0
+1;0;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;0;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;0;1;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;0;1;BREAST CONSERVING;Breast;60+;0
+1;0;1;BREAST CONSERVING;Breast;40-60;0
+1;0;1;BREAST CONSERVING;Breast;20-40;0
+1;0;1;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+1;0;1;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+1;0;1;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
+1;0;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;0;0;MASTECTOMY;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+1;0;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;60+;0
+1;0;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;40-60;0
+1;0;0;MASTECTOMY;Breast Invasive Lobular Carcinoma;20-40;0
+1;0;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;0;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;0;0;MASTECTOMY;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;0;0;MASTECTOMY;Breast;60+;0
+1;0;0;MASTECTOMY;Breast;40-60;0
+1;0;0;MASTECTOMY;Breast;20-40;0
+1;0;0;MASTECTOMY;Metaplastic Breast Cancer;60+;0
+1;0;0;MASTECTOMY;Metaplastic Breast Cancer;40-60;0
+1;0;0;MASTECTOMY;Metaplastic Breast Cancer;20-40;0
+1;0;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;60+;0
+1;0;0;BREAST CONSERVING;Breast Invasive Ductal Carcinoma;20-40;0
+1;0;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;60+;0
+1;0;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;40-60;0
+1;0;0;BREAST CONSERVING;Breast Mixed Ductal and Lobular Carcinoma;20-40;0
+1;0;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;60+;0
+1;0;0;BREAST CONSERVING;Breast Invasive Lobular Carcinoma;20-40;0
+1;0;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;60+;0
+1;0;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;40-60;0
+1;0;0;BREAST CONSERVING;Breast Invasive Mixed Mucinous Carcinoma;20-40;0
+1;0;0;BREAST CONSERVING;Breast;60+;0
+1;0;0;BREAST CONSERVING;Breast;40-60;0
+1;0;0;BREAST CONSERVING;Breast;20-40;0
+1;0;0;BREAST CONSERVING;Metaplastic Breast Cancer;60+;0
+1;0;0;BREAST CONSERVING;Metaplastic Breast Cancer;40-60;0
+1;0;0;BREAST CONSERVING;Metaplastic Breast Cancer;20-40;0
