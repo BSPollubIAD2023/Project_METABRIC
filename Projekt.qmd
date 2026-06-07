@@ -1,5 +1,5 @@
 ---
-title: 'Predykcja zgonu z powodu raka piersi z       wykorzystaniem danych klinicznych i genomowych — analiza porównawcza modeli uczenia maszynowego na zbiorze METABRIC'
+title: 'Predykcja zgonu z powodu raka piersi z wykorzystaniem danych klinicznych i genomowych — analiza porównawcza modeli uczenia maszynowego na zbiorze METABRIC'
 author: Bartłomiej Stola, Lidia Gozdecka
 format: html
 toc: true
@@ -8,16 +8,26 @@ toc-expand: true
 number-sections: true
 execute: 
   echo: false
+editor: 
+  markdown: 
+    wrap: 72
 ---
+
 # Wstęp
 
 ## Temat projektu
 
-Tematem projektu jest analiza zbioru danych Breast Cancer Gene Expression Profiles (METABRIC) zawierającego informacje dotyczące cech klinicznych pacjentów oraz molekularnych oraz budowa modelu prognozującego przeżywalność pacjenta.
+Tematem projektu jest analiza zbioru danych Breast Cancer Gene
+Expression Profiles (METABRIC) zawierającego informacje dotyczące cech
+klinicznych pacjentów oraz genomicznych oraz budowa modelu
+prognozującego przeżywalność pacjenta.
 
 ## Opis zbioru
 
-Zbiór składa się z 30 zmiennych klinicznych 173 zmiennych binarnych informujące o braku lub mutacji danego genu i 489 zmiennych dotyczących poziomu ekspresji genów.
+Zbiór składa się z 30 zmiennych klinicznych 173 zmiennych binarnych
+informujące o wystąpieniu lub braku mutacji danego genu i 489 zmiennych
+dotyczących poziomu ekspresji genów.
+
 ```{python}
 import pandas as pd
 pd.set_option('display.max_rows', None)
@@ -112,7 +122,9 @@ display(p)
 
 ## Braki danych
 
-Poniższa ramka zawiera liczbę braków danych w kolumnach i ich udział procentowy
+Poniższa ramka zawiera liczbę braków danych w kolumnach i ich udział
+procentowy
+
 ```{python}
 import pandas as pd
 
@@ -176,6 +188,7 @@ p.style.set_table_styles([
 display(p)
 
 ```
+
 Brak całkowicie pustych wierszy.
 
 ```{python}
@@ -198,13 +211,17 @@ p.style.set_table_styles([
 ])
 display(p)
 ```
+
 Tylko około 40% wierszy jest całkowicie pełnych
 
 # Eksploracja zbioru
 
 ## Mechanizm braków danych
 
-Rodzaj braków danych będzie decydował o sposobie ich uzupełnienia dlatego została zbadana zależność braków od zmiennych kategorycznych za pomocą testu $\chi^2$
+Rodzaj braków danych będzie decydował o sposobie ich uzupełnienia
+dlatego została zbadana zależność braków od zmiennych kategorycznych za
+pomocą testu $\chi^2$
+
 ```{python}
 import pandas as pd
 pd.set_option('display.max_rows', None)
@@ -226,9 +243,12 @@ wynik.style.set_table_styles([
 ])
 display(wynik.iloc[:,1:5].head(10))
 ```
-Uwzględniono jedynie zmienne charakteryzujące się liczbą braków większą od mediany liczby brakujących obserwacji.
+
+Uwzględniono jedynie zmienne charakteryzujące się liczbą braków większą
+od mediany liczby brakujących obserwacji.
 
 Jednak ilość wykonanych testów:
+
 ```{python}
 import pandas as pd
 pd.set_option('display.max_rows', None)
@@ -252,7 +272,10 @@ p.style.set_table_styles([
 ])
 display(p)
 ```
-Sprawia, że prawdopodobieństwa niesłusznego odrzucenia hipotezy zerowej o naturze MCAR (*Missing completely at random*) wynosi:
+
+Sprawia, że prawdopodobieństwa niesłusznego odrzucenia hipotezy zerowej
+o naturze MCAR (*Missing completely at random*) wynosi:
+
 ```{python}
 import pandas as pd
 wynik=pd.read_csv("wynik.csv", sep=";")
@@ -260,9 +283,14 @@ x=1-(1-0.05)**len(wynik)
 print(f"{x:4e}")
 ```
 
-Jest niemal pewne, że uznamy odrzucimy hipotezę zerową niesłusznie przynajmniej raz. Dlatego zastosowano poprawkę Benjaminiego-Hochberga.
+Jest niemal pewne, że uznamy odrzucimy hipotezę zerową niesłusznie
+przynajmniej raz. Dlatego zastosowano poprawkę Benjaminiego-Hochberga.
 
-Dodatkowo każdą parę sklasyfikowano według typu relacji: gene–gene, clinic–clinic, gene–clinic lub clinic–gene, co umożliwiło ocenę zależności pomiędzy brakami danych w obrębie oraz pomiędzy grupami zmiennych. Nowy wynik po korekcie:
+Dodatkowo każdą parę sklasyfikowano według typu relacji: gene–gene,
+clinic–clinic, gene–clinic lub clinic–gene, co umożliwiło ocenę
+zależności pomiędzy brakami danych w obrębie oraz pomiędzy grupami
+zmiennych. Nowy wynik po korekcie:
+
 ```{python}
 import pandas as pd
 pd.set_option('display.max_rows', None)
@@ -285,24 +313,52 @@ wynik.style.set_table_styles([
 
 display(wynik.iloc[:,1:7].head(5))
 ```
-Zmienne które nie znajdują się w kolumnie *missing in* zostały oznaczone jako zmienne zawierające losowe braki danych, te które się w niej znajdują będą wymagały bardziej przemyślanego uzupełnienia aby nie wprowadzać stronniczości do zbioru. Odpowiednia obsługa braków znajduje się w dalszej części.
+
+Zmienne które nie znajdują się w kolumnie *missing in* zostały oznaczone
+jako zmienne zawierające losowe braki danych, te które się w niej
+znajdują będą wymagały bardziej przemyślanego uzupełnienia aby nie
+wprowadzać stronniczości do zbioru. Odpowiednia obsługa braków znajduje
+się w dalszej części.
 
 ## Przeżywalność, grupa wiekowa, typ operacji i kombinacja terapii
 
-Na wykresie przedstawiono rozkłady czasu przeżycia całkowitego w miesiącach dla różnych kombinacji terapii, z podziałem na grupy wiekowe oraz rodzaj przeprowadzonego zabiegu chirurgicznego.
-![Czas przeżycia w zależności od terapii, wieku i rodzaju operacji](fig.png)
+Na wykresie przedstawiono rozkłady czasu przeżycia całkowitego w
+miesiącach dla różnych kombinacji terapii, z podziałem na grupy wiekowe
+oraz rodzaj przeprowadzonego zabiegu chirurgicznego. ![Czas przeżycia w
+zależności od terapii, wieku i rodzaju operacji](fig.png)
 
-*Do uzupełnienia dla Lidii*
+Przeżywalność w podziale na wiek: w grupie 60+ nieomal nie ma żywych
+pacjentek - nie wynika to jednak koniecznie z typu operacji czyli
+terapii, a po prostu z diagnozy w późnym wieku. Z kolei w grupie 20-40
+przeżywa zdecydowanie więcej kobiet niż w 40-60. Warto też zauważyć, że
+w niemal każdym przypadku (wieku, terapii etc.) śmierć spowodowana
+postępem nowotoworu następuje znacznie później niż zgon spowodowany
+ewentualnymi innymi schorzeniami bądź powikłaniami - na przeżywalność
+wpływają również współistniejące lub poprzedzające schorzenia.
+
+Przeżywalność jest większa w grupie operacji oszczędzającej;
+niekoniecznie sugeruje to jej wyższość nad mastektomią - prawdopodobnie
+jest możliwa tylko u pacjentek o lepszych rokowaniach.
+
+W grupie 20-40 najdłuższym przeżyciem cechuje się albo sama
+radioterapia, albo brak jakiejkolwiek terapii. Warto jednak pamiętać, że
+wybór bardziej agresywnej kombinacji terapii i operacji niekoniecznie
+skutkuje gorszymi rokowaniami, tylko zdarza się w cięższych przypadkach,
+które same w sobie już slabo rokują.
 
 ## Rozkład zmiennej wynikowej ze względu na rodzaj terapii
 
 ![](Terapia-przezywalnosc.png)
 
-Udziały poziomów zmiennej wynikowej różnią się pomiędzy rodzajami terapii, jednak niekoniecznie oznacza to różnice w skuteczności, ponieważ pacjenci mogli być leczeni niektórymi kombinacjami w zależności od powagi ich sytuacji.
+Udziały poziomów zmiennej wynikowej różnią się pomiędzy rodzajami
+terapii, jednak niekoniecznie oznacza to różnice w skuteczności,
+ponieważ pacjenci mogli być leczeni niektórymi kombinacjami w zależności
+od powagi ich sytuacji.
 
-## Lata przeżycia od diagnozy 
+## Lata przeżycia od diagnozy
 
-Dla pacjentów którzy zmarli w wyniku raka poniższy wykres przedstawia rozkład prawdopodobieństwa lat przeżytych od diagnozy
+Dla pacjentów którzy zmarli w wyniku raka poniższy wykres przedstawia
+rozkład prawdopodobieństwa lat przeżytych od diagnozy
 
 ![](Czas_przezycia.png)
 
@@ -312,7 +368,14 @@ Zbadano współzmienność zmiennych klinicznych.
 
 ![Korelacja zmiennych klinicznych](korelacja_kli.png)
 
-Współczynniki korelacji nie przedstawiają znaczących wartośći, jednak wnioski które można wyciągnąć są raczej zgodne z ogólną intuicją. Na przykład średnia ilość prognozowanych misięcy przeżycia zmniejsza się wraz ze wzrostem liczby zajętych węzłów chłonnych (*overall survival months* ~ *lymph_nodes_examined_positive*), identycznie dla miesięcy przeżycia i rozmiaru guza (*overall survival months* ~ *tumor size*). Niskie współczynniki korelacji, mogą wskazywać na wpływ innych czynników na ogólny dobrostan pacjentów.
+Współczynniki korelacji nie przedstawiają znaczących wartośći, jednak
+wnioski które można wyciągnąć są raczej zgodne z ogólną intuicją. Na
+przykład średnia ilość prognozowanych misięcy przeżycia zmniejsza się
+wraz ze wzrostem liczby zajętych węzłów chłonnych (*overall survival
+months* \~ *lymph_nodes_examined_positive*), identycznie dla miesięcy
+przeżycia i rozmiaru guza (*overall survival months* \~ *tumor size*).
+Niskie współczynniki korelacji, mogą wskazywać na wpływ innych czynników
+na ogólny dobrostan pacjentów.
 
 ## Balans zmiennej wynikowej
 
@@ -335,17 +398,23 @@ p.style.set_table_styles([
 ])
 display(p)
 ```
-Liczności poziomów zmiennej wynikowej są w miarę podobne, przynajmniej akceptowalne i nie wymagają modyfikacji.
+
+Liczności poziomów zmiennej wynikowej są w miarę podobne, przynajmniej
+akceptowalne i nie wymagają modyfikacji.
 
 ## Rozkład zmiennych klinicznych
 
 Tabela przedstawia ogólny rozkład numerycznych zmiennych klinicznych
-![Rozkład  zmiennych klinicznych](opisowe_heatmap.png)
+![Rozkład zmiennych klinicznych](opisowe_heatmap.png)
 
-Jako, że rozmiar guza potrafi przyjmować bardzo wysokie wartości, postanowiono zbadać obecność obserwacji odstających. Przyjęto wariant wielowymiarowy aby uwzględnić relacje pomiędzy zmiennymi.
-Wykorzystano do tego odległość mahalanobisa.
+Jako, że rozmiar guza potrafi przyjmować bardzo wysokie wartości,
+postanowiono zbadać obecność obserwacji odstających. Przyjęto wariant
+wielowymiarowy aby uwzględnić relacje pomiędzy zmiennymi. Wykorzystano
+do tego odległość mahalanobisa.
 
-Kwadraty odległości mahalanobisa większe niż 99 kwantyl rozkładu $\chi^2$ uznano za wartości odstające i nadano im odpowiednią flagę w zbiorze danych.
+Kwadraty odległości mahalanobisa większe niż 99 kwantyl rozkładu
+$\chi^2$ uznano za wartości odstające i nadano im odpowiednią flagę w
+zbiorze danych.
 
 ```{python}
 import pandas as pd
@@ -377,65 +446,74 @@ display(
 )
 ```
 
-Wielowymiarowe obserwacje odstające stanowią niewielką część zbioru, ale samo bycie obserwacją odstające może być informacją samą w sobie dlatego nie zostaną usunięte.
+Wielowymiarowe obserwacje odstające stanowią niewielką część zbioru, ale
+samo bycie obserwacją odstające może być informacją samą w sobie dlatego
+nie zostaną usunięte.
 
 # Redukcja wymiarowości
 
 ## PCA
 
-Zbiór posiada 489 zmiennych dotyczących ekspresji genów, co jest bardzo dużą liczbą zmiennych mogących nieść tą samą informację. Sama korelacja zmiennych dotyczących ekspresji genów nie została zbadana, więc jako narzędzie eksploracyjne zastosowano analizę składowych głównych (*Principal component analysis*) aby zredukować wymiarowość i otrzmać nieskorelowane komponenty przy zachowaniu jak największej zmienności oryginalnych danych.
+Zbiór posiada 489 zmiennych dotyczących ekspresji genów, co jest bardzo
+dużą liczbą zmiennych mogących nieść tą samą informację. Sama korelacja
+zmiennych dotyczących ekspresji genów nie została zbadana, więc jako
+narzędzie eksploracyjne zastosowano analizę składowych głównych
+(*Principal component analysis*) aby zredukować wymiarowość i otrzmać
+nieskorelowane komponenty przy zachowaniu jak największej zmienności
+oryginalnych danych.
 
 Dane zostały przeskalowane oraz oczyszczone z braków (tylko dla PCA)
 
 ![Wykres zsumowanej wariancji współdzielonej](PCA_wariancja_wyj.png)
 
-Niestety aby zachować przynajmniej 90% wariancji wyjaśnionej, otrzymano 360 komponentów. Naszym zdaniem redukcja z 489 zmiennych do 360 komponentów jest niewystarczająca i nie poprawia sytuacji.
+Niestety aby zachować przynajmniej 90% wariancji wyjaśnionej, otrzymano
+360 komponentów. Naszym zdaniem redukcja z 489 zmiennych do 360
+komponentów jest niewystarczająca i nie poprawia sytuacji.
 
 ## ICA
 
-Analiza niezależnych składowych, teoretycznie wydaje się lepszym wyborem. Założono, że zmienne dotyczący ekspresji genów można opisać za pomocą mniejszej liczby komponentów reprezentujących niezależne procesy biologiczne.
-Niech:
+Analiza niezależnych składowych, teoretycznie wydaje się lepszym
+wyborem. Założono, że zmienne dotyczący ekspresji genów można opisać za
+pomocą mniejszej liczby komponentów reprezentujących niezależne procesy
+biologiczne. Niech:
 
-$$
-X \in \mathbb{R}^{n \times p}
-$$
+$$X \in \mathbb{R}^{n \times p}$$
 
-oznacza macierz danych wejściowych, gdzie $n$ jest liczbą obserwacji, a $p$ liczbą zmiennych. Metoda ICA aproksymuje macierz danych zależnością:
+oznacza macierz danych wejściowych, gdzie $n$ jest liczbą obserwacji, a
+$p$ liczbą zmiennych. Metoda ICA aproksymuje macierz danych zależnością:
 
-$$
-X \approx SA
-$$
+$$X \approx SA$$
 
 gdzie:
 
-$S$ – macierz składowych niezależnych,
-$A$ – macierz wag (mixing matrix).
+$S$ – macierz składowych niezależnych, $A$ – macierz wag (mixing
+matrix).
 
-Po wyznaczeniu określonej liczby składowych możliwe jest odtworzenie przybliżonej wersji danych wejściowych:
+Po wyznaczeniu określonej liczby składowych możliwe jest odtworzenie
+przybliżonej wersji danych wejściowych:
 
-$$
-\hat{X} = SA
-$$
+$$\hat{X} = SA$$
 
-Jako miarę jakości rekonstrukcji wykorzystano średni błąd kwadratowy (Mean Squared Error, MSE):
+Jako miarę jakości rekonstrukcji wykorzystano średni błąd kwadratowy
+(Mean Squared Error, MSE):
 
-$$
-MSE = \frac{1}{np}
+$$MSE = \frac{1}{np}
 \sum_{i=1}^{n}
 \sum_{j=1}^{p}
 \left(
 X_{ij} - \hat{X}_{ij}
-\right)^2
-$$
+\right)^2$$
 
 gdzie:
 
-$X_{ij}$ oznacza rzeczywistą wartość zmiennej,
-$\hat{X}_{ij}$ oznacza wartość odtworzoną na podstawie modelu ICA.
+$X_{ij}$ oznacza rzeczywistą wartość zmiennej, $\hat{X}_{ij}$ oznacza
+wartość odtworzoną na podstawie modelu ICA.
 
-Błąd rekonstrukcji informuje o stopniu utraty informacji wynikającej z redukcji wymiarowości.
+Błąd rekonstrukcji informuje o stopniu utraty informacji wynikającej z
+redukcji wymiarowości.
 
-Dane zostały odpowiednio przetworzone i zbadane pod kątem skośności i kurtozy.
+Dane zostały odpowiednio przetworzone i zbadane pod kątem skośności i
+kurtozy.
 
 ```{python}
 import pandas as pd
@@ -462,19 +540,30 @@ print(pd.Series(sk).describe())
 print("\nOpis kurtozy:")
 print(pd.Series(ku).describe())
 ```
-Dominuje prawoskośność przy zróżnicowanym współczynniku kurtozy. Właściwości te są korzystne z punktu widzenia metody ICA, która opiera się na identyfikacji statystycznie niezależnych i niegaussowskich sygnałów ukrytych w danych.
+
+Dominuje prawoskośność przy zróżnicowanym współczynniku kurtozy.
+Właściwości te są korzystne z punktu widzenia metody ICA, która opiera
+się na identyfikacji statystycznie niezależnych i niegaussowskich
+sygnałów ukrytych w danych.
 
 Poniżej wykres błędu w zależności od liczby wybranych składowych:
 ![](ICA_elbow.png)
 
-Wybrano 60 składowych niezależnych aby zredukować wymiar jak najbardziej przy akceptowalnym błędzie rekonstrukcji.
+Wybrano 60 składowych niezależnych aby zredukować wymiar jak najbardziej
+przy akceptowalnym błędzie rekonstrukcji.
 
 ### Interpretacja pierwszych pięciu komponentów
 
-W celu interpretacji biologicznej wyodrębnionych komponentów ICA przeanalizowano geny o najwyższych dodatnich i ujemnych wartościach wag. Na podstawie literatury naukowej przypisano poszczególnym komponentom najbardziej prawdopodobne procesy biologiczne i szlaki sygnałowe. Należy podkreślić, że zaproponowane nazwy komponentów mają charakter interpretacyjny i wynikają z dominujących genów oraz ich funkcji biologicznych.
+W celu interpretacji biologicznej wyodrębnionych komponentów ICA
+przeanalizowano geny o najwyższych dodatnich i ujemnych wartościach wag.
+Na podstawie literatury naukowej przypisano poszczególnym komponentom
+najbardziej prawdopodobne procesy biologiczne i szlaki sygnałowe. Należy
+podkreślić, że zaproponowane nazwy komponentów mają charakter
+interpretacyjny i wynikają z dominujących genów oraz ich funkcji
+biologicznych.
 
 | IC | Nazwa | Geny (+) | Geny (-) | Proces |
-|----|--------|----------|----------|---------|
+|---------------|---------------|---------------|---------------|---------------|
 | IC1 | TGF-β/BMP i EMT | SMAD6, BMP2, BMP15 | GDF2, MTAP, BBC3 | EMT, progresja nowotworu |
 | IC2 | FGF i angiogeneza | FGF2, ITGB3, SERPINI1 | RAF1, CDK8 | Angiogeneza |
 | IC3 | SWI/SNF | ARID1A, PBRM1, KDM6A | MAML3, E2F1 | Stabilność genomu |
@@ -483,66 +572,119 @@ W celu interpretacji biologicznej wyodrębnionych komponentów ICA przeanalizowa
 
 IC1 – Sygnalizacja TGF-β/BMP i EMT
 
-Komponent IC1 zdominowany jest przez geny należące do rodziny BMP oraz regulatorów szlaku TGF-β. Szczególnie wysokie dodatnie wagi uzyskały geny SMAD6, BMP2 oraz BMP15, natomiast ujemne wartości odnotowano między innymi dla GDF2, MTAP i BBC3. Wskazuje to na obecność osi biologicznej związanej z sygnalizacją TGF-β/BMP.
+Komponent IC1 zdominowany jest przez geny należące do rodziny BMP oraz
+regulatorów szlaku TGF-β. Szczególnie wysokie dodatnie wagi uzyskały
+geny SMAD6, BMP2 oraz BMP15, natomiast ujemne wartości odnotowano między
+innymi dla GDF2, MTAP i BBC3. Wskazuje to na obecność osi biologicznej
+związanej z sygnalizacją TGF-β/BMP.
 
-Szlak TGF-β pełni podwójną funkcję w nowotworach. We wczesnych etapach może działać supresorowo poprzez indukcję apoptozy i zatrzymanie cyklu komórkowego, natomiast w zaawansowanych stadiach wspiera proces przejścia nabłonkowo-mezenchymalnego (EMT), inwazję i tworzenie przerzutów. Wysokie wartości IC1 można zatem interpretować jako zwiększoną aktywność procesów związanych z EMT i progresją nowotworu.
+Szlak TGF-β pełni podwójną funkcję w nowotworach. We wczesnych etapach
+może działać supresorowo poprzez indukcję apoptozy i zatrzymanie cyklu
+komórkowego, natomiast w zaawansowanych stadiach wspiera proces
+przejścia nabłonkowo-mezenchymalnego (EMT), inwazję i tworzenie
+przerzutów. Wysokie wartości IC1 można zatem interpretować jako
+zwiększoną aktywność procesów związanych z EMT i progresją nowotworu.
 
 IC2 – Angiogeneza i sygnalizacja FGF
 
-Największe dodatnie wagi w komponencie IC2 uzyskały geny FGF2, ITGB3, SERPINI1 oraz BMP4. W literaturze FGF2 uznawany jest za jeden z kluczowych regulatorów proliferacji komórek nowotworowych oraz angiogenezy.
+Największe dodatnie wagi w komponencie IC2 uzyskały geny FGF2, ITGB3,
+SERPINI1 oraz BMP4. W literaturze FGF2 uznawany jest za jeden z
+kluczowych regulatorów proliferacji komórek nowotworowych oraz
+angiogenezy.
 
-Wysokie wartości komponentu mogą odpowiadać nasileniu procesów wzrostu guza, tworzenia naczyń krwionośnych oraz zwiększonej aktywności mikrośrodowiska nowotworowego. Ujemne wagi genów takich jak RAF1 czy CDK8 sugerują obecność przeciwstawnych mechanizmów regulacyjnych.
+Wysokie wartości komponentu mogą odpowiadać nasileniu procesów wzrostu
+guza, tworzenia naczyń krwionośnych oraz zwiększonej aktywności
+mikrośrodowiska nowotworowego. Ujemne wagi genów takich jak RAF1 czy
+CDK8 sugerują obecność przeciwstawnych mechanizmów regulacyjnych.
 
 IC3 – Remodelowanie chromatyny i kontrola stabilności genomu
 
-Komponent IC3 skupia geny związane z kompleksem remodelującym chromatynę SWI/SNF, w szczególności ARID1A, PBRM1 i KDM6A. Dodatkowo wysoką wagę uzyskał gen FBXW7, będący ważnym supresorem nowotworowym odpowiedzialnym za degradację wielu onkoprotein.
+Komponent IC3 skupia geny związane z kompleksem remodelującym chromatynę
+SWI/SNF, w szczególności ARID1A, PBRM1 i KDM6A. Dodatkowo wysoką wagę
+uzyskał gen FBXW7, będący ważnym supresorem nowotworowym odpowiedzialnym
+za degradację wielu onkoprotein.
 
-Interpretacja biologiczna tego komponentu wskazuje na procesy związane z regulacją transkrypcji, naprawą DNA oraz utrzymaniem stabilności genomowej. Wysokie wartości IC3 mogą odpowiadać zachowaniu funkcji supresorowych, natomiast niskie wartości mogą wskazywać na utratę kontroli nad proliferacją komórkową.
+Interpretacja biologiczna tego komponentu wskazuje na procesy związane z
+regulacją transkrypcji, naprawą DNA oraz utrzymaniem stabilności
+genomowej. Wysokie wartości IC3 mogą odpowiadać zachowaniu funkcji
+supresorowych, natomiast niskie wartości mogą wskazywać na utratę
+kontroli nad proliferacją komórkową.
 
 IC4 – Aktywacja szlaku Notch
 
-Wysokie dodatnie wagi genów RBPJ, MAML1, ADAM10 i HES5 wskazują na silny związek komponentu IC4 z aktywnością szlaku Notch. Białko RBPJ stanowi centralny element kompleksu transkrypcyjnego Notch, natomiast MAML1 działa jako jego koaktywator.
+Wysokie dodatnie wagi genów RBPJ, MAML1, ADAM10 i HES5 wskazują na silny
+związek komponentu IC4 z aktywnością szlaku Notch. Białko RBPJ stanowi
+centralny element kompleksu transkrypcyjnego Notch, natomiast MAML1
+działa jako jego koaktywator.
 
-Aktywacja szlaku Notch jest związana między innymi z utrzymaniem komórek macierzystych nowotworu, regulacją różnicowania komórkowego oraz kontrolą proliferacji. Wysokie wartości IC4 mogą wskazywać na zwiększoną aktywność tych procesów.
+Aktywacja szlaku Notch jest związana między innymi z utrzymaniem komórek
+macierzystych nowotworu, regulacją różnicowania komórkowego oraz
+kontrolą proliferacji. Wysokie wartości IC4 mogą wskazywać na zwiększoną
+aktywność tych procesów.
 
 IC5 – Metabolizm hormonów steroidowych
 
-Komponent IC5 charakteryzuje się dominacją genów UGT2B7, UGT2B15 oraz UGT2B17, które uczestniczą w procesach glukuronidacji hormonów steroidowych.
+Komponent IC5 charakteryzuje się dominacją genów UGT2B7, UGT2B15 oraz
+UGT2B17, które uczestniczą w procesach glukuronidacji hormonów
+steroidowych.
 
-Enzymy UGT odpowiadają za sprzęganie estrogenów i androgenów, prowadząc do ich inaktywacji i usuwania z komórki. Wysokie wartości komponentu można interpretować jako zwiększony metabolizm hormonów płciowych, natomiast niskie wartości mogą sprzyjać utrzymaniu wyższej aktywności sygnalizacji hormonalnej w komórkach nowotworowych.
+Enzymy UGT odpowiadają za sprzęganie estrogenów i androgenów, prowadząc
+do ich inaktywacji i usuwania z komórki. Wysokie wartości komponentu
+można interpretować jako zwiększony metabolizm hormonów płciowych,
+natomiast niskie wartości mogą sprzyjać utrzymaniu wyższej aktywności
+sygnalizacji hormonalnej w komórkach nowotworowych.
 
 Bibliografia:
 
-1. *Liu J., Wang C. i wsp. TGF-β in Tumor Development and Progression: Mechanisms and Therapeutics. Molecular Biomedicine, 2026.*
+1.  *Liu J., Wang C. i wsp. TGF-β in Tumor Development and Progression:
+    Mechanisms and Therapeutics. Molecular Biomedicine, 2026.*
 
-2. *Santolla M.F., Maggiolini M. The FGF/FGFR System in Breast Cancer: Oncogenic Features and Therapeutic Perspectives. Cancers, 2020.*
-3. *Gopalakrishnan S., Patel D., Shah M., Relan S. A Review of ARID1A's Role in Breast Cancer Progression. Cancers, 2026.*
+2.  *Santolla M.F., Maggiolini M. The FGF/FGFR System in Breast Cancer:
+    Oncogenic Features and Therapeutic Perspectives. Cancers, 2020.*
 
-4. *Huang Z., Zhou J. i wsp. RBPJ Maintains Brain Tumor-Initiating Cells Through CDK9-Mediated Transcriptional Elongation. Journal of Clinical Investigation, 2016.*
+3.  *Gopalakrishnan S., Patel D., Shah M., Relan S. A Review of ARID1A's
+    Role in Breast Cancer Progression. Cancers, 2026.*
 
-5. *Harrington W.R., Sengupta S. i wsp. Estrogen Regulation of the Glucuronidation Enzyme UGT2B15 in Estrogen Receptor-Positive Breast Cancer Cells. Endocrinology, 2006.*
+4.  *Huang Z., Zhou J. i wsp. RBPJ Maintains Brain Tumor-Initiating
+    Cells Through CDK9-Mediated Transcriptional Elongation. Journal of
+    Clinical Investigation, 2016.*
 
-6. *Jiang X., Xiang W., Wang X. i wsp. Tumor Suppressor FBXW7 and Its Regulation of DNA Damage Response and Repair. Frontiers in Cell and Developmental Biology, 2021.*
+5.  *Harrington W.R., Sengupta S. i wsp. Estrogen Regulation of the
+    Glucuronidation Enzyme UGT2B15 in Estrogen Receptor-Positive Breast
+    Cancer Cells. Endocrinology, 2006.*
+
+6.  *Jiang X., Xiang W., Wang X. i wsp. Tumor Suppressor FBXW7 and Its
+    Regulation of DNA Damage Response and Repair. Frontiers in Cell and
+    Developmental Biology, 2021.*
 
 ### Zróżnicowanie genowe komponentów
 
-Dla każdej z 1770 kombinacji komponentów zbadano ich podobieńtwo za pomocą indeksu Jaccarda
+Dla każdej z 1770 kombinacji komponentów zbadano ich podobieńtwo za
+pomocą indeksu Jaccarda
 
-$$
-Jaccard(IC{i}IC{j})=\frac{IC{i} \cap IC{j}}{IC{i} \cup IC{j}}
-$$
+$$Jaccard(IC{i}IC{j})=\frac{IC{i} \cap IC{j}}{IC{i} \cup IC{j}}$$
 
+Poniższa macierz przedstawia podobieństwo: ![](Podobienstwo_comp.png)
 
-Poniższa macierz przedstawia podobieństwo:
-![](Podobienstwo_comp.png)
-
-Maksymalna wartość indeksu Jaccarda wynosząca około 0.16 wskazuje na niewielkie nakładanie się genów dominujących w poszczególnych komponentach. Oznacza to, że większość składowych jest związana z odmiennymi zestawami genów i prawdopodobnie reprezentuje różne mechanizmy biologiczne.
+Maksymalna wartość indeksu Jaccarda wynosząca około 0.16 wskazuje na
+niewielkie nakładanie się genów dominujących w poszczególnych
+komponentach. Oznacza to, że większość składowych jest związana z
+odmiennymi zestawami genów i prawdopodobnie reprezentuje różne
+mechanizmy biologiczne.
 
 ## Wizualizacja pacjentów w przestrzeni UMAP
 
-W celu oceny, czy wyznaczone komponenty ICA zawierają informację pozwalającą na rozróżnianie molekularnych podtypów nowotworu, zastosowano algorytm UMAP (Uniform Manifold Approximation and Projection). Metoda ta umożliwia nieliniową redukcję wymiarowości przy zachowaniu lokalnej struktury danych.
+W celu oceny, czy wyznaczone komponenty ICA zawierają informację
+pozwalającą na rozróżnianie molekularnych podtypów nowotworu,
+zastosowano algorytm UMAP (Uniform Manifold Approximation and
+Projection). Metoda ta umożliwia nieliniową redukcję wymiarowości przy
+zachowaniu lokalnej struktury danych.
 
-Jako dane wejściowe wykorzystano 60 składowych uzyskanych metodą ICA. Następnie dokonano projekcji pacjentów do przestrzeni dwuwymiarowej. Punkty na wykresie odpowiadają pojedynczym pacjentom, natomiast kolor oznacza przynależność do podtypu molekularnego określonego przez zmienną *pam50_+_claudin-low_subtype*.
+Jako dane wejściowe wykorzystano 60 składowych uzyskanych metodą ICA.
+Następnie dokonano projekcji pacjentów do przestrzeni dwuwymiarowej.
+Punkty na wykresie odpowiadają pojedynczym pacjentom, natomiast kolor
+oznacza przynależność do podtypu molekularnego określonego przez zmienną
+\*pam50\_+\_claudin-low_subtype\*.
 
 Zmienna domyślnie składa się z 7 kategorii:
 
@@ -552,39 +694,58 @@ dane=pd.read_csv('dane2.csv', sep=';')
 dane['pam50_+_claudin-low_subtype'].unique()
 ```
 
-Przypisano cyfry:
-1. *Claudin-low*
+Przypisano cyfry: 1. *Claudin-low*
 
-2. *LumA*
+2.  *LumA*
 
-3. *LumB*
+3.  *LumB*
 
-4. *Her2*
+4.  *Her2*
 
-5. *Normal*
+5.  *Normal*
 
-6. *Basal*
+6.  *Basal*
 
-7. *NC*
+7.  *NC*
 
-Celem analizy nie była interpretacja osi UMAP1 i UMAP2, ponieważ nie posiadają one bezpośredniego znaczenia biologicznego. Analizie poddano natomiast rozmieszczenie pacjentów w przestrzeni UMAP oraz stopień grupowania obserwacji należących do tych samych podtypów molekularnych.
+Celem analizy nie była interpretacja osi UMAP1 i UMAP2, ponieważ nie
+posiadają one bezpośredniego znaczenia biologicznego. Analizie poddano
+natomiast rozmieszczenie pacjentów w przestrzeni UMAP oraz stopień
+grupowania obserwacji należących do tych samych podtypów molekularnych.
 
 ![](UMAP_PAM50.png)
 
-Na wykresie zaobserwowano częściową separację poszczególnych klas. Pacjenci należący do niektórych podtypów wykazują tendencję do zajmowania określonych regionów przestrzeni UMAP, jednak nie występują całkowicie rozłączne klastry. Oznacza to, że informacje zawarte w komponentach ICA pozwalają na częściowe różnicowanie podtypów PAM50, choć granice pomiędzy klasami pozostają w znacznym stopniu nakładające się.
+Na wykresie zaobserwowano częściową separację poszczególnych klas.
+Pacjenci należący do niektórych podtypów wykazują tendencję do
+zajmowania określonych regionów przestrzeni UMAP, jednak nie występują
+całkowicie rozłączne klastry. Oznacza to, że informacje zawarte w
+komponentach ICA pozwalają na częściowe różnicowanie podtypów PAM50,
+choć granice pomiędzy klasami pozostają w znacznym stopniu nakładające
+się.
 
-Wynik ten jest zgodny z biologicznym charakterem klasyfikacji PAM50. Poszczególne podtypy raka piersi nie stanowią całkowicie odrębnych jednostek, lecz reprezentują kontinuum zmian molekularnych. Obserwowane grupowanie sugeruje, że komponenty ICA uchwyciły część sygnałów odpowiadających za zróżnicowanie profili ekspresji genów pomiędzy podtypami nowotworu.
-
+Wynik ten jest zgodny z biologicznym charakterem klasyfikacji PAM50.
+Poszczególne podtypy raka piersi nie stanowią całkowicie odrębnych
+jednostek, lecz reprezentują kontinuum zmian molekularnych. Obserwowane
+grupowanie sugeruje, że komponenty ICA uchwyciły część sygnałów
+odpowiadających za zróżnicowanie profili ekspresji genów pomiędzy
+podtypami nowotworu.
 
 # Budowa modelu przewidującego poziom zmiennej wynikowej
 
 ## Cat boost
 
-Z powodu dużej ilości zmiennych kategorycznych zawierających po kilka lub kilkanaście kategorii (szczególnie zmienne dotyczące mutacji potrafią składać się z wielu poziomów zakodowanych jednocześnie jako liczby i nazwy) zastosowanie OneHotEncodingu byłoby trudne i jeszcze bardziej zwiększałoby wymiarowość. Dla zbioru testowego czy walidacyjnego liczba zmiennych mogłaby nawet przekraczać liczbę obserwacji.
+Z powodu dużej ilości zmiennych kategorycznych zawierających po kilka
+lub kilkanaście kategorii (szczególnie zmienne dotyczące mutacji
+potrafią składać się z wielu poziomów zakodowanych jednocześnie jako
+liczby i nazwy) zastosowanie OneHotEncodingu byłoby trudne i jeszcze
+bardziej zwiększałoby wymiarowość. Dla zbioru testowego czy
+walidacyjnego liczba zmiennych mogłaby nawet przekraczać liczbę
+obserwacji.
 
 Optymalnym rozwiązaniem wydawał się Cat boosting.
 
-Dane podzielono na zbiór treningowy, walidacyjny i testowy w proporcji 3:1:1.
+Dane podzielono na zbiór treningowy, walidacyjny i testowy w proporcji
+3:1:1.
 
 ### Budowa pierwszego modelu
 
@@ -613,6 +774,7 @@ display(
 ```
 
 Poniżej wagi cech:
+
 ```{python}
 import pandas as pd
 tabela=pd.read_csv('wagi_cat_boost_1.csv', sep=';')
@@ -635,7 +797,10 @@ display(
 )
 ```
 
-Dość wysoką wagę ma zmienna *Unnamed:0* która jest zmienną zawierającą informację o niczym tak naprawdę bo jest to numer wiersza. Cały model zostanie wytrenowany ponownie bez tej zmiennej jednak mimo wszystko poniżej znajdują się ogólne metryki.
+Dość wysoką wagę ma zmienna *Unnamed:0* która jest zmienną zawierającą
+informację o niczym tak naprawdę bo jest to numer wiersza. Cały model
+zostanie wytrenowany ponownie bez tej zmiennej jednak mimo wszystko
+poniżej znajdują się ogólne metryki.
 
 ```{python}
 import pandas as pd
@@ -663,11 +828,9 @@ display(
 
 Po usunięciu zmiennej model wytrenowano na identycznych parametrach:
 
-
 Przebieg wartości metryk podczas treningu na 1000 iteracji:
 
 ![](Metryki_over_drzewa2.png)
-
 
 Lista wag zmiennych:
 
@@ -722,11 +885,13 @@ display(
     ])
 )
 ```
+
 Co dziwne po usunięciu niepotrzebnej zmiennej ważone f1 modelu spadło.
 
 ### Model zawierający jedynie zmienne kliniczne
 
-Ponieważ najwyższe wagi należą i tak do zmiennych klinicznych, zbudowano model zawierający wyłącznie zmienne kliniczne.
+Ponieważ najwyższe wagi należą i tak do zmiennych klinicznych, zbudowano
+model zawierający wyłącznie zmienne kliniczne.
 
 Parametry modelu są identyczne.
 
@@ -758,10 +923,6 @@ display(
 )
 ```
 
-
-
-
-
 Ostateczne metryki:
 
 ```{python}
@@ -790,9 +951,12 @@ Model zbudowany tylko na zmiennych klinicznych jest nieznacznie lepszy.
 
 ## Random Forest
 
-Konkurentem dla Cat boost jest Random Forest. Zastosowano porządkowe zakodowanie klas zmiennych kategorycznych, ponieważ OneHotEncoder zwiększył by wymiarowość. 
+Konkurentem dla Cat boost jest Random Forest. Zastosowano porządkowe
+zakodowanie klas zmiennych kategorycznych, ponieważ OneHotEncoder
+zwiększył by wymiarowość.
 
 Parametry:
+
 ```{python}
 import pandas as pd
 tabela=pd.read_csv('parametry_rf.csv', sep=';')
@@ -816,6 +980,7 @@ display(
 ```
 
 Wagi cech:
+
 ```{python}
 import pandas as pd
 tabela=pd.read_csv('wagi_cech_rf.csv', sep=';')
@@ -839,6 +1004,7 @@ display(
 ```
 
 Ostateczne metryki:
+
 ```{python}
 import pandas as pd
 tabela=pd.read_csv('metryki_rf.csv', sep=';')
@@ -861,9 +1027,11 @@ display(
 )
 ```
 
-Random forest sprawdza się delikatnie gorzej niż Cat boost, winowajcą może być *ordinal encoding*
+Random forest sprawdza się delikatnie gorzej niż Cat boost, winowajcą
+może być *ordinal encoding*
 
-Model zbudowany na identycznych parametrach tylko dla zmiennych klinicznych.
+Model zbudowany na identycznych parametrach tylko dla zmiennych
+klinicznych.
 
 ```{python}
 import pandas as pd
@@ -886,9 +1054,11 @@ display(
     ])
 )
 ```
+
 Ponownie model zbudowany tylko na klinicznych jest lepszy.
 
 Wagi cech:
+
 ```{python}
 import pandas as pd
 tabela=pd.read_csv('wagi_cech_rf_clin.csv', sep=';')
@@ -910,13 +1080,18 @@ display(
     ])
 )
 ```
+
 Ponownie dominuje *overall_survival_months*.
 
 ## XG Boost
 
-Kolejnym modelem będzie *eXtreme Gradient Boosting*. W tym wypadku nie tylko kategoryczne predyktory zostały zakodowane porządkowo ale również zmienna wyjściowa przyjmuje teraz wartości 0,1,2 odpowiednio dla *Died of Disease*, *Died of Other Causes*, *Living*.
+Kolejnym modelem będzie *eXtreme Gradient Boosting*. W tym wypadku nie
+tylko kategoryczne predyktory zostały zakodowane porządkowo ale również
+zmienna wyjściowa przyjmuje teraz wartości 0,1,2 odpowiednio dla *Died
+of Disease*, *Died of Other Causes*, *Living*.
 
 Parametry:
+
 ```{python}
 import pandas as pd
 tabela=pd.read_csv('parametry_xgb.csv', sep=';')
@@ -1046,7 +1221,9 @@ Ponownie model zbudowany na klinicznych jest lepszy
 
 ## Model losowy
 
-Jako punkt odniesienia wykonano 1000 losowych permutacji na zbiorze testowym, przydzielono oryginalne indeksy zmiennej wynikowej i policzono średnie metryki:
+Jako punkt odniesienia wykonano 1000 losowych permutacji na zbiorze
+testowym, przydzielono oryginalne indeksy zmiennej wynikowej i policzono
+średnie metryki:
 
 ```{python}
 import pandas as pd
@@ -1074,13 +1251,19 @@ Losowy model jest bardzo słaby pod względem metryk.
 
 # Porównanie modeli na zbiorze testowym
 
-Powyższe metryki były badane jedynie na zbiorze walidacyjnym do których dostrajane były parametry w ten sposób aby ograniczyć przetrenowanie i otrzymać jak najlepsze wyniki na owym zbiorze. Poniżej ostateczne porównanie modeli na zbiorze testowym:
+Powyższe metryki były badane jedynie na zbiorze walidacyjnym do których
+dostrajane były parametry w ten sposób aby ograniczyć przetrenowanie i
+otrzymać jak najlepsze wyniki na owym zbiorze. Poniżej ostateczne
+porównanie modeli na zbiorze testowym:
 
 ![](Por%C3%B3wnanie_metryk.png)
 
-Co ciekawe wbrew oczekiwaniom dodanie komponentów ICA i mutacji genowych poprawia model.
+Co ciekawe wbrew oczekiwaniom dodanie komponentów ICA i mutacji genowych
+poprawia model.
 
-Precyzja przeżywalności to *Precision* dla klasy *Living*, ma za zadanie pokazywać jak bardzo należy się cieszyć prognozą - wyższe wartości sugerują, że prawie na pewno pacjent przeżyje.
+Precyzja przeżywalności to *Precision* dla klasy *Living*, ma za zadanie
+pokazywać jak bardzo należy się cieszyć prognozą - wyższe wartości
+sugerują, że prawie na pewno pacjent przeżyje.
 
 Poniżej wizualizacja modeli pod względem f1-score i dokładności:
 
