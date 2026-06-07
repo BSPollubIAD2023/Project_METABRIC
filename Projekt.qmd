@@ -1,5 +1,5 @@
 ---
-title: 'Predykcja zgonu z powodu raka piersi z       wykorzystaniem danych klinicznych i genomowych — analiza porównawcza modeli uczenia maszynowego na zbiorze METABRIC'
+title: 'Predykcja zgonu z powodu raka piersi z wykorzystaniem danych klinicznych i genomowych — analiza porównawcza modeli uczenia maszynowego na zbiorze METABRIC'
 author: Bartłomiej Stola, Lidia Gozdecka
 format: html
 toc: true
