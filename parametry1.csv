@@ -1,0 +1,2 @@
+;iterations;learning_rate;depth;l2_leaf_reg;loss_function;border_count;random_seed;verbose;random_strength;custom_metric;eval_metric;min_data_in_leaf
+0;1000;0.03;4;10;MultiClass;20;2026;100;5;Accuracy;TotalF1;15

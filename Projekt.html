@@ -155,12 +155,12 @@ window.Quarto = {
 <h1 data-number="1"><span class="header-section-number">1</span> Wstęp</h1>
 <section id="temat-projektu" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="temat-projektu"><span class="header-section-number">1.1</span> Temat projektu</h2>
-<p>Tematem projektu jest analiza zbioru danych Breast Cancer Gene Expression Profiles (METABRIC) zawierającego informacje dotyczące cech klinicznych pacjentów oraz molekularnych oraz budowa modelu prognozującego przeżywalność pacjenta.</p>
+<p>Tematem projektu jest analiza zbioru danych Breast Cancer Gene Expression Profiles (METABRIC) zawierającego informacje dotyczące cech klinicznych pacjentów oraz genomicznych oraz budowa modelu prognozującego przeżywalność pacjenta.</p>
 </section>
 <section id="opis-zbioru" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="opis-zbioru"><span class="header-section-number">1.2</span> Opis zbioru</h2>
-<p>Zbiór składa się z 30 zmiennych klinicznych 173 zmiennych binarnych informujące o braku lub mutacji danego genu i 489 zmiennych dotyczących poziomu ekspresji genów.</p>
-<div id="d9cafa74" class="cell" data-execution_count="1">
+<p>Zbiór składa się z 30 zmiennych klinicznych 173 zmiennych binarnych informujące o wystąpieniu lub braku mutacji danego genu i 489 zmiennych dotyczących poziomu ekspresji genów.</p>
+<div id="653b6a79" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -339,7 +339,7 @@ window.Quarto = {
 <section id="braki-danych" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="braki-danych"><span class="header-section-number">1.3</span> Braki danych</h2>
 <p>Poniższa ramka zawiera liczbę braków danych w kolumnach i ich udział procentowy</p>
-<div id="307cc88a" class="cell" data-execution_count="2">
+<div id="8b514ec6" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -738,7 +738,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="c1a19822" class="cell" data-execution_count="3">
+<div id="9849fba8" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -762,7 +762,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Tyle komórek zawiera brak.</p>
-<div id="c24e4ca9" class="cell" data-execution_count="4">
+<div id="1b246e0d" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -786,7 +786,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Brak całkowicie pustych wierszy.</p>
-<div id="bcfb4a77" class="cell" data-execution_count="5">
+<div id="f863bee6" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -817,7 +817,7 @@ window.Quarto = {
 <section id="mechanizm-braków-danych" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="mechanizm-braków-danych"><span class="header-section-number">2.1</span> Mechanizm braków danych</h2>
 <p>Rodzaj braków danych będzie decydował o sposobie ich uzupełnienia dlatego została zbadana zależność braków od zmiennych kategorycznych za pomocą testu <span class="math inline">\(\chi^2\)</span></p>
-<div id="a54c5c1b" class="cell" data-execution_count="6">
+<div id="87a7ad25" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -911,7 +911,7 @@ window.Quarto = {
 </div>
 <p>Uwzględniono jedynie zmienne charakteryzujące się liczbą braków większą od mediany liczby brakujących obserwacji.</p>
 <p>Jednak ilość wykonanych testów:</p>
-<div id="83f5411f" class="cell" data-execution_count="7">
+<div id="064c0c3e" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -935,14 +935,14 @@ window.Quarto = {
 </div>
 </div>
 <p>Sprawia, że prawdopodobieństwa niesłusznego odrzucenia hipotezy zerowej o naturze MCAR (<em>Missing completely at random</em>) wynosi:</p>
-<div id="9dd92192" class="cell" data-execution_count="8">
+<div id="5c30073c" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>1.000000e+00</code></pre>
 </div>
 </div>
 <p>Jest niemal pewne, że uznamy odrzucimy hipotezę zerową niesłusznie przynajmniej raz. Dlatego zastosowano poprawkę Benjaminiego-Hochberga.</p>
 <p>Dodatkowo każdą parę sklasyfikowano według typu relacji: gene–gene, clinic–clinic, gene–clinic lub clinic–gene, co umożliwiło ocenę zależności pomiędzy brakami danych w obrębie oraz pomiędzy grupami zmiennych. Nowy wynik po korekcie:</p>
-<div id="37584569" class="cell" data-execution_count="9">
+<div id="9e0b4b7a" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -1016,7 +1016,9 @@ window.Quarto = {
 <section id="przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="przeżywalność-grupa-wiekowa-typ-operacji-i-kombinacja-terapii"><span class="header-section-number">2.2</span> Przeżywalność, grupa wiekowa, typ operacji i kombinacja terapii</h2>
 <p>Na wykresie przedstawiono rozkłady czasu przeżycia całkowitego w miesiącach dla różnych kombinacji terapii, z podziałem na grupy wiekowe oraz rodzaj przeprowadzonego zabiegu chirurgicznego. <img src="fig.png" class="img-fluid" alt="Czas przeżycia w zależności od terapii, wieku i rodzaju operacji"></p>
-<p><em>Do uzupełnienia dla Lidii</em></p>
+<p>Przeżywalność w podziale na wiek: w grupie 60+ nieomal nie ma żywych pacjentek - nie wynika to jednak koniecznie z typu operacji czyli terapii, a po prostu z diagnozy w późnym wieku. Z kolei w grupie 20-40 przeżywa zdecydowanie więcej kobiet niż w 40-60. Warto też zauważyć, że w niemal każdym przypadku (wieku, terapii etc.) śmierć spowodowana postępem nowotoworu następuje znacznie później niż zgon spowodowany ewentualnymi innymi schorzeniami bądź powikłaniami - na przeżywalność wpływają również współistniejące lub poprzedzające schorzenia.</p>
+<p>Przeżywalność jest większa w grupie operacji oszczędzającej; niekoniecznie sugeruje to jej wyższość nad mastektomią - prawdopodobnie jest możliwa tylko u pacjentek o lepszych rokowaniach.</p>
+<p>W grupie 20-40 najdłuższym przeżyciem cechuje się albo sama radioterapia, albo brak jakiejkolwiek terapii. Warto jednak pamiętać, że wybór bardziej agresywnej kombinacji terapii i operacji niekoniecznie skutkuje gorszymi rokowaniami, tylko zdarza się w cięższych przypadkach, które same w sobie już slabo rokują.</p>
 </section>
 <section id="rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="rozkład-zmiennej-wynikowej-ze-względu-na-rodzaj-terapii"><span class="header-section-number">2.3</span> Rozkład zmiennej wynikowej ze względu na rodzaj terapii</h2>
@@ -1041,7 +1043,7 @@ window.Quarto = {
 </section>
 <section id="balans-zmiennej-wynikowej" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="balans-zmiennej-wynikowej"><span class="header-section-number">2.6</span> Balans zmiennej wynikowej</h2>
-<div id="b7776b99" class="cell" data-execution_count="10">
+<div id="cbb5ac89" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div>
 
@@ -1083,33 +1085,33 @@ window.Quarto = {
 <p>Tabela przedstawia ogólny rozkład numerycznych zmiennych klinicznych <img src="opisowe_heatmap.png" class="img-fluid" alt="Rozkład zmiennych klinicznych"></p>
 <p>Jako, że rozmiar guza potrafi przyjmować bardzo wysokie wartości, postanowiono zbadać obecność obserwacji odstających. Przyjęto wariant wielowymiarowy aby uwzględnić relacje pomiędzy zmiennymi. Wykorzystano do tego odległość mahalanobisa.</p>
 <p>Kwadraty odległości mahalanobisa większe niż 99 kwantyl rozkładu <span class="math inline">\(\chi^2\)</span> uznano za wartości odstające i nadano im odpowiednią flagę w zbiorze danych.</p>
-<div id="156b7f6d" class="cell" data-execution_count="11">
+<div id="fe6df06e" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_92574 table {
+#T_6525a table {
   border-collapse: collapse;
 }
-#T_92574 th {
+#T_6525a th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_92574  td {
+#T_6525a  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_92574" class="caption-top table table-sm table-striped small">
+<table id="T_6525a" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_92574_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Liczba odstających</th>
-<th id="T_92574_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Pozostałe</th>
+<th id="T_6525a_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Liczba odstających</th>
+<th id="T_6525a_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Pozostałe</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_92574_row0_col0" class="data row0 col0">152</td>
-<td id="T_92574_row0_col1" class="data row0 col1">1752</td>
+<td id="T_6525a_row0_col0" class="data row0 col0">152</td>
+<td id="T_6525a_row0_col1" class="data row0 col1">1752</td>
 </tr>
 </tbody>
 </table>
@@ -1135,33 +1137,25 @@ window.Quarto = {
 <section id="ica" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="ica"><span class="header-section-number">3.2</span> ICA</h2>
 <p>Analiza niezależnych składowych, teoretycznie wydaje się lepszym wyborem. Założono, że zmienne dotyczący ekspresji genów można opisać za pomocą mniejszej liczby komponentów reprezentujących niezależne procesy biologiczne. Niech:</p>
-<p><span class="math display">\[
-X \in \mathbb{R}^{n \times p}
-\]</span></p>
+<p><span class="math display">\[X \in \mathbb{R}^{n \times p}\]</span></p>
 <p>oznacza macierz danych wejściowych, gdzie <span class="math inline">\(n\)</span> jest liczbą obserwacji, a <span class="math inline">\(p\)</span> liczbą zmiennych. Metoda ICA aproksymuje macierz danych zależnością:</p>
-<p><span class="math display">\[
-X \approx SA
-\]</span></p>
+<p><span class="math display">\[X \approx SA\]</span></p>
 <p>gdzie:</p>
 <p><span class="math inline">\(S\)</span> – macierz składowych niezależnych, <span class="math inline">\(A\)</span> – macierz wag (mixing matrix).</p>
 <p>Po wyznaczeniu określonej liczby składowych możliwe jest odtworzenie przybliżonej wersji danych wejściowych:</p>
-<p><span class="math display">\[
-\hat{X} = SA
-\]</span></p>
+<p><span class="math display">\[\hat{X} = SA\]</span></p>
 <p>Jako miarę jakości rekonstrukcji wykorzystano średni błąd kwadratowy (Mean Squared Error, MSE):</p>
-<p><span class="math display">\[
-MSE = \frac{1}{np}
+<p><span class="math display">\[MSE = \frac{1}{np}
 \sum_{i=1}^{n}
 \sum_{j=1}^{p}
 \left(
 X_{ij} - \hat{X}_{ij}
-\right)^2
-\]</span></p>
+\right)^2\]</span></p>
 <p>gdzie:</p>
 <p><span class="math inline">\(X_{ij}\)</span> oznacza rzeczywistą wartość zmiennej, <span class="math inline">\(\hat{X}_{ij}\)</span> oznacza wartość odtworzoną na podstawie modelu ICA.</p>
 <p>Błąd rekonstrukcji informuje o stopniu utraty informacji wynikającej z redukcji wymiarowości.</p>
 <p>Dane zostały odpowiednio przetworzone i zbadane pod kątem skośności i kurtozy.</p>
-<div id="36266842" class="cell" data-execution_count="12">
+<div id="643a806f" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-stdout">
 <pre><code>Moda skośności:
 1.194189471865714e-16
@@ -1200,11 +1194,11 @@ dtype: float64</code></pre>
 <p>W celu interpretacji biologicznej wyodrębnionych komponentów ICA przeanalizowano geny o najwyższych dodatnich i ujemnych wartościach wag. Na podstawie literatury naukowej przypisano poszczególnym komponentom najbardziej prawdopodobne procesy biologiczne i szlaki sygnałowe. Należy podkreślić, że zaproponowane nazwy komponentów mają charakter interpretacyjny i wynikają z dominujących genów oraz ich funkcji biologicznych.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 9%">
-<col style="width: 19%">
-<col style="width: 24%">
-<col style="width: 24%">
-<col style="width: 21%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1281,9 +1275,7 @@ dtype: float64</code></pre>
 <section id="zróżnicowanie-genowe-komponentów" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="zróżnicowanie-genowe-komponentów"><span class="header-section-number">3.2.2</span> Zróżnicowanie genowe komponentów</h3>
 <p>Dla każdej z 1770 kombinacji komponentów zbadano ich podobieńtwo za pomocą indeksu Jaccarda</p>
-<p><span class="math display">\[
-Jaccard(IC{i}IC{j})=\frac{IC{i} \cap IC{j}}{IC{i} \cup IC{j}}
-\]</span></p>
+<p><span class="math display">\[Jaccard(IC{i}IC{j})=\frac{IC{i} \cap IC{j}}{IC{i} \cup IC{j}}\]</span></p>
 <p>Poniższa macierz przedstawia podobieństwo: <img src="Podobienstwo_comp.png" class="img-fluid"></p>
 <p>Maksymalna wartość indeksu Jaccarda wynosząca około 0.16 wskazuje na niewielkie nakładanie się genów dominujących w poszczególnych komponentach. Oznacza to, że większość składowych jest związana z odmiennymi zestawami genów i prawdopodobnie reprezentuje różne mechanizmy biologiczne.</p>
 </section>
@@ -1293,7 +1285,7 @@ Jaccard(IC{i}IC{j})=\frac{IC{i} \cap IC{j}}{IC{i} \cup IC{j}}
 <p>W celu oceny, czy wyznaczone komponenty ICA zawierają informację pozwalającą na rozróżnianie molekularnych podtypów nowotworu, zastosowano algorytm UMAP (Uniform Manifold Approximation and Projection). Metoda ta umożliwia nieliniową redukcję wymiarowości przy zachowaniu lokalnej struktury danych.</p>
 <p>Jako dane wejściowe wykorzystano 60 składowych uzyskanych metodą ICA. Następnie dokonano projekcji pacjentów do przestrzeni dwuwymiarowej. Punkty na wykresie odpowiadają pojedynczym pacjentom, natomiast kolor oznacza przynależność do podtypu molekularnego określonego przez zmienną *pam50_+_claudin-low_subtype*.</p>
 <p>Zmienna domyślnie składa się z 7 kategorii:</p>
-<div id="1aab30ab" class="cell" data-execution_count="13">
+<div id="30549aae" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>&lt;StringArray&gt;
 ['claudin-low', 'LumA', 'LumB', 'Her2', 'Normal', 'Basal', 'NC']
@@ -1325,230 +1317,230 @@ Length: 7, dtype: str</code></pre>
 <section id="budowa-pierwszego-modelu" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="budowa-pierwszego-modelu"><span class="header-section-number">4.1.1</span> Budowa pierwszego modelu</h3>
 <p>Model zbuodwano na poniższych parametrach:</p>
-<div id="b87e6556" class="cell" data-execution_count="14">
+<div id="a70c448e" class="cell" data-execution_count="14">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_1689e table {
+#T_70856 table {
   border-collapse: collapse;
 }
-#T_1689e th {
+#T_70856 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_1689e  td {
+#T_70856  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_1689e" class="caption-top table table-sm table-striped small">
+<table id="T_70856" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_1689e_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_1689e_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">iterations</th>
-<th id="T_1689e_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">learning_rate</th>
-<th id="T_1689e_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">depth</th>
-<th id="T_1689e_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">l2_leaf_reg</th>
-<th id="T_1689e_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">loss_function</th>
-<th id="T_1689e_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">border_count</th>
-<th id="T_1689e_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">random_seed</th>
-<th id="T_1689e_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">verbose</th>
-<th id="T_1689e_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">random_strength</th>
-<th id="T_1689e_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">custom_metric</th>
-<th id="T_1689e_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">eval_metric</th>
-<th id="T_1689e_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">min_data_in_leaf</th>
+<th id="T_70856_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_70856_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">iterations</th>
+<th id="T_70856_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">learning_rate</th>
+<th id="T_70856_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">depth</th>
+<th id="T_70856_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">l2_leaf_reg</th>
+<th id="T_70856_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">loss_function</th>
+<th id="T_70856_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">border_count</th>
+<th id="T_70856_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">random_seed</th>
+<th id="T_70856_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">verbose</th>
+<th id="T_70856_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">random_strength</th>
+<th id="T_70856_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">custom_metric</th>
+<th id="T_70856_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">eval_metric</th>
+<th id="T_70856_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">min_data_in_leaf</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_1689e_row0_col0" class="data row0 col0">0</td>
-<td id="T_1689e_row0_col1" class="data row0 col1">1000</td>
-<td id="T_1689e_row0_col2" class="data row0 col2">0.030000</td>
-<td id="T_1689e_row0_col3" class="data row0 col3">4</td>
-<td id="T_1689e_row0_col4" class="data row0 col4">10</td>
-<td id="T_1689e_row0_col5" class="data row0 col5">MultiClass</td>
-<td id="T_1689e_row0_col6" class="data row0 col6">20</td>
-<td id="T_1689e_row0_col7" class="data row0 col7">2026</td>
-<td id="T_1689e_row0_col8" class="data row0 col8">100</td>
-<td id="T_1689e_row0_col9" class="data row0 col9">5</td>
-<td id="T_1689e_row0_col10" class="data row0 col10">Accuracy</td>
-<td id="T_1689e_row0_col11" class="data row0 col11">TotalF1</td>
-<td id="T_1689e_row0_col12" class="data row0 col12">15</td>
+<td id="T_70856_row0_col0" class="data row0 col0">0</td>
+<td id="T_70856_row0_col1" class="data row0 col1">1000</td>
+<td id="T_70856_row0_col2" class="data row0 col2">0.030000</td>
+<td id="T_70856_row0_col3" class="data row0 col3">4</td>
+<td id="T_70856_row0_col4" class="data row0 col4">10</td>
+<td id="T_70856_row0_col5" class="data row0 col5">MultiClass</td>
+<td id="T_70856_row0_col6" class="data row0 col6">20</td>
+<td id="T_70856_row0_col7" class="data row0 col7">2026</td>
+<td id="T_70856_row0_col8" class="data row0 col8">100</td>
+<td id="T_70856_row0_col9" class="data row0 col9">5</td>
+<td id="T_70856_row0_col10" class="data row0 col10">Accuracy</td>
+<td id="T_70856_row0_col11" class="data row0 col11">TotalF1</td>
+<td id="T_70856_row0_col12" class="data row0 col12">15</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Poniżej wagi cech:</p>
-<div id="d90879cc" class="cell" data-execution_count="15">
+<div id="97dab627" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_ccca1 table {
+#T_7d0a3 table {
   border-collapse: collapse;
 }
-#T_ccca1 th {
+#T_7d0a3 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_ccca1  td {
+#T_7d0a3  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_ccca1" class="caption-top table table-sm table-striped small">
+<table id="T_7d0a3" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_ccca1_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_ccca1_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
-<th id="T_ccca1_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
+<th id="T_7d0a3_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_7d0a3_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_7d0a3_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_ccca1_row0_col0" class="data row0 col0">3</td>
-<td id="T_ccca1_row0_col1" class="data row0 col1">29.344662</td>
-<td id="T_ccca1_row0_col2" class="data row0 col2">overall_survival_months</td>
+<td id="T_7d0a3_row0_col0" class="data row0 col0">3</td>
+<td id="T_7d0a3_row0_col1" class="data row0 col1">29.344662</td>
+<td id="T_7d0a3_row0_col2" class="data row0 col2">overall_survival_months</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row1_col0" class="data row1 col0">1</td>
-<td id="T_ccca1_row1_col1" class="data row1 col1">22.129998</td>
-<td id="T_ccca1_row1_col2" class="data row1 col2">age_at_diagnosis</td>
+<td id="T_7d0a3_row1_col0" class="data row1 col0">1</td>
+<td id="T_7d0a3_row1_col1" class="data row1 col1">22.129998</td>
+<td id="T_7d0a3_row1_col2" class="data row1 col2">age_at_diagnosis</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row2_col0" class="data row2 col0">9</td>
-<td id="T_ccca1_row2_col1" class="data row2 col1">6.545552</td>
-<td id="T_ccca1_row2_col2" class="data row2 col2">IC3</td>
+<td id="T_7d0a3_row2_col0" class="data row2 col0">9</td>
+<td id="T_7d0a3_row2_col1" class="data row2 col1">6.545552</td>
+<td id="T_7d0a3_row2_col2" class="data row2 col2">IC3</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row3_col0" class="data row3 col0">0</td>
-<td id="T_ccca1_row3_col1" class="data row3 col1">3.541668</td>
-<td id="T_ccca1_row3_col2" class="data row3 col2">Unnamed: 0</td>
+<td id="T_7d0a3_row3_col0" class="data row3 col0">0</td>
+<td id="T_7d0a3_row3_col1" class="data row3 col1">3.541668</td>
+<td id="T_7d0a3_row3_col2" class="data row3 col2">Unnamed: 0</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row4_col0" class="data row4 col0">2</td>
-<td id="T_ccca1_row4_col1" class="data row4 col1">2.727808</td>
-<td id="T_ccca1_row4_col2" class="data row4 col2">lymph_nodes_examined_positive</td>
+<td id="T_7d0a3_row4_col0" class="data row4 col0">2</td>
+<td id="T_7d0a3_row4_col1" class="data row4 col1">2.727808</td>
+<td id="T_7d0a3_row4_col2" class="data row4 col2">lymph_nodes_examined_positive</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row5_col0" class="data row5 col0">8</td>
-<td id="T_ccca1_row5_col1" class="data row5 col1">2.015436</td>
-<td id="T_ccca1_row5_col2" class="data row5 col2">IC2</td>
+<td id="T_7d0a3_row5_col0" class="data row5 col0">8</td>
+<td id="T_7d0a3_row5_col1" class="data row5 col1">2.015436</td>
+<td id="T_7d0a3_row5_col2" class="data row5 col2">IC2</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row6_col0" class="data row6 col0">4</td>
-<td id="T_ccca1_row6_col1" class="data row6 col1">1.584302</td>
-<td id="T_ccca1_row6_col2" class="data row6 col2">nottingham_prognostic_index</td>
+<td id="T_7d0a3_row6_col0" class="data row6 col0">4</td>
+<td id="T_7d0a3_row6_col1" class="data row6 col1">1.584302</td>
+<td id="T_7d0a3_row6_col2" class="data row6 col2">nottingham_prognostic_index</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row7_col0" class="data row7 col0">14</td>
-<td id="T_ccca1_row7_col1" class="data row7 col1">1.254747</td>
-<td id="T_ccca1_row7_col2" class="data row7 col2">IC8</td>
+<td id="T_7d0a3_row7_col0" class="data row7 col0">14</td>
+<td id="T_7d0a3_row7_col1" class="data row7 col1">1.254747</td>
+<td id="T_7d0a3_row7_col2" class="data row7 col2">IC8</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row8_col0" class="data row8 col0">224</td>
-<td id="T_ccca1_row8_col1" class="data row8 col1">1.223695</td>
-<td id="T_ccca1_row8_col2" class="data row8 col2">npnt_mut</td>
+<td id="T_7d0a3_row8_col0" class="data row8 col0">224</td>
+<td id="T_7d0a3_row8_col1" class="data row8 col1">1.223695</td>
+<td id="T_7d0a3_row8_col2" class="data row8 col2">npnt_mut</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row9_col0" class="data row9 col0">228</td>
-<td id="T_ccca1_row9_col1" class="data row9 col1">1.146634</td>
-<td id="T_ccca1_row9_col2" class="data row9 col2">sik1_mut</td>
+<td id="T_7d0a3_row9_col0" class="data row9 col0">228</td>
+<td id="T_7d0a3_row9_col1" class="data row9 col1">1.146634</td>
+<td id="T_7d0a3_row9_col2" class="data row9 col2">sik1_mut</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row10_col0" class="data row10 col0">13</td>
-<td id="T_ccca1_row10_col1" class="data row10 col1">0.919151</td>
-<td id="T_ccca1_row10_col2" class="data row10 col2">IC7</td>
+<td id="T_7d0a3_row10_col0" class="data row10 col0">13</td>
+<td id="T_7d0a3_row10_col1" class="data row10 col1">0.919151</td>
+<td id="T_7d0a3_row10_col2" class="data row10 col2">IC7</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row11_col0" class="data row11 col0">5</td>
-<td id="T_ccca1_row11_col1" class="data row11 col1">0.826027</td>
-<td id="T_ccca1_row11_col2" class="data row11 col2">tumor_size</td>
+<td id="T_7d0a3_row11_col0" class="data row11 col0">5</td>
+<td id="T_7d0a3_row11_col1" class="data row11 col1">0.826027</td>
+<td id="T_7d0a3_row11_col2" class="data row11 col2">tumor_size</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row12_col0" class="data row12 col0">186</td>
-<td id="T_ccca1_row12_col1" class="data row12 col1">0.796600</td>
-<td id="T_ccca1_row12_col2" class="data row12 col2">prkce_mut</td>
+<td id="T_7d0a3_row12_col0" class="data row12 col0">186</td>
+<td id="T_7d0a3_row12_col1" class="data row12 col1">0.796600</td>
+<td id="T_7d0a3_row12_col2" class="data row12 col2">prkce_mut</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row13_col0" class="data row13 col0">210</td>
-<td id="T_ccca1_row13_col1" class="data row13 col1">0.718436</td>
-<td id="T_ccca1_row13_col2" class="data row13 col2">nr3c1_mut</td>
+<td id="T_7d0a3_row13_col0" class="data row13 col0">210</td>
+<td id="T_7d0a3_row13_col1" class="data row13 col1">0.718436</td>
+<td id="T_7d0a3_row13_col2" class="data row13 col2">nr3c1_mut</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row14_col0" class="data row14 col0">174</td>
-<td id="T_ccca1_row14_col1" class="data row14 col1">0.704558</td>
-<td id="T_ccca1_row14_col2" class="data row14 col2">men1_mut</td>
+<td id="T_7d0a3_row14_col0" class="data row14 col0">174</td>
+<td id="T_7d0a3_row14_col1" class="data row14 col1">0.704558</td>
+<td id="T_7d0a3_row14_col2" class="data row14 col2">men1_mut</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row15_col0" class="data row15 col0">234</td>
-<td id="T_ccca1_row15_col1" class="data row15 col1">0.695741</td>
-<td id="T_ccca1_row15_col2" class="data row15 col2">type_of_breast_surgery</td>
+<td id="T_7d0a3_row15_col0" class="data row15 col0">234</td>
+<td id="T_7d0a3_row15_col1" class="data row15 col1">0.695741</td>
+<td id="T_7d0a3_row15_col2" class="data row15 col2">type_of_breast_surgery</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row16_col0" class="data row16 col0">201</td>
-<td id="T_ccca1_row16_col1" class="data row16 col1">0.658685</td>
-<td id="T_ccca1_row16_col2" class="data row16 col2">dtwd2_mut</td>
+<td id="T_7d0a3_row16_col0" class="data row16 col0">201</td>
+<td id="T_7d0a3_row16_col1" class="data row16 col1">0.658685</td>
+<td id="T_7d0a3_row16_col2" class="data row16 col2">dtwd2_mut</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row17_col0" class="data row17 col0">241</td>
-<td id="T_ccca1_row17_col1" class="data row17 col1">0.596192</td>
-<td id="T_ccca1_row17_col2" class="data row17 col2">ep300_mut</td>
+<td id="T_7d0a3_row17_col0" class="data row17 col0">241</td>
+<td id="T_7d0a3_row17_col1" class="data row17 col1">0.596192</td>
+<td id="T_7d0a3_row17_col2" class="data row17 col2">ep300_mut</td>
 </tr>
 <tr class="odd">
-<td id="T_ccca1_row18_col0" class="data row18 col0">183</td>
-<td id="T_ccca1_row18_col1" class="data row18 col1">0.588691</td>
-<td id="T_ccca1_row18_col2" class="data row18 col2">clk3_mut</td>
+<td id="T_7d0a3_row18_col0" class="data row18 col0">183</td>
+<td id="T_7d0a3_row18_col1" class="data row18 col1">0.588691</td>
+<td id="T_7d0a3_row18_col2" class="data row18 col2">clk3_mut</td>
 </tr>
 <tr class="even">
-<td id="T_ccca1_row19_col0" class="data row19 col0">204</td>
-<td id="T_ccca1_row19_col1" class="data row19 col1">0.569203</td>
-<td id="T_ccca1_row19_col2" class="data row19 col2">primary_tumor_laterality</td>
+<td id="T_7d0a3_row19_col0" class="data row19 col0">204</td>
+<td id="T_7d0a3_row19_col1" class="data row19 col1">0.569203</td>
+<td id="T_7d0a3_row19_col2" class="data row19 col2">primary_tumor_laterality</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Dość wysoką wagę ma zmienna <em>Unnamed:0</em> która jest zmienną zawierającą informację o niczym tak naprawdę bo jest to numer wiersza. Cały model zostanie wytrenowany ponownie bez tej zmiennej jednak mimo wszystko poniżej znajdują się ogólne metryki.</p>
-<div id="2cfd40f7" class="cell" data-execution_count="16">
+<div id="a9443e97" class="cell" data-execution_count="16">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_2fd69 table {
+#T_0f756 table {
   border-collapse: collapse;
 }
-#T_2fd69 th {
+#T_0f756 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_2fd69  td {
+#T_0f756  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_2fd69" class="caption-top table table-sm table-striped small">
+<table id="T_0f756" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_2fd69_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_2fd69_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
-<th id="T_2fd69_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
+<th id="T_0f756_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_0f756_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
+<th id="T_0f756_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_2fd69_row0_col0" class="data row0 col0">Accuracy</td>
-<td id="T_2fd69_row0_col1" class="data row0 col1">0.808940</td>
-<td id="T_2fd69_row0_col2" class="data row0 col2">0.658793</td>
+<td id="T_0f756_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_0f756_row0_col1" class="data row0 col1">0.808940</td>
+<td id="T_0f756_row0_col2" class="data row0 col2">0.658793</td>
 </tr>
 <tr class="even">
-<td id="T_2fd69_row1_col0" class="data row1 col0">TotalF1</td>
-<td id="T_2fd69_row1_col1" class="data row1 col1">0.806587</td>
-<td id="T_2fd69_row1_col2" class="data row1 col2">0.652512</td>
+<td id="T_0f756_row1_col0" class="data row1 col0">TotalF1</td>
+<td id="T_0f756_row1_col1" class="data row1 col1">0.806587</td>
+<td id="T_0f756_row1_col2" class="data row1 col2">0.652512</td>
 </tr>
 <tr class="odd">
-<td id="T_2fd69_row2_col0" class="data row2 col0">MultiClass</td>
-<td id="T_2fd69_row2_col1" class="data row2 col1">0.554971</td>
-<td id="T_2fd69_row2_col2" class="data row2 col2">0.827648</td>
+<td id="T_0f756_row2_col0" class="data row2 col0">MultiClass</td>
+<td id="T_0f756_row2_col1" class="data row2 col1">0.554971</td>
+<td id="T_0f756_row2_col2" class="data row2 col2">0.827648</td>
 </tr>
 </tbody>
 </table>
@@ -1561,130 +1553,130 @@ Length: 7, dtype: str</code></pre>
 <p>Przebieg wartości metryk podczas treningu na 1000 iteracji:</p>
 <p><img src="Metryki_over_drzewa2.png" class="img-fluid"></p>
 <p>Lista wag zmiennych:</p>
-<div id="e83b3530" class="cell" data-execution_count="17">
+<div id="5172f78a" class="cell" data-execution_count="17">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_104ed table {
+#T_fe4f6 table {
   border-collapse: collapse;
 }
-#T_104ed th {
+#T_fe4f6 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_104ed  td {
+#T_fe4f6  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_104ed" class="caption-top table table-sm table-striped small">
+<table id="T_fe4f6" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_104ed_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_104ed_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
-<th id="T_104ed_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
+<th id="T_fe4f6_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_fe4f6_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_fe4f6_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_104ed_row0_col0" class="data row0 col0">2</td>
-<td id="T_104ed_row0_col1" class="data row0 col1">27.194109</td>
-<td id="T_104ed_row0_col2" class="data row0 col2">overall_survival_months</td>
+<td id="T_fe4f6_row0_col0" class="data row0 col0">2</td>
+<td id="T_fe4f6_row0_col1" class="data row0 col1">27.194109</td>
+<td id="T_fe4f6_row0_col2" class="data row0 col2">overall_survival_months</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row1_col0" class="data row1 col0">0</td>
-<td id="T_104ed_row1_col1" class="data row1 col1">21.827896</td>
-<td id="T_104ed_row1_col2" class="data row1 col2">age_at_diagnosis</td>
+<td id="T_fe4f6_row1_col0" class="data row1 col0">0</td>
+<td id="T_fe4f6_row1_col1" class="data row1 col1">21.827896</td>
+<td id="T_fe4f6_row1_col2" class="data row1 col2">age_at_diagnosis</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row2_col0" class="data row2 col0">8</td>
-<td id="T_104ed_row2_col1" class="data row2 col1">8.345248</td>
-<td id="T_104ed_row2_col2" class="data row2 col2">cohort</td>
+<td id="T_fe4f6_row2_col0" class="data row2 col0">8</td>
+<td id="T_fe4f6_row2_col1" class="data row2 col1">8.345248</td>
+<td id="T_fe4f6_row2_col2" class="data row2 col2">cohort</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row3_col0" class="data row3 col0">1</td>
-<td id="T_104ed_row3_col1" class="data row3 col1">2.518802</td>
-<td id="T_104ed_row3_col2" class="data row3 col2">lymph_nodes_examined_positive</td>
+<td id="T_fe4f6_row3_col0" class="data row3 col0">1</td>
+<td id="T_fe4f6_row3_col1" class="data row3 col1">2.518802</td>
+<td id="T_fe4f6_row3_col2" class="data row3 col2">lymph_nodes_examined_positive</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row4_col0" class="data row4 col0">3</td>
-<td id="T_104ed_row4_col1" class="data row4 col1">2.136793</td>
-<td id="T_104ed_row4_col2" class="data row4 col2">nottingham_prognostic_index</td>
+<td id="T_fe4f6_row4_col0" class="data row4 col0">3</td>
+<td id="T_fe4f6_row4_col1" class="data row4 col1">2.136793</td>
+<td id="T_fe4f6_row4_col2" class="data row4 col2">nottingham_prognostic_index</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row5_col0" class="data row5 col0">7</td>
-<td id="T_104ed_row5_col1" class="data row5 col1">1.723083</td>
-<td id="T_104ed_row5_col2" class="data row5 col2">pam50_+_claudin-low_subtype</td>
+<td id="T_fe4f6_row5_col0" class="data row5 col0">7</td>
+<td id="T_fe4f6_row5_col1" class="data row5 col1">1.723083</td>
+<td id="T_fe4f6_row5_col2" class="data row5 col2">pam50_+_claudin-low_subtype</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row6_col0" class="data row6 col0">12</td>
-<td id="T_104ed_row6_col1" class="data row6 col1">1.639950</td>
-<td id="T_104ed_row6_col2" class="data row6 col2">inferred_menopausal_state</td>
+<td id="T_fe4f6_row6_col0" class="data row6 col0">12</td>
+<td id="T_fe4f6_row6_col1" class="data row6 col1">1.639950</td>
+<td id="T_fe4f6_row6_col2" class="data row6 col2">inferred_menopausal_state</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row7_col0" class="data row7 col0">173</td>
-<td id="T_104ed_row7_col1" class="data row7 col1">1.426379</td>
-<td id="T_104ed_row7_col2" class="data row7 col2">type_of_breast_surgery</td>
+<td id="T_fe4f6_row7_col0" class="data row7 col0">173</td>
+<td id="T_fe4f6_row7_col1" class="data row7 col1">1.426379</td>
+<td id="T_fe4f6_row7_col2" class="data row7 col2">type_of_breast_surgery</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row8_col0" class="data row8 col0">13</td>
-<td id="T_104ed_row8_col1" class="data row8 col1">1.400039</td>
-<td id="T_104ed_row8_col2" class="data row8 col2">integrative_cluster</td>
+<td id="T_fe4f6_row8_col0" class="data row8 col0">13</td>
+<td id="T_fe4f6_row8_col1" class="data row8 col1">1.400039</td>
+<td id="T_fe4f6_row8_col2" class="data row8 col2">integrative_cluster</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row9_col0" class="data row9 col0">227</td>
-<td id="T_104ed_row9_col1" class="data row9 col1">1.312188</td>
-<td id="T_104ed_row9_col2" class="data row9 col2">IC45</td>
+<td id="T_fe4f6_row9_col0" class="data row9 col0">227</td>
+<td id="T_fe4f6_row9_col1" class="data row9 col1">1.312188</td>
+<td id="T_fe4f6_row9_col2" class="data row9 col2">IC45</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row10_col0" class="data row10 col0">223</td>
-<td id="T_104ed_row10_col1" class="data row10 col1">1.238368</td>
-<td id="T_104ed_row10_col2" class="data row10 col2">IC41</td>
+<td id="T_fe4f6_row10_col0" class="data row10 col0">223</td>
+<td id="T_fe4f6_row10_col1" class="data row10 col1">1.238368</td>
+<td id="T_fe4f6_row10_col2" class="data row10 col2">IC41</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row11_col0" class="data row11 col0">209</td>
-<td id="T_104ed_row11_col1" class="data row11 col1">0.887856</td>
-<td id="T_104ed_row11_col2" class="data row11 col2">IC27</td>
+<td id="T_fe4f6_row11_col0" class="data row11 col0">209</td>
+<td id="T_fe4f6_row11_col1" class="data row11 col1">0.887856</td>
+<td id="T_fe4f6_row11_col2" class="data row11 col2">IC27</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row12_col0" class="data row12 col0">233</td>
-<td id="T_104ed_row12_col1" class="data row12 col1">0.863983</td>
-<td id="T_104ed_row12_col2" class="data row12 col2">IC51</td>
+<td id="T_fe4f6_row12_col0" class="data row12 col0">233</td>
+<td id="T_fe4f6_row12_col1" class="data row12 col1">0.863983</td>
+<td id="T_fe4f6_row12_col2" class="data row12 col2">IC51</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row13_col0" class="data row13 col0">189</td>
-<td id="T_104ed_row13_col1" class="data row13 col1">0.798668</td>
-<td id="T_104ed_row13_col2" class="data row13 col2">IC7</td>
+<td id="T_fe4f6_row13_col0" class="data row13 col0">189</td>
+<td id="T_fe4f6_row13_col1" class="data row13 col1">0.798668</td>
+<td id="T_fe4f6_row13_col2" class="data row13 col2">IC7</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row14_col0" class="data row14 col0">230</td>
-<td id="T_104ed_row14_col1" class="data row14 col1">0.751670</td>
-<td id="T_104ed_row14_col2" class="data row14 col2">IC48</td>
+<td id="T_fe4f6_row14_col0" class="data row14 col0">230</td>
+<td id="T_fe4f6_row14_col1" class="data row14 col1">0.751670</td>
+<td id="T_fe4f6_row14_col2" class="data row14 col2">IC48</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row15_col0" class="data row15 col0">240</td>
-<td id="T_104ed_row15_col1" class="data row15 col1">0.687359</td>
-<td id="T_104ed_row15_col2" class="data row15 col2">IC58</td>
+<td id="T_fe4f6_row15_col0" class="data row15 col0">240</td>
+<td id="T_fe4f6_row15_col1" class="data row15 col1">0.687359</td>
+<td id="T_fe4f6_row15_col2" class="data row15 col2">IC58</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row16_col0" class="data row16 col0">222</td>
-<td id="T_104ed_row16_col1" class="data row16 col1">0.678106</td>
-<td id="T_104ed_row16_col2" class="data row16 col2">IC40</td>
+<td id="T_fe4f6_row16_col0" class="data row16 col0">222</td>
+<td id="T_fe4f6_row16_col1" class="data row16 col1">0.678106</td>
+<td id="T_fe4f6_row16_col2" class="data row16 col2">IC40</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row17_col0" class="data row17 col0">185</td>
-<td id="T_104ed_row17_col1" class="data row17 col1">0.640620</td>
-<td id="T_104ed_row17_col2" class="data row17 col2">IC3</td>
+<td id="T_fe4f6_row17_col0" class="data row17 col0">185</td>
+<td id="T_fe4f6_row17_col1" class="data row17 col1">0.640620</td>
+<td id="T_fe4f6_row17_col2" class="data row17 col2">IC3</td>
 </tr>
 <tr class="odd">
-<td id="T_104ed_row18_col0" class="data row18 col0">200</td>
-<td id="T_104ed_row18_col1" class="data row18 col1">0.636656</td>
-<td id="T_104ed_row18_col2" class="data row18 col2">IC18</td>
+<td id="T_fe4f6_row18_col0" class="data row18 col0">200</td>
+<td id="T_fe4f6_row18_col1" class="data row18 col1">0.636656</td>
+<td id="T_fe4f6_row18_col2" class="data row18 col2">IC18</td>
 </tr>
 <tr class="even">
-<td id="T_104ed_row19_col0" class="data row19 col0">143</td>
-<td id="T_104ed_row19_col1" class="data row19 col1">0.569896</td>
-<td id="T_104ed_row19_col2" class="data row19 col2">primary_tumor_laterality</td>
+<td id="T_fe4f6_row19_col0" class="data row19 col0">143</td>
+<td id="T_fe4f6_row19_col1" class="data row19 col1">0.569896</td>
+<td id="T_fe4f6_row19_col2" class="data row19 col2">primary_tumor_laterality</td>
 </tr>
 </tbody>
 </table>
@@ -1694,45 +1686,45 @@ Length: 7, dtype: str</code></pre>
 <p>Pierwsze drzewo:</p>
 <p><img src="cat_tree1.png" class="img-fluid"></p>
 <p>Ostateczne metryki:</p>
-<div id="8c3f7b22" class="cell" data-execution_count="18">
+<div id="6ed500bd" class="cell" data-execution_count="18">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_d4fbc table {
+#T_bc37d table {
   border-collapse: collapse;
 }
-#T_d4fbc th {
+#T_bc37d th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_d4fbc  td {
+#T_bc37d  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_d4fbc" class="caption-top table table-sm table-striped small">
+<table id="T_bc37d" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_d4fbc_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_d4fbc_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
-<th id="T_d4fbc_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
+<th id="T_bc37d_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_bc37d_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
+<th id="T_bc37d_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_d4fbc_row0_col0" class="data row0 col0">Accuracy</td>
-<td id="T_d4fbc_row0_col1" class="data row0 col1">0.816827</td>
-<td id="T_d4fbc_row0_col2" class="data row0 col2">0.643045</td>
+<td id="T_bc37d_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_bc37d_row0_col1" class="data row0 col1">0.816827</td>
+<td id="T_bc37d_row0_col2" class="data row0 col2">0.643045</td>
 </tr>
 <tr class="even">
-<td id="T_d4fbc_row1_col0" class="data row1 col0">TotalF1</td>
-<td id="T_d4fbc_row1_col1" class="data row1 col1">0.814816</td>
-<td id="T_d4fbc_row1_col2" class="data row1 col2">0.636073</td>
+<td id="T_bc37d_row1_col0" class="data row1 col0">TotalF1</td>
+<td id="T_bc37d_row1_col1" class="data row1 col1">0.814816</td>
+<td id="T_bc37d_row1_col2" class="data row1 col2">0.636073</td>
 </tr>
 <tr class="odd">
-<td id="T_d4fbc_row2_col0" class="data row2 col0">MultiClass</td>
-<td id="T_d4fbc_row2_col1" class="data row2 col1">0.556007</td>
-<td id="T_d4fbc_row2_col2" class="data row2 col2">0.824167</td>
+<td id="T_bc37d_row2_col0" class="data row2 col0">MultiClass</td>
+<td id="T_bc37d_row2_col1" class="data row2 col1">0.556007</td>
+<td id="T_bc37d_row2_col2" class="data row2 col2">0.824167</td>
 </tr>
 </tbody>
 </table>
@@ -1747,175 +1739,175 @@ Length: 7, dtype: str</code></pre>
 <p>Przebieg wartości metryk podczas treningu:</p>
 <p><img src="Metryki_over_drzewa_clin.png" class="img-fluid"></p>
 <p>Lista wag zmiennych:</p>
-<div id="76513c1c" class="cell" data-execution_count="19">
+<div id="f1f4f5cc" class="cell" data-execution_count="19">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_99f39 table {
+#T_d854f table {
   border-collapse: collapse;
 }
-#T_99f39 th {
+#T_d854f th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_99f39  td {
+#T_d854f  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_99f39" class="caption-top table table-sm table-striped small">
+<table id="T_d854f" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_99f39_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_99f39_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
-<th id="T_99f39_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
+<th id="T_d854f_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_d854f_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_d854f_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">cechy</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_99f39_row0_col0" class="data row0 col0">2</td>
-<td id="T_99f39_row0_col1" class="data row0 col1">31.397845</td>
-<td id="T_99f39_row0_col2" class="data row0 col2">overall_survival_months</td>
+<td id="T_d854f_row0_col0" class="data row0 col0">2</td>
+<td id="T_d854f_row0_col1" class="data row0 col1">31.397845</td>
+<td id="T_d854f_row0_col2" class="data row0 col2">overall_survival_months</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row1_col0" class="data row1 col0">0</td>
-<td id="T_99f39_row1_col1" class="data row1 col1">20.618216</td>
-<td id="T_99f39_row1_col2" class="data row1 col2">age_at_diagnosis</td>
+<td id="T_d854f_row1_col0" class="data row1 col0">0</td>
+<td id="T_d854f_row1_col1" class="data row1 col1">20.618216</td>
+<td id="T_d854f_row1_col2" class="data row1 col2">age_at_diagnosis</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row2_col0" class="data row2 col0">8</td>
-<td id="T_99f39_row2_col1" class="data row2 col1">10.344717</td>
-<td id="T_99f39_row2_col2" class="data row2 col2">cohort</td>
+<td id="T_d854f_row2_col0" class="data row2 col0">8</td>
+<td id="T_d854f_row2_col1" class="data row2 col1">10.344717</td>
+<td id="T_d854f_row2_col2" class="data row2 col2">cohort</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row3_col0" class="data row3 col0">13</td>
-<td id="T_99f39_row3_col1" class="data row3 col1">5.479458</td>
-<td id="T_99f39_row3_col2" class="data row3 col2">integrative_cluster</td>
+<td id="T_d854f_row3_col0" class="data row3 col0">13</td>
+<td id="T_d854f_row3_col1" class="data row3 col1">5.479458</td>
+<td id="T_d854f_row3_col2" class="data row3 col2">integrative_cluster</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row4_col0" class="data row4 col0">7</td>
-<td id="T_99f39_row4_col1" class="data row4 col1">4.984526</td>
-<td id="T_99f39_row4_col2" class="data row4 col2">pam50_+_claudin-low_subtype</td>
+<td id="T_d854f_row4_col0" class="data row4 col0">7</td>
+<td id="T_d854f_row4_col1" class="data row4 col1">4.984526</td>
+<td id="T_d854f_row4_col2" class="data row4 col2">pam50_+_claudin-low_subtype</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row5_col0" class="data row5 col0">24</td>
-<td id="T_99f39_row5_col1" class="data row5 col1">3.987972</td>
-<td id="T_99f39_row5_col2" class="data row5 col2">3-gene_classifier_subtype</td>
+<td id="T_d854f_row5_col0" class="data row5 col0">24</td>
+<td id="T_d854f_row5_col1" class="data row5 col1">3.987972</td>
+<td id="T_d854f_row5_col2" class="data row5 col2">3-gene_classifier_subtype</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row6_col0" class="data row6 col0">1</td>
-<td id="T_99f39_row6_col1" class="data row6 col1">3.087854</td>
-<td id="T_99f39_row6_col2" class="data row6 col2">lymph_nodes_examined_positive</td>
+<td id="T_d854f_row6_col0" class="data row6 col0">1</td>
+<td id="T_d854f_row6_col1" class="data row6 col1">3.087854</td>
+<td id="T_d854f_row6_col2" class="data row6 col2">lymph_nodes_examined_positive</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row7_col0" class="data row7 col0">17</td>
-<td id="T_99f39_row7_col1" class="data row7 col1">2.463155</td>
-<td id="T_99f39_row7_col2" class="data row7 col2">neoplasm_histologic_grade</td>
+<td id="T_d854f_row7_col0" class="data row7 col0">17</td>
+<td id="T_d854f_row7_col1" class="data row7 col1">2.463155</td>
+<td id="T_d854f_row7_col2" class="data row7 col2">neoplasm_histologic_grade</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row8_col0" class="data row8 col0">3</td>
-<td id="T_99f39_row8_col1" class="data row8 col1">2.022021</td>
-<td id="T_99f39_row8_col2" class="data row8 col2">nottingham_prognostic_index</td>
+<td id="T_d854f_row8_col0" class="data row8 col0">3</td>
+<td id="T_d854f_row8_col1" class="data row8 col1">2.022021</td>
+<td id="T_d854f_row8_col2" class="data row8 col2">nottingham_prognostic_index</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row9_col0" class="data row9 col0">15</td>
-<td id="T_99f39_row9_col1" class="data row9 col1">1.920809</td>
-<td id="T_99f39_row9_col2" class="data row9 col2">tumor_stage</td>
+<td id="T_d854f_row9_col0" class="data row9 col0">15</td>
+<td id="T_d854f_row9_col1" class="data row9 col1">1.920809</td>
+<td id="T_d854f_row9_col2" class="data row9 col2">tumor_stage</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row10_col0" class="data row10 col0">22</td>
-<td id="T_99f39_row10_col1" class="data row10 col1">1.799992</td>
-<td id="T_99f39_row10_col2" class="data row10 col2">type_of_breast_surgery</td>
+<td id="T_d854f_row10_col0" class="data row10 col0">22</td>
+<td id="T_d854f_row10_col1" class="data row10 col1">1.799992</td>
+<td id="T_d854f_row10_col2" class="data row10 col2">type_of_breast_surgery</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row11_col0" class="data row11 col0">23</td>
-<td id="T_99f39_row11_col1" class="data row11 col1">1.685885</td>
-<td id="T_99f39_row11_col2" class="data row11 col2">cellularity</td>
+<td id="T_d854f_row11_col0" class="data row11 col0">23</td>
+<td id="T_d854f_row11_col1" class="data row11 col1">1.685885</td>
+<td id="T_d854f_row11_col2" class="data row11 col2">cellularity</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row12_col0" class="data row12 col0">10</td>
-<td id="T_99f39_row12_col1" class="data row12 col1">1.671679</td>
-<td id="T_99f39_row12_col2" class="data row12 col2">her2_status_measured_by_snp6</td>
+<td id="T_d854f_row12_col0" class="data row12 col0">10</td>
+<td id="T_d854f_row12_col1" class="data row12 col1">1.671679</td>
+<td id="T_d854f_row12_col2" class="data row12 col2">her2_status_measured_by_snp6</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row13_col0" class="data row13 col0">4</td>
-<td id="T_99f39_row13_col1" class="data row13 col1">1.592813</td>
-<td id="T_99f39_row13_col2" class="data row13 col2">tumor_size</td>
+<td id="T_d854f_row13_col0" class="data row13 col0">4</td>
+<td id="T_d854f_row13_col1" class="data row13 col1">1.592813</td>
+<td id="T_d854f_row13_col2" class="data row13 col2">tumor_size</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row14_col0" class="data row14 col0">5</td>
-<td id="T_99f39_row14_col1" class="data row14 col1">1.460499</td>
-<td id="T_99f39_row14_col2" class="data row14 col2">mutation_count</td>
+<td id="T_d854f_row14_col0" class="data row14 col0">5</td>
+<td id="T_d854f_row14_col1" class="data row14 col1">1.460499</td>
+<td id="T_d854f_row14_col2" class="data row14 col2">mutation_count</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row15_col0" class="data row15 col0">14</td>
-<td id="T_99f39_row15_col1" class="data row15 col1">1.045784</td>
-<td id="T_99f39_row15_col2" class="data row15 col2">pr_status</td>
+<td id="T_d854f_row15_col0" class="data row15 col0">14</td>
+<td id="T_d854f_row15_col1" class="data row15 col1">1.045784</td>
+<td id="T_d854f_row15_col2" class="data row15 col2">pr_status</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row16_col0" class="data row16 col0">19</td>
-<td id="T_99f39_row16_col1" class="data row16 col1">0.924415</td>
-<td id="T_99f39_row16_col2" class="data row16 col2">oncotree_code</td>
+<td id="T_d854f_row16_col0" class="data row16 col0">19</td>
+<td id="T_d854f_row16_col1" class="data row16 col1">0.924415</td>
+<td id="T_d854f_row16_col2" class="data row16 col2">oncotree_code</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row17_col0" class="data row17 col0">16</td>
-<td id="T_99f39_row17_col1" class="data row17 col1">0.863381</td>
-<td id="T_99f39_row17_col2" class="data row17 col2">primary_tumor_laterality</td>
+<td id="T_d854f_row17_col0" class="data row17 col0">16</td>
+<td id="T_d854f_row17_col1" class="data row17 col1">0.863381</td>
+<td id="T_d854f_row17_col2" class="data row17 col2">primary_tumor_laterality</td>
 </tr>
 <tr class="odd">
-<td id="T_99f39_row18_col0" class="data row18 col0">20</td>
-<td id="T_99f39_row18_col1" class="data row18 col1">0.795841</td>
-<td id="T_99f39_row18_col2" class="data row18 col2">tumor_other_histologic_subtype</td>
+<td id="T_d854f_row18_col0" class="data row18 col0">20</td>
+<td id="T_d854f_row18_col1" class="data row18 col1">0.795841</td>
+<td id="T_d854f_row18_col2" class="data row18 col2">tumor_other_histologic_subtype</td>
 </tr>
 <tr class="even">
-<td id="T_99f39_row19_col0" class="data row19 col0">18</td>
-<td id="T_99f39_row19_col1" class="data row19 col1">0.757549</td>
-<td id="T_99f39_row19_col2" class="data row19 col2">cancer_type_detailed</td>
+<td id="T_d854f_row19_col0" class="data row19 col0">18</td>
+<td id="T_d854f_row19_col1" class="data row19 col1">0.757549</td>
+<td id="T_d854f_row19_col2" class="data row19 col2">cancer_type_detailed</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Ostateczne metryki:</p>
-<div id="016b1c05" class="cell" data-execution_count="20">
+<div id="078c9975" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_d0b98 table {
+#T_2d1df table {
   border-collapse: collapse;
 }
-#T_d0b98 th {
+#T_2d1df th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_d0b98  td {
+#T_2d1df  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_d0b98" class="caption-top table table-sm table-striped small">
+<table id="T_2d1df" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_d0b98_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_d0b98_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
-<th id="T_d0b98_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
+<th id="T_2d1df_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_2d1df_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">learn</th>
+<th id="T_2d1df_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">validation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_d0b98_row0_col0" class="data row0 col0">Accuracy</td>
-<td id="T_d0b98_row0_col1" class="data row0 col1">0.767748</td>
-<td id="T_d0b98_row0_col2" class="data row0 col2">0.669291</td>
+<td id="T_2d1df_row0_col0" class="data row0 col0">Accuracy</td>
+<td id="T_2d1df_row0_col1" class="data row0 col1">0.767748</td>
+<td id="T_2d1df_row0_col2" class="data row0 col2">0.669291</td>
 </tr>
 <tr class="even">
-<td id="T_d0b98_row1_col0" class="data row1 col0">TotalF1</td>
-<td id="T_d0b98_row1_col1" class="data row1 col1">0.764206</td>
-<td id="T_d0b98_row1_col2" class="data row1 col2">0.665777</td>
+<td id="T_2d1df_row1_col0" class="data row1 col0">TotalF1</td>
+<td id="T_2d1df_row1_col1" class="data row1 col1">0.764206</td>
+<td id="T_2d1df_row1_col2" class="data row1 col2">0.665777</td>
 </tr>
 <tr class="odd">
-<td id="T_d0b98_row2_col0" class="data row2 col0">MultiClass</td>
-<td id="T_d0b98_row2_col1" class="data row2 col1">0.612132</td>
-<td id="T_d0b98_row2_col2" class="data row2 col2">0.763700</td>
+<td id="T_2d1df_row2_col0" class="data row2 col0">MultiClass</td>
+<td id="T_2d1df_row2_col1" class="data row2 col1">0.612132</td>
+<td id="T_2d1df_row2_col2" class="data row2 col2">0.763700</td>
 </tr>
 </tbody>
 </table>
@@ -1928,309 +1920,309 @@ Length: 7, dtype: str</code></pre>
 <h2 data-number="4.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">4.2</span> Random Forest</h2>
 <p>Konkurentem dla Cat boost jest Random Forest. Zastosowano porządkowe zakodowanie klas zmiennych kategorycznych, ponieważ OneHotEncoder zwiększył by wymiarowość.</p>
 <p>Parametry:</p>
-<div id="a24ac975" class="cell" data-execution_count="21">
+<div id="0a6bfdef" class="cell" data-execution_count="21">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_f8af3 table {
+#T_bbfe0 table {
   border-collapse: collapse;
 }
-#T_f8af3 th {
+#T_bbfe0 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_f8af3  td {
+#T_bbfe0  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_f8af3" class="caption-top table table-sm table-striped small">
+<table id="T_bbfe0" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_f8af3_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_f8af3_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">0</th>
+<th id="T_bbfe0_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_bbfe0_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">0</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_f8af3_row0_col0" class="data row0 col0">bootstrap</td>
-<td id="T_f8af3_row0_col1" class="data row0 col1">True</td>
+<td id="T_bbfe0_row0_col0" class="data row0 col0">bootstrap</td>
+<td id="T_bbfe0_row0_col1" class="data row0 col1">True</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row1_col0" class="data row1 col0">ccp_alpha</td>
-<td id="T_f8af3_row1_col1" class="data row1 col1">0.0</td>
+<td id="T_bbfe0_row1_col0" class="data row1 col0">ccp_alpha</td>
+<td id="T_bbfe0_row1_col1" class="data row1 col1">0.0</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row2_col0" class="data row2 col0">class_weight</td>
-<td id="T_f8af3_row2_col1" class="data row2 col1">balanced</td>
+<td id="T_bbfe0_row2_col0" class="data row2 col0">class_weight</td>
+<td id="T_bbfe0_row2_col1" class="data row2 col1">balanced</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row3_col0" class="data row3 col0">criterion</td>
-<td id="T_f8af3_row3_col1" class="data row3 col1">gini</td>
+<td id="T_bbfe0_row3_col0" class="data row3 col0">criterion</td>
+<td id="T_bbfe0_row3_col1" class="data row3 col1">gini</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row4_col0" class="data row4 col0">max_depth</td>
-<td id="T_f8af3_row4_col1" class="data row4 col1">8</td>
+<td id="T_bbfe0_row4_col0" class="data row4 col0">max_depth</td>
+<td id="T_bbfe0_row4_col1" class="data row4 col1">8</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row5_col0" class="data row5 col0">max_features</td>
-<td id="T_f8af3_row5_col1" class="data row5 col1">sqrt</td>
+<td id="T_bbfe0_row5_col0" class="data row5 col0">max_features</td>
+<td id="T_bbfe0_row5_col1" class="data row5 col1">sqrt</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row6_col0" class="data row6 col0">max_leaf_nodes</td>
-<td id="T_f8af3_row6_col1" class="data row6 col1">nan</td>
+<td id="T_bbfe0_row6_col0" class="data row6 col0">max_leaf_nodes</td>
+<td id="T_bbfe0_row6_col1" class="data row6 col1">nan</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row7_col0" class="data row7 col0">max_samples</td>
-<td id="T_f8af3_row7_col1" class="data row7 col1">nan</td>
+<td id="T_bbfe0_row7_col0" class="data row7 col0">max_samples</td>
+<td id="T_bbfe0_row7_col1" class="data row7 col1">nan</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row8_col0" class="data row8 col0">min_impurity_decrease</td>
-<td id="T_f8af3_row8_col1" class="data row8 col1">0.0</td>
+<td id="T_bbfe0_row8_col0" class="data row8 col0">min_impurity_decrease</td>
+<td id="T_bbfe0_row8_col1" class="data row8 col1">0.0</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row9_col0" class="data row9 col0">min_samples_leaf</td>
-<td id="T_f8af3_row9_col1" class="data row9 col1">3</td>
+<td id="T_bbfe0_row9_col0" class="data row9 col0">min_samples_leaf</td>
+<td id="T_bbfe0_row9_col1" class="data row9 col1">3</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row10_col0" class="data row10 col0">min_samples_split</td>
-<td id="T_f8af3_row10_col1" class="data row10 col1">5</td>
+<td id="T_bbfe0_row10_col0" class="data row10 col0">min_samples_split</td>
+<td id="T_bbfe0_row10_col1" class="data row10 col1">5</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row11_col0" class="data row11 col0">min_weight_fraction_leaf</td>
-<td id="T_f8af3_row11_col1" class="data row11 col1">0.0</td>
+<td id="T_bbfe0_row11_col0" class="data row11 col0">min_weight_fraction_leaf</td>
+<td id="T_bbfe0_row11_col1" class="data row11 col1">0.0</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row12_col0" class="data row12 col0">monotonic_cst</td>
-<td id="T_f8af3_row12_col1" class="data row12 col1">nan</td>
+<td id="T_bbfe0_row12_col0" class="data row12 col0">monotonic_cst</td>
+<td id="T_bbfe0_row12_col1" class="data row12 col1">nan</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row13_col0" class="data row13 col0">n_estimators</td>
-<td id="T_f8af3_row13_col1" class="data row13 col1">1000</td>
+<td id="T_bbfe0_row13_col0" class="data row13 col0">n_estimators</td>
+<td id="T_bbfe0_row13_col1" class="data row13 col1">1000</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row14_col0" class="data row14 col0">n_jobs</td>
-<td id="T_f8af3_row14_col1" class="data row14 col1">-1</td>
+<td id="T_bbfe0_row14_col0" class="data row14 col0">n_jobs</td>
+<td id="T_bbfe0_row14_col1" class="data row14 col1">-1</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row15_col0" class="data row15 col0">oob_score</td>
-<td id="T_f8af3_row15_col1" class="data row15 col1">False</td>
+<td id="T_bbfe0_row15_col0" class="data row15 col0">oob_score</td>
+<td id="T_bbfe0_row15_col1" class="data row15 col1">False</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row16_col0" class="data row16 col0">random_state</td>
-<td id="T_f8af3_row16_col1" class="data row16 col1">2026</td>
+<td id="T_bbfe0_row16_col0" class="data row16 col0">random_state</td>
+<td id="T_bbfe0_row16_col1" class="data row16 col1">2026</td>
 </tr>
 <tr class="even">
-<td id="T_f8af3_row17_col0" class="data row17 col0">verbose</td>
-<td id="T_f8af3_row17_col1" class="data row17 col1">1</td>
+<td id="T_bbfe0_row17_col0" class="data row17 col0">verbose</td>
+<td id="T_bbfe0_row17_col1" class="data row17 col1">1</td>
 </tr>
 <tr class="odd">
-<td id="T_f8af3_row18_col0" class="data row18 col0">warm_start</td>
-<td id="T_f8af3_row18_col1" class="data row18 col1">False</td>
+<td id="T_bbfe0_row18_col0" class="data row18 col0">warm_start</td>
+<td id="T_bbfe0_row18_col1" class="data row18 col1">False</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Wagi cech:</p>
-<div id="79f223bd" class="cell" data-execution_count="22">
+<div id="eef75ce6" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_822bf table {
+#T_8c487 table {
   border-collapse: collapse;
 }
-#T_822bf th {
+#T_8c487 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_822bf  td {
+#T_8c487  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_822bf" class="caption-top table table-sm table-striped small">
+<table id="T_8c487" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_822bf_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_822bf_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
-<th id="T_822bf_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_8c487_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_8c487_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_8c487_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_822bf_row0_col0" class="data row0 col0">2</td>
-<td id="T_822bf_row0_col1" class="data row0 col1">overall_survival_months</td>
-<td id="T_822bf_row0_col2" class="data row0 col2">0.090415</td>
+<td id="T_8c487_row0_col0" class="data row0 col0">2</td>
+<td id="T_8c487_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_8c487_row0_col2" class="data row0 col2">0.090415</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row1_col0" class="data row1 col0">0</td>
-<td id="T_822bf_row1_col1" class="data row1 col1">age_at_diagnosis</td>
-<td id="T_822bf_row1_col2" class="data row1 col2">0.083109</td>
+<td id="T_8c487_row1_col0" class="data row1 col0">0</td>
+<td id="T_8c487_row1_col1" class="data row1 col1">age_at_diagnosis</td>
+<td id="T_8c487_row1_col2" class="data row1 col2">0.083109</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row2_col0" class="data row2 col0">3</td>
-<td id="T_822bf_row2_col1" class="data row2 col1">nottingham_prognostic_index</td>
-<td id="T_822bf_row2_col2" class="data row2 col2">0.027629</td>
+<td id="T_8c487_row2_col0" class="data row2 col0">3</td>
+<td id="T_8c487_row2_col1" class="data row2 col1">nottingham_prognostic_index</td>
+<td id="T_8c487_row2_col2" class="data row2 col2">0.027629</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row3_col0" class="data row3 col0">1</td>
-<td id="T_822bf_row3_col1" class="data row3 col1">lymph_nodes_examined_positive</td>
-<td id="T_822bf_row3_col2" class="data row3 col2">0.020052</td>
+<td id="T_8c487_row3_col0" class="data row3 col0">1</td>
+<td id="T_8c487_row3_col1" class="data row3 col1">lymph_nodes_examined_positive</td>
+<td id="T_8c487_row3_col2" class="data row3 col2">0.020052</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row4_col0" class="data row4 col0">12</td>
-<td id="T_822bf_row4_col1" class="data row4 col1">inferred_menopausal_state</td>
-<td id="T_822bf_row4_col2" class="data row4 col2">0.019570</td>
+<td id="T_8c487_row4_col0" class="data row4 col0">12</td>
+<td id="T_8c487_row4_col1" class="data row4 col1">inferred_menopausal_state</td>
+<td id="T_8c487_row4_col2" class="data row4 col2">0.019570</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row5_col0" class="data row5 col0">8</td>
-<td id="T_822bf_row5_col1" class="data row5 col1">cohort</td>
-<td id="T_822bf_row5_col2" class="data row5 col2">0.017243</td>
+<td id="T_8c487_row5_col0" class="data row5 col0">8</td>
+<td id="T_8c487_row5_col1" class="data row5 col1">cohort</td>
+<td id="T_8c487_row5_col2" class="data row5 col2">0.017243</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row6_col0" class="data row6 col0">223</td>
-<td id="T_822bf_row6_col1" class="data row6 col1">IC41</td>
-<td id="T_822bf_row6_col2" class="data row6 col2">0.016248</td>
+<td id="T_8c487_row6_col0" class="data row6 col0">223</td>
+<td id="T_8c487_row6_col1" class="data row6 col1">IC41</td>
+<td id="T_8c487_row6_col2" class="data row6 col2">0.016248</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row7_col0" class="data row7 col0">200</td>
-<td id="T_822bf_row7_col1" class="data row7 col1">IC18</td>
-<td id="T_822bf_row7_col2" class="data row7 col2">0.014132</td>
+<td id="T_8c487_row7_col0" class="data row7 col0">200</td>
+<td id="T_8c487_row7_col1" class="data row7 col1">IC18</td>
+<td id="T_8c487_row7_col2" class="data row7 col2">0.014132</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row8_col0" class="data row8 col0">4</td>
-<td id="T_822bf_row8_col1" class="data row8 col1">tumor_size</td>
-<td id="T_822bf_row8_col2" class="data row8 col2">0.013537</td>
+<td id="T_8c487_row8_col0" class="data row8 col0">4</td>
+<td id="T_8c487_row8_col1" class="data row8 col1">tumor_size</td>
+<td id="T_8c487_row8_col2" class="data row8 col2">0.013537</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row9_col0" class="data row9 col0">242</td>
-<td id="T_822bf_row9_col1" class="data row9 col1">IC60</td>
-<td id="T_822bf_row9_col2" class="data row9 col2">0.012720</td>
+<td id="T_8c487_row9_col0" class="data row9 col0">242</td>
+<td id="T_8c487_row9_col1" class="data row9 col1">IC60</td>
+<td id="T_8c487_row9_col2" class="data row9 col2">0.012720</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row10_col0" class="data row10 col0">209</td>
-<td id="T_822bf_row10_col1" class="data row10 col1">IC27</td>
-<td id="T_822bf_row10_col2" class="data row10 col2">0.012688</td>
+<td id="T_8c487_row10_col0" class="data row10 col0">209</td>
+<td id="T_8c487_row10_col1" class="data row10 col1">IC27</td>
+<td id="T_8c487_row10_col2" class="data row10 col2">0.012688</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row11_col0" class="data row11 col0">201</td>
-<td id="T_822bf_row11_col1" class="data row11 col1">IC19</td>
-<td id="T_822bf_row11_col2" class="data row11 col2">0.012657</td>
+<td id="T_8c487_row11_col0" class="data row11 col0">201</td>
+<td id="T_8c487_row11_col1" class="data row11 col1">IC19</td>
+<td id="T_8c487_row11_col2" class="data row11 col2">0.012657</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row12_col0" class="data row12 col0">185</td>
-<td id="T_822bf_row12_col1" class="data row12 col1">IC3</td>
-<td id="T_822bf_row12_col2" class="data row12 col2">0.012365</td>
+<td id="T_8c487_row12_col0" class="data row12 col0">185</td>
+<td id="T_8c487_row12_col1" class="data row12 col1">IC3</td>
+<td id="T_8c487_row12_col2" class="data row12 col2">0.012365</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row13_col0" class="data row13 col0">240</td>
-<td id="T_822bf_row13_col1" class="data row13 col1">IC58</td>
-<td id="T_822bf_row13_col2" class="data row13 col2">0.011881</td>
+<td id="T_8c487_row13_col0" class="data row13 col0">240</td>
+<td id="T_8c487_row13_col1" class="data row13 col1">IC58</td>
+<td id="T_8c487_row13_col2" class="data row13 col2">0.011881</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row14_col0" class="data row14 col0">188</td>
-<td id="T_822bf_row14_col1" class="data row14 col1">IC6</td>
-<td id="T_822bf_row14_col2" class="data row14 col2">0.011821</td>
+<td id="T_8c487_row14_col0" class="data row14 col0">188</td>
+<td id="T_8c487_row14_col1" class="data row14 col1">IC6</td>
+<td id="T_8c487_row14_col2" class="data row14 col2">0.011821</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row15_col0" class="data row15 col0">187</td>
-<td id="T_822bf_row15_col1" class="data row15 col1">IC5</td>
-<td id="T_822bf_row15_col2" class="data row15 col2">0.011774</td>
+<td id="T_8c487_row15_col0" class="data row15 col0">187</td>
+<td id="T_8c487_row15_col1" class="data row15 col1">IC5</td>
+<td id="T_8c487_row15_col2" class="data row15 col2">0.011774</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row16_col0" class="data row16 col0">217</td>
-<td id="T_822bf_row16_col1" class="data row16 col1">IC35</td>
-<td id="T_822bf_row16_col2" class="data row16 col2">0.011723</td>
+<td id="T_8c487_row16_col0" class="data row16 col0">217</td>
+<td id="T_8c487_row16_col1" class="data row16 col1">IC35</td>
+<td id="T_8c487_row16_col2" class="data row16 col2">0.011723</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row17_col0" class="data row17 col0">228</td>
-<td id="T_822bf_row17_col1" class="data row17 col1">IC46</td>
-<td id="T_822bf_row17_col2" class="data row17 col2">0.011172</td>
+<td id="T_8c487_row17_col0" class="data row17 col0">228</td>
+<td id="T_8c487_row17_col1" class="data row17 col1">IC46</td>
+<td id="T_8c487_row17_col2" class="data row17 col2">0.011172</td>
 </tr>
 <tr class="odd">
-<td id="T_822bf_row18_col0" class="data row18 col0">189</td>
-<td id="T_822bf_row18_col1" class="data row18 col1">IC7</td>
-<td id="T_822bf_row18_col2" class="data row18 col2">0.011146</td>
+<td id="T_8c487_row18_col0" class="data row18 col0">189</td>
+<td id="T_8c487_row18_col1" class="data row18 col1">IC7</td>
+<td id="T_8c487_row18_col2" class="data row18 col2">0.011146</td>
 </tr>
 <tr class="even">
-<td id="T_822bf_row19_col0" class="data row19 col0">190</td>
-<td id="T_822bf_row19_col1" class="data row19 col1">IC8</td>
-<td id="T_822bf_row19_col2" class="data row19 col2">0.011045</td>
+<td id="T_8c487_row19_col0" class="data row19 col0">190</td>
+<td id="T_8c487_row19_col1" class="data row19 col1">IC8</td>
+<td id="T_8c487_row19_col2" class="data row19 col2">0.011045</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>Ostateczne metryki:</p>
-<div id="bddff131" class="cell" data-execution_count="23">
+<div id="797e0b6b" class="cell" data-execution_count="23">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_e72f0 table {
+#T_efa0e table {
   border-collapse: collapse;
 }
-#T_e72f0 th {
+#T_efa0e th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_e72f0  td {
+#T_efa0e  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_e72f0" class="caption-top table table-sm table-striped small">
+<table id="T_efa0e" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_e72f0_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_e72f0_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
-<th id="T_e72f0_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
-<th id="T_e72f0_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
-<th id="T_e72f0_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+<th id="T_efa0e_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_efa0e_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_efa0e_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_efa0e_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_efa0e_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_e72f0_row0_col0" class="data row0 col0">Died of Disease</td>
-<td id="T_e72f0_row0_col1" class="data row0 col1">0.720430</td>
-<td id="T_e72f0_row0_col2" class="data row0 col2">0.540323</td>
-<td id="T_e72f0_row0_col3" class="data row0 col3">0.617512</td>
-<td id="T_e72f0_row0_col4" class="data row0 col4">124.000000</td>
+<td id="T_efa0e_row0_col0" class="data row0 col0">Died of Disease</td>
+<td id="T_efa0e_row0_col1" class="data row0 col1">0.720430</td>
+<td id="T_efa0e_row0_col2" class="data row0 col2">0.540323</td>
+<td id="T_efa0e_row0_col3" class="data row0 col3">0.617512</td>
+<td id="T_efa0e_row0_col4" class="data row0 col4">124.000000</td>
 </tr>
 <tr class="even">
-<td id="T_e72f0_row1_col0" class="data row1 col0">Died of Other Causes</td>
-<td id="T_e72f0_row1_col1" class="data row1 col1">0.450450</td>
-<td id="T_e72f0_row1_col2" class="data row1 col2">0.520833</td>
-<td id="T_e72f0_row1_col3" class="data row1 col3">0.483092</td>
-<td id="T_e72f0_row1_col4" class="data row1 col4">96.000000</td>
+<td id="T_efa0e_row1_col0" class="data row1 col0">Died of Other Causes</td>
+<td id="T_efa0e_row1_col1" class="data row1 col1">0.450450</td>
+<td id="T_efa0e_row1_col2" class="data row1 col2">0.520833</td>
+<td id="T_efa0e_row1_col3" class="data row1 col3">0.483092</td>
+<td id="T_efa0e_row1_col4" class="data row1 col4">96.000000</td>
 </tr>
 <tr class="odd">
-<td id="T_e72f0_row2_col0" class="data row2 col0">Living</td>
-<td id="T_e72f0_row2_col1" class="data row2 col1">0.655367</td>
-<td id="T_e72f0_row2_col2" class="data row2 col2">0.720497</td>
-<td id="T_e72f0_row2_col3" class="data row2 col3">0.686391</td>
-<td id="T_e72f0_row2_col4" class="data row2 col4">161.000000</td>
+<td id="T_efa0e_row2_col0" class="data row2 col0">Living</td>
+<td id="T_efa0e_row2_col1" class="data row2 col1">0.655367</td>
+<td id="T_efa0e_row2_col2" class="data row2 col2">0.720497</td>
+<td id="T_efa0e_row2_col3" class="data row2 col3">0.686391</td>
+<td id="T_efa0e_row2_col4" class="data row2 col4">161.000000</td>
 </tr>
 <tr class="even">
-<td id="T_e72f0_row3_col0" class="data row3 col0">accuracy</td>
-<td id="T_e72f0_row3_col1" class="data row3 col1">0.611549</td>
-<td id="T_e72f0_row3_col2" class="data row3 col2">0.611549</td>
-<td id="T_e72f0_row3_col3" class="data row3 col3">0.611549</td>
-<td id="T_e72f0_row3_col4" class="data row3 col4">0.611549</td>
+<td id="T_efa0e_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_efa0e_row3_col1" class="data row3 col1">0.611549</td>
+<td id="T_efa0e_row3_col2" class="data row3 col2">0.611549</td>
+<td id="T_efa0e_row3_col3" class="data row3 col3">0.611549</td>
+<td id="T_efa0e_row3_col4" class="data row3 col4">0.611549</td>
 </tr>
 <tr class="odd">
-<td id="T_e72f0_row4_col0" class="data row4 col0">macro avg</td>
-<td id="T_e72f0_row4_col1" class="data row4 col1">0.608749</td>
-<td id="T_e72f0_row4_col2" class="data row4 col2">0.593884</td>
-<td id="T_e72f0_row4_col3" class="data row4 col3">0.595665</td>
-<td id="T_e72f0_row4_col4" class="data row4 col4">381.000000</td>
+<td id="T_efa0e_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_efa0e_row4_col1" class="data row4 col1">0.608749</td>
+<td id="T_efa0e_row4_col2" class="data row4 col2">0.593884</td>
+<td id="T_efa0e_row4_col3" class="data row4 col3">0.595665</td>
+<td id="T_efa0e_row4_col4" class="data row4 col4">381.000000</td>
 </tr>
 <tr class="even">
-<td id="T_e72f0_row5_col0" class="data row5 col0">weighted avg</td>
-<td id="T_e72f0_row5_col1" class="data row5 col1">0.624910</td>
-<td id="T_e72f0_row5_col2" class="data row5 col2">0.611549</td>
-<td id="T_e72f0_row5_col3" class="data row5 col3">0.612748</td>
-<td id="T_e72f0_row5_col4" class="data row5 col4">381.000000</td>
+<td id="T_efa0e_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_efa0e_row5_col1" class="data row5 col1">0.624910</td>
+<td id="T_efa0e_row5_col2" class="data row5 col2">0.611549</td>
+<td id="T_efa0e_row5_col3" class="data row5 col3">0.612748</td>
+<td id="T_efa0e_row5_col4" class="data row5 col4">381.000000</td>
 </tr>
 </tbody>
 </table>
@@ -2238,74 +2230,74 @@ Length: 7, dtype: str</code></pre>
 </div>
 <p>Random forest sprawdza się delikatnie gorzej niż Cat boost, winowajcą może być <em>ordinal encoding</em></p>
 <p>Model zbudowany na identycznych parametrach tylko dla zmiennych klinicznych.</p>
-<div id="9683df47" class="cell" data-execution_count="24">
+<div id="e95555cd" class="cell" data-execution_count="24">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_71daa table {
+#T_3a0ae table {
   border-collapse: collapse;
 }
-#T_71daa th {
+#T_3a0ae th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_71daa  td {
+#T_3a0ae  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_71daa" class="caption-top table table-sm table-striped small">
+<table id="T_3a0ae" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_71daa_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_71daa_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
-<th id="T_71daa_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
-<th id="T_71daa_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
-<th id="T_71daa_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+<th id="T_3a0ae_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_3a0ae_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_3a0ae_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_3a0ae_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_3a0ae_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_71daa_row0_col0" class="data row0 col0">Died of Disease</td>
-<td id="T_71daa_row0_col1" class="data row0 col1">0.686275</td>
-<td id="T_71daa_row0_col2" class="data row0 col2">0.564516</td>
-<td id="T_71daa_row0_col3" class="data row0 col3">0.619469</td>
-<td id="T_71daa_row0_col4" class="data row0 col4">124.000000</td>
+<td id="T_3a0ae_row0_col0" class="data row0 col0">Died of Disease</td>
+<td id="T_3a0ae_row0_col1" class="data row0 col1">0.686275</td>
+<td id="T_3a0ae_row0_col2" class="data row0 col2">0.564516</td>
+<td id="T_3a0ae_row0_col3" class="data row0 col3">0.619469</td>
+<td id="T_3a0ae_row0_col4" class="data row0 col4">124.000000</td>
 </tr>
 <tr class="even">
-<td id="T_71daa_row1_col0" class="data row1 col0">Died of Other Causes</td>
-<td id="T_71daa_row1_col1" class="data row1 col1">0.483607</td>
-<td id="T_71daa_row1_col2" class="data row1 col2">0.614583</td>
-<td id="T_71daa_row1_col3" class="data row1 col3">0.541284</td>
-<td id="T_71daa_row1_col4" class="data row1 col4">96.000000</td>
+<td id="T_3a0ae_row1_col0" class="data row1 col0">Died of Other Causes</td>
+<td id="T_3a0ae_row1_col1" class="data row1 col1">0.483607</td>
+<td id="T_3a0ae_row1_col2" class="data row1 col2">0.614583</td>
+<td id="T_3a0ae_row1_col3" class="data row1 col3">0.541284</td>
+<td id="T_3a0ae_row1_col4" class="data row1 col4">96.000000</td>
 </tr>
 <tr class="odd">
-<td id="T_71daa_row2_col0" class="data row2 col0">Living</td>
-<td id="T_71daa_row2_col1" class="data row2 col1">0.719745</td>
-<td id="T_71daa_row2_col2" class="data row2 col2">0.701863</td>
-<td id="T_71daa_row2_col3" class="data row2 col3">0.710692</td>
-<td id="T_71daa_row2_col4" class="data row2 col4">161.000000</td>
+<td id="T_3a0ae_row2_col0" class="data row2 col0">Living</td>
+<td id="T_3a0ae_row2_col1" class="data row2 col1">0.719745</td>
+<td id="T_3a0ae_row2_col2" class="data row2 col2">0.701863</td>
+<td id="T_3a0ae_row2_col3" class="data row2 col3">0.710692</td>
+<td id="T_3a0ae_row2_col4" class="data row2 col4">161.000000</td>
 </tr>
 <tr class="even">
-<td id="T_71daa_row3_col0" class="data row3 col0">accuracy</td>
-<td id="T_71daa_row3_col1" class="data row3 col1">0.635171</td>
-<td id="T_71daa_row3_col2" class="data row3 col2">0.635171</td>
-<td id="T_71daa_row3_col3" class="data row3 col3">0.635171</td>
-<td id="T_71daa_row3_col4" class="data row3 col4">0.635171</td>
+<td id="T_3a0ae_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_3a0ae_row3_col1" class="data row3 col1">0.635171</td>
+<td id="T_3a0ae_row3_col2" class="data row3 col2">0.635171</td>
+<td id="T_3a0ae_row3_col3" class="data row3 col3">0.635171</td>
+<td id="T_3a0ae_row3_col4" class="data row3 col4">0.635171</td>
 </tr>
 <tr class="odd">
-<td id="T_71daa_row4_col0" class="data row4 col0">macro avg</td>
-<td id="T_71daa_row4_col1" class="data row4 col1">0.629875</td>
-<td id="T_71daa_row4_col2" class="data row4 col2">0.626988</td>
-<td id="T_71daa_row4_col3" class="data row4 col3">0.623815</td>
-<td id="T_71daa_row4_col4" class="data row4 col4">381.000000</td>
+<td id="T_3a0ae_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_3a0ae_row4_col1" class="data row4 col1">0.629875</td>
+<td id="T_3a0ae_row4_col2" class="data row4 col2">0.626988</td>
+<td id="T_3a0ae_row4_col3" class="data row4 col3">0.623815</td>
+<td id="T_3a0ae_row4_col4" class="data row4 col4">381.000000</td>
 </tr>
 <tr class="even">
-<td id="T_71daa_row5_col0" class="data row5 col0">weighted avg</td>
-<td id="T_71daa_row5_col1" class="data row5 col1">0.649352</td>
-<td id="T_71daa_row5_col2" class="data row5 col2">0.635171</td>
-<td id="T_71daa_row5_col3" class="data row5 col3">0.638317</td>
-<td id="T_71daa_row5_col4" class="data row5 col4">381.000000</td>
+<td id="T_3a0ae_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_3a0ae_row5_col1" class="data row5 col1">0.649352</td>
+<td id="T_3a0ae_row5_col2" class="data row5 col2">0.635171</td>
+<td id="T_3a0ae_row5_col3" class="data row5 col3">0.638317</td>
+<td id="T_3a0ae_row5_col4" class="data row5 col4">381.000000</td>
 </tr>
 </tbody>
 </table>
@@ -2313,130 +2305,130 @@ Length: 7, dtype: str</code></pre>
 </div>
 <p>Ponownie model zbudowany tylko na klinicznych jest lepszy.</p>
 <p>Wagi cech:</p>
-<div id="a2382c93" class="cell" data-execution_count="25">
+<div id="0bd3b75d" class="cell" data-execution_count="25">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_e6be9 table {
+#T_3ff0c table {
   border-collapse: collapse;
 }
-#T_e6be9 th {
+#T_3ff0c th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_e6be9  td {
+#T_3ff0c  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_e6be9" class="caption-top table table-sm table-striped small">
+<table id="T_3ff0c" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_e6be9_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_e6be9_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
-<th id="T_e6be9_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_3ff0c_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_3ff0c_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_3ff0c_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_e6be9_row0_col0" class="data row0 col0">2</td>
-<td id="T_e6be9_row0_col1" class="data row0 col1">overall_survival_months</td>
-<td id="T_e6be9_row0_col2" class="data row0 col2">0.249429</td>
+<td id="T_3ff0c_row0_col0" class="data row0 col0">2</td>
+<td id="T_3ff0c_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_3ff0c_row0_col2" class="data row0 col2">0.249429</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row1_col0" class="data row1 col0">0</td>
-<td id="T_e6be9_row1_col1" class="data row1 col1">age_at_diagnosis</td>
-<td id="T_e6be9_row1_col2" class="data row1 col2">0.193995</td>
+<td id="T_3ff0c_row1_col0" class="data row1 col0">0</td>
+<td id="T_3ff0c_row1_col1" class="data row1 col1">age_at_diagnosis</td>
+<td id="T_3ff0c_row1_col2" class="data row1 col2">0.193995</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row2_col0" class="data row2 col0">3</td>
-<td id="T_e6be9_row2_col1" class="data row2 col1">nottingham_prognostic_index</td>
-<td id="T_e6be9_row2_col2" class="data row2 col2">0.083439</td>
+<td id="T_3ff0c_row2_col0" class="data row2 col0">3</td>
+<td id="T_3ff0c_row2_col1" class="data row2 col1">nottingham_prognostic_index</td>
+<td id="T_3ff0c_row2_col2" class="data row2 col2">0.083439</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row3_col0" class="data row3 col0">8</td>
-<td id="T_e6be9_row3_col1" class="data row3 col1">cohort</td>
-<td id="T_e6be9_row3_col2" class="data row3 col2">0.055457</td>
+<td id="T_3ff0c_row3_col0" class="data row3 col0">8</td>
+<td id="T_3ff0c_row3_col1" class="data row3 col1">cohort</td>
+<td id="T_3ff0c_row3_col2" class="data row3 col2">0.055457</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row4_col0" class="data row4 col0">4</td>
-<td id="T_e6be9_row4_col1" class="data row4 col1">tumor_size</td>
-<td id="T_e6be9_row4_col2" class="data row4 col2">0.054705</td>
+<td id="T_3ff0c_row4_col0" class="data row4 col0">4</td>
+<td id="T_3ff0c_row4_col1" class="data row4 col1">tumor_size</td>
+<td id="T_3ff0c_row4_col2" class="data row4 col2">0.054705</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row5_col0" class="data row5 col0">1</td>
-<td id="T_e6be9_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
-<td id="T_e6be9_row5_col2" class="data row5 col2">0.053635</td>
+<td id="T_3ff0c_row5_col0" class="data row5 col0">1</td>
+<td id="T_3ff0c_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
+<td id="T_3ff0c_row5_col2" class="data row5 col2">0.053635</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row6_col0" class="data row6 col0">5</td>
-<td id="T_e6be9_row6_col1" class="data row6 col1">mutation_count</td>
-<td id="T_e6be9_row6_col2" class="data row6 col2">0.043035</td>
+<td id="T_3ff0c_row6_col0" class="data row6 col0">5</td>
+<td id="T_3ff0c_row6_col1" class="data row6 col1">mutation_count</td>
+<td id="T_3ff0c_row6_col2" class="data row6 col2">0.043035</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row7_col0" class="data row7 col0">13</td>
-<td id="T_e6be9_row7_col1" class="data row7 col1">integrative_cluster</td>
-<td id="T_e6be9_row7_col2" class="data row7 col2">0.037137</td>
+<td id="T_3ff0c_row7_col0" class="data row7 col0">13</td>
+<td id="T_3ff0c_row7_col1" class="data row7 col1">integrative_cluster</td>
+<td id="T_3ff0c_row7_col2" class="data row7 col2">0.037137</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row8_col0" class="data row8 col0">7</td>
-<td id="T_e6be9_row8_col1" class="data row8 col1">pam50_+_claudin-low_subtype</td>
-<td id="T_e6be9_row8_col2" class="data row8 col2">0.031351</td>
+<td id="T_3ff0c_row8_col0" class="data row8 col0">7</td>
+<td id="T_3ff0c_row8_col1" class="data row8 col1">pam50_+_claudin-low_subtype</td>
+<td id="T_3ff0c_row8_col2" class="data row8 col2">0.031351</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row9_col0" class="data row9 col0">12</td>
-<td id="T_e6be9_row9_col1" class="data row9 col1">inferred_menopausal_state</td>
-<td id="T_e6be9_row9_col2" class="data row9 col2">0.030932</td>
+<td id="T_3ff0c_row9_col0" class="data row9 col0">12</td>
+<td id="T_3ff0c_row9_col1" class="data row9 col1">inferred_menopausal_state</td>
+<td id="T_3ff0c_row9_col2" class="data row9 col2">0.030932</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row10_col0" class="data row10 col0">24</td>
-<td id="T_e6be9_row10_col1" class="data row10 col1">3-gene_classifier_subtype</td>
-<td id="T_e6be9_row10_col2" class="data row10 col2">0.022698</td>
+<td id="T_3ff0c_row10_col0" class="data row10 col0">24</td>
+<td id="T_3ff0c_row10_col1" class="data row10 col1">3-gene_classifier_subtype</td>
+<td id="T_3ff0c_row10_col2" class="data row10 col2">0.022698</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row11_col0" class="data row11 col0">22</td>
-<td id="T_e6be9_row11_col1" class="data row11 col1">type_of_breast_surgery</td>
-<td id="T_e6be9_row11_col2" class="data row11 col2">0.018562</td>
+<td id="T_3ff0c_row11_col0" class="data row11 col0">22</td>
+<td id="T_3ff0c_row11_col1" class="data row11 col1">type_of_breast_surgery</td>
+<td id="T_3ff0c_row11_col2" class="data row11 col2">0.018562</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row12_col0" class="data row12 col0">23</td>
-<td id="T_e6be9_row12_col1" class="data row12 col1">cellularity</td>
-<td id="T_e6be9_row12_col2" class="data row12 col2">0.015633</td>
+<td id="T_3ff0c_row12_col0" class="data row12 col0">23</td>
+<td id="T_3ff0c_row12_col1" class="data row12 col1">cellularity</td>
+<td id="T_3ff0c_row12_col2" class="data row12 col2">0.015633</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row13_col0" class="data row13 col0">17</td>
-<td id="T_e6be9_row13_col1" class="data row13 col1">neoplasm_histologic_grade</td>
-<td id="T_e6be9_row13_col2" class="data row13 col2">0.014445</td>
+<td id="T_3ff0c_row13_col0" class="data row13 col0">17</td>
+<td id="T_3ff0c_row13_col1" class="data row13 col1">neoplasm_histologic_grade</td>
+<td id="T_3ff0c_row13_col2" class="data row13 col2">0.014445</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row14_col0" class="data row14 col0">10</td>
-<td id="T_e6be9_row14_col1" class="data row14 col1">her2_status_measured_by_snp6</td>
-<td id="T_e6be9_row14_col2" class="data row14 col2">0.013256</td>
+<td id="T_3ff0c_row14_col0" class="data row14 col0">10</td>
+<td id="T_3ff0c_row14_col1" class="data row14 col1">her2_status_measured_by_snp6</td>
+<td id="T_3ff0c_row14_col2" class="data row14 col2">0.013256</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row15_col0" class="data row15 col0">16</td>
-<td id="T_e6be9_row15_col1" class="data row15 col1">primary_tumor_laterality</td>
-<td id="T_e6be9_row15_col2" class="data row15 col2">0.011566</td>
+<td id="T_3ff0c_row15_col0" class="data row15 col0">16</td>
+<td id="T_3ff0c_row15_col1" class="data row15 col1">primary_tumor_laterality</td>
+<td id="T_3ff0c_row15_col2" class="data row15 col2">0.011566</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row16_col0" class="data row16 col0">14</td>
-<td id="T_e6be9_row16_col1" class="data row16 col1">pr_status</td>
-<td id="T_e6be9_row16_col2" class="data row16 col2">0.011338</td>
+<td id="T_3ff0c_row16_col0" class="data row16 col0">14</td>
+<td id="T_3ff0c_row16_col1" class="data row16 col1">pr_status</td>
+<td id="T_3ff0c_row16_col2" class="data row16 col2">0.011338</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row17_col0" class="data row17 col0">21</td>
-<td id="T_e6be9_row17_col1" class="data row17 col1">er_status_measured_by_ihc</td>
-<td id="T_e6be9_row17_col2" class="data row17 col2">0.010517</td>
+<td id="T_3ff0c_row17_col0" class="data row17 col0">21</td>
+<td id="T_3ff0c_row17_col1" class="data row17 col1">er_status_measured_by_ihc</td>
+<td id="T_3ff0c_row17_col2" class="data row17 col2">0.010517</td>
 </tr>
 <tr class="odd">
-<td id="T_e6be9_row18_col0" class="data row18 col0">9</td>
-<td id="T_e6be9_row18_col1" class="data row18 col1">er_status</td>
-<td id="T_e6be9_row18_col2" class="data row18 col2">0.009971</td>
+<td id="T_3ff0c_row18_col0" class="data row18 col0">9</td>
+<td id="T_3ff0c_row18_col1" class="data row18 col1">er_status</td>
+<td id="T_3ff0c_row18_col2" class="data row18 col2">0.009971</td>
 </tr>
 <tr class="even">
-<td id="T_e6be9_row19_col0" class="data row19 col0">15</td>
-<td id="T_e6be9_row19_col1" class="data row19 col1">tumor_stage</td>
-<td id="T_e6be9_row19_col2" class="data row19 col2">0.009896</td>
+<td id="T_3ff0c_row19_col0" class="data row19 col0">15</td>
+<td id="T_3ff0c_row19_col1" class="data row19 col1">tumor_stage</td>
+<td id="T_3ff0c_row19_col2" class="data row19 col2">0.009896</td>
 </tr>
 </tbody>
 </table>
@@ -2448,59 +2440,59 @@ Length: 7, dtype: str</code></pre>
 <h2 data-number="4.3" class="anchored" data-anchor-id="xg-boost"><span class="header-section-number">4.3</span> XG Boost</h2>
 <p>Kolejnym modelem będzie <em>eXtreme Gradient Boosting</em>. W tym wypadku nie tylko kategoryczne predyktory zostały zakodowane porządkowo ale również zmienna wyjściowa przyjmuje teraz wartości 0,1,2 odpowiednio dla <em>Died of Disease</em>, <em>Died of Other Causes</em>, <em>Living</em>.</p>
 <p>Parametry:</p>
-<div id="5510cdf2" class="cell" data-execution_count="26">
+<div id="48a8dca2" class="cell" data-execution_count="26">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_dbc1a table {
+#T_6cbbe table {
   border-collapse: collapse;
 }
-#T_dbc1a th {
+#T_6cbbe th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_dbc1a  td {
+#T_6cbbe  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_dbc1a" class="caption-top table table-sm table-striped small">
+<table id="T_6cbbe" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_dbc1a_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_dbc1a_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">objective</th>
-<th id="T_dbc1a_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">colsample_bytree</th>
-<th id="T_dbc1a_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">early_stopping_rounds</th>
-<th id="T_dbc1a_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">enable_categorical</th>
-<th id="T_dbc1a_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">eval_metric</th>
-<th id="T_dbc1a_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">learning_rate</th>
-<th id="T_dbc1a_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">max_depth</th>
-<th id="T_dbc1a_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">n_estimators</th>
-<th id="T_dbc1a_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">n_jobs</th>
-<th id="T_dbc1a_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">random_state</th>
-<th id="T_dbc1a_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">reg_alpha</th>
-<th id="T_dbc1a_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">reg_lambda</th>
-<th id="T_dbc1a_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">subsample</th>
-<th id="T_dbc1a_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">num_class</th>
+<th id="T_6cbbe_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_6cbbe_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">objective</th>
+<th id="T_6cbbe_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">colsample_bytree</th>
+<th id="T_6cbbe_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">early_stopping_rounds</th>
+<th id="T_6cbbe_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">enable_categorical</th>
+<th id="T_6cbbe_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">eval_metric</th>
+<th id="T_6cbbe_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">learning_rate</th>
+<th id="T_6cbbe_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">max_depth</th>
+<th id="T_6cbbe_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">n_estimators</th>
+<th id="T_6cbbe_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">n_jobs</th>
+<th id="T_6cbbe_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">random_state</th>
+<th id="T_6cbbe_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">reg_alpha</th>
+<th id="T_6cbbe_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">reg_lambda</th>
+<th id="T_6cbbe_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">subsample</th>
+<th id="T_6cbbe_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">num_class</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_dbc1a_row0_col0" class="data row0 col0">0</td>
-<td id="T_dbc1a_row0_col1" class="data row0 col1">multi:softprob</td>
-<td id="T_dbc1a_row0_col2" class="data row0 col2">0.600000</td>
-<td id="T_dbc1a_row0_col3" class="data row0 col3">300</td>
-<td id="T_dbc1a_row0_col4" class="data row0 col4">False</td>
-<td id="T_dbc1a_row0_col5" class="data row0 col5">mlogloss</td>
-<td id="T_dbc1a_row0_col6" class="data row0 col6">0.010000</td>
-<td id="T_dbc1a_row0_col7" class="data row0 col7">5</td>
-<td id="T_dbc1a_row0_col8" class="data row0 col8">1500</td>
-<td id="T_dbc1a_row0_col9" class="data row0 col9">-1</td>
-<td id="T_dbc1a_row0_col10" class="data row0 col10">2026</td>
-<td id="T_dbc1a_row0_col11" class="data row0 col11">4</td>
-<td id="T_dbc1a_row0_col12" class="data row0 col12">10</td>
-<td id="T_dbc1a_row0_col13" class="data row0 col13">0.600000</td>
-<td id="T_dbc1a_row0_col14" class="data row0 col14">3</td>
+<td id="T_6cbbe_row0_col0" class="data row0 col0">0</td>
+<td id="T_6cbbe_row0_col1" class="data row0 col1">multi:softprob</td>
+<td id="T_6cbbe_row0_col2" class="data row0 col2">0.600000</td>
+<td id="T_6cbbe_row0_col3" class="data row0 col3">300</td>
+<td id="T_6cbbe_row0_col4" class="data row0 col4">False</td>
+<td id="T_6cbbe_row0_col5" class="data row0 col5">mlogloss</td>
+<td id="T_6cbbe_row0_col6" class="data row0 col6">0.010000</td>
+<td id="T_6cbbe_row0_col7" class="data row0 col7">5</td>
+<td id="T_6cbbe_row0_col8" class="data row0 col8">1500</td>
+<td id="T_6cbbe_row0_col9" class="data row0 col9">-1</td>
+<td id="T_6cbbe_row0_col10" class="data row0 col10">2026</td>
+<td id="T_6cbbe_row0_col11" class="data row0 col11">4</td>
+<td id="T_6cbbe_row0_col12" class="data row0 col12">10</td>
+<td id="T_6cbbe_row0_col13" class="data row0 col13">0.600000</td>
+<td id="T_6cbbe_row0_col14" class="data row0 col14">3</td>
 </tr>
 </tbody>
 </table>
@@ -2510,71 +2502,71 @@ Length: 7, dtype: str</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_681c7 table {
+#T_6580f table {
   border-collapse: collapse;
 }
-#T_681c7 th {
+#T_6580f th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_681c7  td {
+#T_6580f  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_681c7" class="caption-top table table-sm table-striped small">
+<table id="T_6580f" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_681c7_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_681c7_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
-<th id="T_681c7_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
-<th id="T_681c7_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
-<th id="T_681c7_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+<th id="T_6580f_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_6580f_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_6580f_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_6580f_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_6580f_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_681c7_row0_col0" class="data row0 col0">0</td>
-<td id="T_681c7_row0_col1" class="data row0 col1">0.684685</td>
-<td id="T_681c7_row0_col2" class="data row0 col2">0.612903</td>
-<td id="T_681c7_row0_col3" class="data row0 col3">0.646809</td>
-<td id="T_681c7_row0_col4" class="data row0 col4">124.000000</td>
+<td id="T_6580f_row0_col0" class="data row0 col0">0</td>
+<td id="T_6580f_row0_col1" class="data row0 col1">0.684685</td>
+<td id="T_6580f_row0_col2" class="data row0 col2">0.612903</td>
+<td id="T_6580f_row0_col3" class="data row0 col3">0.646809</td>
+<td id="T_6580f_row0_col4" class="data row0 col4">124.000000</td>
 </tr>
 <tr class="even">
-<td id="T_681c7_row1_col0" class="data row1 col0">1</td>
-<td id="T_681c7_row1_col1" class="data row1 col1">0.487805</td>
-<td id="T_681c7_row1_col2" class="data row1 col2">0.416667</td>
-<td id="T_681c7_row1_col3" class="data row1 col3">0.449438</td>
-<td id="T_681c7_row1_col4" class="data row1 col4">96.000000</td>
+<td id="T_6580f_row1_col0" class="data row1 col0">1</td>
+<td id="T_6580f_row1_col1" class="data row1 col1">0.487805</td>
+<td id="T_6580f_row1_col2" class="data row1 col2">0.416667</td>
+<td id="T_6580f_row1_col3" class="data row1 col3">0.449438</td>
+<td id="T_6580f_row1_col4" class="data row1 col4">96.000000</td>
 </tr>
 <tr class="odd">
-<td id="T_681c7_row2_col0" class="data row2 col0">2</td>
-<td id="T_681c7_row2_col1" class="data row2 col1">0.654255</td>
-<td id="T_681c7_row2_col2" class="data row2 col2">0.763975</td>
-<td id="T_681c7_row2_col3" class="data row2 col3">0.704871</td>
-<td id="T_681c7_row2_col4" class="data row2 col4">161.000000</td>
+<td id="T_6580f_row2_col0" class="data row2 col0">2</td>
+<td id="T_6580f_row2_col1" class="data row2 col1">0.654255</td>
+<td id="T_6580f_row2_col2" class="data row2 col2">0.763975</td>
+<td id="T_6580f_row2_col3" class="data row2 col3">0.704871</td>
+<td id="T_6580f_row2_col4" class="data row2 col4">161.000000</td>
 </tr>
 <tr class="even">
-<td id="T_681c7_row3_col0" class="data row3 col0">accuracy</td>
-<td id="T_681c7_row3_col1" class="data row3 col1">0.627297</td>
-<td id="T_681c7_row3_col2" class="data row3 col2">0.627297</td>
-<td id="T_681c7_row3_col3" class="data row3 col3">0.627297</td>
-<td id="T_681c7_row3_col4" class="data row3 col4">0.627297</td>
+<td id="T_6580f_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_6580f_row3_col1" class="data row3 col1">0.627297</td>
+<td id="T_6580f_row3_col2" class="data row3 col2">0.627297</td>
+<td id="T_6580f_row3_col3" class="data row3 col3">0.627297</td>
+<td id="T_6580f_row3_col4" class="data row3 col4">0.627297</td>
 </tr>
 <tr class="odd">
-<td id="T_681c7_row4_col0" class="data row4 col0">macro avg</td>
-<td id="T_681c7_row4_col1" class="data row4 col1">0.608915</td>
-<td id="T_681c7_row4_col2" class="data row4 col2">0.597848</td>
-<td id="T_681c7_row4_col3" class="data row4 col3">0.600373</td>
-<td id="T_681c7_row4_col4" class="data row4 col4">381.000000</td>
+<td id="T_6580f_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_6580f_row4_col1" class="data row4 col1">0.608915</td>
+<td id="T_6580f_row4_col2" class="data row4 col2">0.597848</td>
+<td id="T_6580f_row4_col3" class="data row4 col3">0.600373</td>
+<td id="T_6580f_row4_col4" class="data row4 col4">381.000000</td>
 </tr>
 <tr class="even">
-<td id="T_681c7_row5_col0" class="data row5 col0">weighted avg</td>
-<td id="T_681c7_row5_col1" class="data row5 col1">0.622219</td>
-<td id="T_681c7_row5_col2" class="data row5 col2">0.627297</td>
-<td id="T_681c7_row5_col3" class="data row5 col3">0.621613</td>
-<td id="T_681c7_row5_col4" class="data row5 col4">381.000000</td>
+<td id="T_6580f_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_6580f_row5_col1" class="data row5 col1">0.622219</td>
+<td id="T_6580f_row5_col2" class="data row5 col2">0.627297</td>
+<td id="T_6580f_row5_col3" class="data row5 col3">0.621613</td>
+<td id="T_6580f_row5_col4" class="data row5 col4">381.000000</td>
 </tr>
 </tbody>
 </table>
@@ -2584,127 +2576,127 @@ Length: 7, dtype: str</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_a0bbf table {
+#T_ac2dd table {
   border-collapse: collapse;
 }
-#T_a0bbf th {
+#T_ac2dd th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_a0bbf  td {
+#T_ac2dd  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_a0bbf" class="caption-top table table-sm table-striped small">
+<table id="T_ac2dd" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_a0bbf_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_a0bbf_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
-<th id="T_a0bbf_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_ac2dd_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_ac2dd_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_ac2dd_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_a0bbf_row0_col0" class="data row0 col0">2</td>
-<td id="T_a0bbf_row0_col1" class="data row0 col1">overall_survival_months</td>
-<td id="T_a0bbf_row0_col2" class="data row0 col2">0.025567</td>
+<td id="T_ac2dd_row0_col0" class="data row0 col0">2</td>
+<td id="T_ac2dd_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_ac2dd_row0_col2" class="data row0 col2">0.025567</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row1_col0" class="data row1 col0">0</td>
-<td id="T_a0bbf_row1_col1" class="data row1 col1">age_at_diagnosis</td>
-<td id="T_a0bbf_row1_col2" class="data row1 col2">0.022160</td>
+<td id="T_ac2dd_row1_col0" class="data row1 col0">0</td>
+<td id="T_ac2dd_row1_col1" class="data row1 col1">age_at_diagnosis</td>
+<td id="T_ac2dd_row1_col2" class="data row1 col2">0.022160</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row2_col0" class="data row2 col0">12</td>
-<td id="T_a0bbf_row2_col1" class="data row2 col1">inferred_menopausal_state</td>
-<td id="T_a0bbf_row2_col2" class="data row2 col2">0.021976</td>
+<td id="T_ac2dd_row2_col0" class="data row2 col0">12</td>
+<td id="T_ac2dd_row2_col1" class="data row2 col1">inferred_menopausal_state</td>
+<td id="T_ac2dd_row2_col2" class="data row2 col2">0.021976</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row3_col0" class="data row3 col0">8</td>
-<td id="T_a0bbf_row3_col1" class="data row3 col1">cohort</td>
-<td id="T_a0bbf_row3_col2" class="data row3 col2">0.016248</td>
+<td id="T_ac2dd_row3_col0" class="data row3 col0">8</td>
+<td id="T_ac2dd_row3_col1" class="data row3 col1">cohort</td>
+<td id="T_ac2dd_row3_col2" class="data row3 col2">0.016248</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row4_col0" class="data row4 col0">113</td>
-<td id="T_a0bbf_row4_col1" class="data row4 col1">men1_mut</td>
-<td id="T_a0bbf_row4_col2" class="data row4 col2">0.012291</td>
+<td id="T_ac2dd_row4_col0" class="data row4 col0">113</td>
+<td id="T_ac2dd_row4_col1" class="data row4 col1">men1_mut</td>
+<td id="T_ac2dd_row4_col2" class="data row4 col2">0.012291</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row5_col0" class="data row5 col0">1</td>
-<td id="T_a0bbf_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
-<td id="T_a0bbf_row5_col2" class="data row5 col2">0.010847</td>
+<td id="T_ac2dd_row5_col0" class="data row5 col0">1</td>
+<td id="T_ac2dd_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
+<td id="T_ac2dd_row5_col2" class="data row5 col2">0.010847</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row6_col0" class="data row6 col0">117</td>
-<td id="T_a0bbf_row6_col1" class="data row6 col1">ttyh1_mut</td>
-<td id="T_a0bbf_row6_col2" class="data row6 col2">0.010407</td>
+<td id="T_ac2dd_row6_col0" class="data row6 col0">117</td>
+<td id="T_ac2dd_row6_col1" class="data row6 col1">ttyh1_mut</td>
+<td id="T_ac2dd_row6_col2" class="data row6 col2">0.010407</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row7_col0" class="data row7 col0">173</td>
-<td id="T_a0bbf_row7_col1" class="data row7 col1">type_of_breast_surgery</td>
-<td id="T_a0bbf_row7_col2" class="data row7 col2">0.009806</td>
+<td id="T_ac2dd_row7_col0" class="data row7 col0">173</td>
+<td id="T_ac2dd_row7_col1" class="data row7 col1">type_of_breast_surgery</td>
+<td id="T_ac2dd_row7_col2" class="data row7 col2">0.009806</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row8_col0" class="data row8 col0">3</td>
-<td id="T_a0bbf_row8_col1" class="data row8 col1">nottingham_prognostic_index</td>
-<td id="T_a0bbf_row8_col2" class="data row8 col2">0.008788</td>
+<td id="T_ac2dd_row8_col0" class="data row8 col0">3</td>
+<td id="T_ac2dd_row8_col1" class="data row8 col1">nottingham_prognostic_index</td>
+<td id="T_ac2dd_row8_col2" class="data row8 col2">0.008788</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row9_col0" class="data row9 col0">94</td>
-<td id="T_a0bbf_row9_col1" class="data row9 col1">chd1_mut</td>
-<td id="T_a0bbf_row9_col2" class="data row9 col2">0.008478</td>
+<td id="T_ac2dd_row9_col0" class="data row9 col0">94</td>
+<td id="T_ac2dd_row9_col1" class="data row9 col1">chd1_mut</td>
+<td id="T_ac2dd_row9_col2" class="data row9 col2">0.008478</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row10_col0" class="data row10 col0">119</td>
-<td id="T_a0bbf_row10_col1" class="data row10 col1">map3k13_mut</td>
-<td id="T_a0bbf_row10_col2" class="data row10 col2">0.008399</td>
+<td id="T_ac2dd_row10_col0" class="data row10 col0">119</td>
+<td id="T_ac2dd_row10_col1" class="data row10 col1">map3k13_mut</td>
+<td id="T_ac2dd_row10_col2" class="data row10 col2">0.008399</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row11_col0" class="data row11 col0">124</td>
-<td id="T_a0bbf_row11_col1" class="data row11 col1">lipi_mut</td>
-<td id="T_a0bbf_row11_col2" class="data row11 col2">0.007729</td>
+<td id="T_ac2dd_row11_col0" class="data row11 col0">124</td>
+<td id="T_ac2dd_row11_col1" class="data row11 col1">lipi_mut</td>
+<td id="T_ac2dd_row11_col2" class="data row11 col2">0.007729</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row12_col0" class="data row12 col0">34</td>
-<td id="T_a0bbf_row12_col1" class="data row12 col1">tg_mut</td>
-<td id="T_a0bbf_row12_col2" class="data row12 col2">0.007684</td>
+<td id="T_ac2dd_row12_col0" class="data row12 col0">34</td>
+<td id="T_ac2dd_row12_col1" class="data row12 col1">tg_mut</td>
+<td id="T_ac2dd_row12_col2" class="data row12 col2">0.007684</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row13_col0" class="data row13 col0">75</td>
-<td id="T_a0bbf_row13_col1" class="data row13 col1">apc_mut</td>
-<td id="T_a0bbf_row13_col2" class="data row13 col2">0.007682</td>
+<td id="T_ac2dd_row13_col0" class="data row13 col0">75</td>
+<td id="T_ac2dd_row13_col1" class="data row13 col1">apc_mut</td>
+<td id="T_ac2dd_row13_col2" class="data row13 col2">0.007682</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row14_col0" class="data row14 col0">52</td>
-<td id="T_a0bbf_row14_col1" class="data row14 col1">myh9_mut</td>
-<td id="T_a0bbf_row14_col2" class="data row14 col2">0.007532</td>
+<td id="T_ac2dd_row14_col0" class="data row14 col0">52</td>
+<td id="T_ac2dd_row14_col1" class="data row14 col1">myh9_mut</td>
+<td id="T_ac2dd_row14_col2" class="data row14 col2">0.007532</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row15_col0" class="data row15 col0">100</td>
-<td id="T_a0bbf_row15_col1" class="data row15 col1">smarcc2_mut</td>
-<td id="T_a0bbf_row15_col2" class="data row15 col2">0.007059</td>
+<td id="T_ac2dd_row15_col0" class="data row15 col0">100</td>
+<td id="T_ac2dd_row15_col1" class="data row15 col1">smarcc2_mut</td>
+<td id="T_ac2dd_row15_col2" class="data row15 col2">0.007059</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row16_col0" class="data row16 col0">111</td>
-<td id="T_a0bbf_row16_col1" class="data row16 col1">cdkn1b_mut</td>
-<td id="T_a0bbf_row16_col2" class="data row16 col2">0.007050</td>
+<td id="T_ac2dd_row16_col0" class="data row16 col0">111</td>
+<td id="T_ac2dd_row16_col1" class="data row16 col1">cdkn1b_mut</td>
+<td id="T_ac2dd_row16_col2" class="data row16 col2">0.007050</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row17_col0" class="data row17 col0">107</td>
-<td id="T_a0bbf_row17_col1" class="data row17 col1">smarcc1_mut</td>
-<td id="T_a0bbf_row17_col2" class="data row17 col2">0.006934</td>
+<td id="T_ac2dd_row17_col0" class="data row17 col0">107</td>
+<td id="T_ac2dd_row17_col1" class="data row17 col1">smarcc1_mut</td>
+<td id="T_ac2dd_row17_col2" class="data row17 col2">0.006934</td>
 </tr>
 <tr class="odd">
-<td id="T_a0bbf_row18_col0" class="data row18 col0">108</td>
-<td id="T_a0bbf_row18_col1" class="data row18 col1">palld_mut</td>
-<td id="T_a0bbf_row18_col2" class="data row18 col2">0.006916</td>
+<td id="T_ac2dd_row18_col0" class="data row18 col0">108</td>
+<td id="T_ac2dd_row18_col1" class="data row18 col1">palld_mut</td>
+<td id="T_ac2dd_row18_col2" class="data row18 col2">0.006916</td>
 </tr>
 <tr class="even">
-<td id="T_a0bbf_row19_col0" class="data row19 col0">61</td>
-<td id="T_a0bbf_row19_col1" class="data row19 col1">shank2_mut</td>
-<td id="T_a0bbf_row19_col2" class="data row19 col2">0.006817</td>
+<td id="T_ac2dd_row19_col0" class="data row19 col0">61</td>
+<td id="T_ac2dd_row19_col1" class="data row19 col1">shank2_mut</td>
+<td id="T_ac2dd_row19_col2" class="data row19 col2">0.006817</td>
 </tr>
 </tbody>
 </table>
@@ -2712,62 +2704,62 @@ Length: 7, dtype: str</code></pre>
 </div>
 <p>Ponownie dominują te same cechy:</p>
 <p>Model zbudowany tylko na zmiennych klinicznych:</p>
-<div id="dd647759" class="cell" data-execution_count="27">
+<div id="53aa3206" class="cell" data-execution_count="27">
 <div class="cell-output cell-output-stdout">
 <pre><code>Parametry:</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_91806 table {
+#T_390a8 table {
   border-collapse: collapse;
 }
-#T_91806 th {
+#T_390a8 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_91806  td {
+#T_390a8  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_91806" class="caption-top table table-sm table-striped small">
+<table id="T_390a8" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_91806_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_91806_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">objective</th>
-<th id="T_91806_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">colsample_bytree</th>
-<th id="T_91806_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">early_stopping_rounds</th>
-<th id="T_91806_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">enable_categorical</th>
-<th id="T_91806_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">eval_metric</th>
-<th id="T_91806_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">learning_rate</th>
-<th id="T_91806_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">max_depth</th>
-<th id="T_91806_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">n_estimators</th>
-<th id="T_91806_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">n_jobs</th>
-<th id="T_91806_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">random_state</th>
-<th id="T_91806_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">reg_alpha</th>
-<th id="T_91806_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">reg_lambda</th>
-<th id="T_91806_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">subsample</th>
-<th id="T_91806_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">num_class</th>
+<th id="T_390a8_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_390a8_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">objective</th>
+<th id="T_390a8_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">colsample_bytree</th>
+<th id="T_390a8_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">early_stopping_rounds</th>
+<th id="T_390a8_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">enable_categorical</th>
+<th id="T_390a8_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">eval_metric</th>
+<th id="T_390a8_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">learning_rate</th>
+<th id="T_390a8_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">max_depth</th>
+<th id="T_390a8_level0_col8" class="col_heading level0 col8" data-quarto-table-cell-role="th">n_estimators</th>
+<th id="T_390a8_level0_col9" class="col_heading level0 col9" data-quarto-table-cell-role="th">n_jobs</th>
+<th id="T_390a8_level0_col10" class="col_heading level0 col10" data-quarto-table-cell-role="th">random_state</th>
+<th id="T_390a8_level0_col11" class="col_heading level0 col11" data-quarto-table-cell-role="th">reg_alpha</th>
+<th id="T_390a8_level0_col12" class="col_heading level0 col12" data-quarto-table-cell-role="th">reg_lambda</th>
+<th id="T_390a8_level0_col13" class="col_heading level0 col13" data-quarto-table-cell-role="th">subsample</th>
+<th id="T_390a8_level0_col14" class="col_heading level0 col14" data-quarto-table-cell-role="th">num_class</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_91806_row0_col0" class="data row0 col0">0</td>
-<td id="T_91806_row0_col1" class="data row0 col1">multi:softprob</td>
-<td id="T_91806_row0_col2" class="data row0 col2">0.600000</td>
-<td id="T_91806_row0_col3" class="data row0 col3">300</td>
-<td id="T_91806_row0_col4" class="data row0 col4">False</td>
-<td id="T_91806_row0_col5" class="data row0 col5">mlogloss</td>
-<td id="T_91806_row0_col6" class="data row0 col6">0.010000</td>
-<td id="T_91806_row0_col7" class="data row0 col7">5</td>
-<td id="T_91806_row0_col8" class="data row0 col8">1500</td>
-<td id="T_91806_row0_col9" class="data row0 col9">-1</td>
-<td id="T_91806_row0_col10" class="data row0 col10">2026</td>
-<td id="T_91806_row0_col11" class="data row0 col11">4</td>
-<td id="T_91806_row0_col12" class="data row0 col12">10</td>
-<td id="T_91806_row0_col13" class="data row0 col13">0.600000</td>
-<td id="T_91806_row0_col14" class="data row0 col14">3</td>
+<td id="T_390a8_row0_col0" class="data row0 col0">0</td>
+<td id="T_390a8_row0_col1" class="data row0 col1">multi:softprob</td>
+<td id="T_390a8_row0_col2" class="data row0 col2">0.600000</td>
+<td id="T_390a8_row0_col3" class="data row0 col3">300</td>
+<td id="T_390a8_row0_col4" class="data row0 col4">False</td>
+<td id="T_390a8_row0_col5" class="data row0 col5">mlogloss</td>
+<td id="T_390a8_row0_col6" class="data row0 col6">0.010000</td>
+<td id="T_390a8_row0_col7" class="data row0 col7">5</td>
+<td id="T_390a8_row0_col8" class="data row0 col8">1500</td>
+<td id="T_390a8_row0_col9" class="data row0 col9">-1</td>
+<td id="T_390a8_row0_col10" class="data row0 col10">2026</td>
+<td id="T_390a8_row0_col11" class="data row0 col11">4</td>
+<td id="T_390a8_row0_col12" class="data row0 col12">10</td>
+<td id="T_390a8_row0_col13" class="data row0 col13">0.600000</td>
+<td id="T_390a8_row0_col14" class="data row0 col14">3</td>
 </tr>
 </tbody>
 </table>
@@ -2777,71 +2769,71 @@ Length: 7, dtype: str</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_87e54 table {
+#T_f80a8 table {
   border-collapse: collapse;
 }
-#T_87e54 th {
+#T_f80a8 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_87e54  td {
+#T_f80a8  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_87e54" class="caption-top table table-sm table-striped small">
+<table id="T_f80a8" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_87e54_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_87e54_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
-<th id="T_87e54_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
-<th id="T_87e54_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
-<th id="T_87e54_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+<th id="T_f80a8_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_f80a8_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_f80a8_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_f80a8_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_f80a8_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_87e54_row0_col0" class="data row0 col0">0</td>
-<td id="T_87e54_row0_col1" class="data row0 col1">0.660870</td>
-<td id="T_87e54_row0_col2" class="data row0 col2">0.612903</td>
-<td id="T_87e54_row0_col3" class="data row0 col3">0.635983</td>
-<td id="T_87e54_row0_col4" class="data row0 col4">124.000000</td>
+<td id="T_f80a8_row0_col0" class="data row0 col0">0</td>
+<td id="T_f80a8_row0_col1" class="data row0 col1">0.660870</td>
+<td id="T_f80a8_row0_col2" class="data row0 col2">0.612903</td>
+<td id="T_f80a8_row0_col3" class="data row0 col3">0.635983</td>
+<td id="T_f80a8_row0_col4" class="data row0 col4">124.000000</td>
 </tr>
 <tr class="even">
-<td id="T_87e54_row1_col0" class="data row1 col0">1</td>
-<td id="T_87e54_row1_col1" class="data row1 col1">0.571429</td>
-<td id="T_87e54_row1_col2" class="data row1 col2">0.541667</td>
-<td id="T_87e54_row1_col3" class="data row1 col3">0.556150</td>
-<td id="T_87e54_row1_col4" class="data row1 col4">96.000000</td>
+<td id="T_f80a8_row1_col0" class="data row1 col0">1</td>
+<td id="T_f80a8_row1_col1" class="data row1 col1">0.571429</td>
+<td id="T_f80a8_row1_col2" class="data row1 col2">0.541667</td>
+<td id="T_f80a8_row1_col3" class="data row1 col3">0.556150</td>
+<td id="T_f80a8_row1_col4" class="data row1 col4">96.000000</td>
 </tr>
 <tr class="odd">
-<td id="T_87e54_row2_col0" class="data row2 col0">2</td>
-<td id="T_87e54_row2_col1" class="data row2 col1">0.725714</td>
-<td id="T_87e54_row2_col2" class="data row2 col2">0.788820</td>
-<td id="T_87e54_row2_col3" class="data row2 col3">0.755952</td>
-<td id="T_87e54_row2_col4" class="data row2 col4">161.000000</td>
+<td id="T_f80a8_row2_col0" class="data row2 col0">2</td>
+<td id="T_f80a8_row2_col1" class="data row2 col1">0.725714</td>
+<td id="T_f80a8_row2_col2" class="data row2 col2">0.788820</td>
+<td id="T_f80a8_row2_col3" class="data row2 col3">0.755952</td>
+<td id="T_f80a8_row2_col4" class="data row2 col4">161.000000</td>
 </tr>
 <tr class="even">
-<td id="T_87e54_row3_col0" class="data row3 col0">accuracy</td>
-<td id="T_87e54_row3_col1" class="data row3 col1">0.669291</td>
-<td id="T_87e54_row3_col2" class="data row3 col2">0.669291</td>
-<td id="T_87e54_row3_col3" class="data row3 col3">0.669291</td>
-<td id="T_87e54_row3_col4" class="data row3 col4">0.669291</td>
+<td id="T_f80a8_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_f80a8_row3_col1" class="data row3 col1">0.669291</td>
+<td id="T_f80a8_row3_col2" class="data row3 col2">0.669291</td>
+<td id="T_f80a8_row3_col3" class="data row3 col3">0.669291</td>
+<td id="T_f80a8_row3_col4" class="data row3 col4">0.669291</td>
 </tr>
 <tr class="odd">
-<td id="T_87e54_row4_col0" class="data row4 col0">macro avg</td>
-<td id="T_87e54_row4_col1" class="data row4 col1">0.652671</td>
-<td id="T_87e54_row4_col2" class="data row4 col2">0.647797</td>
-<td id="T_87e54_row4_col3" class="data row4 col3">0.649362</td>
-<td id="T_87e54_row4_col4" class="data row4 col4">381.000000</td>
+<td id="T_f80a8_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_f80a8_row4_col1" class="data row4 col1">0.652671</td>
+<td id="T_f80a8_row4_col2" class="data row4 col2">0.647797</td>
+<td id="T_f80a8_row4_col3" class="data row4 col3">0.649362</td>
+<td id="T_f80a8_row4_col4" class="data row4 col4">381.000000</td>
 </tr>
 <tr class="even">
-<td id="T_87e54_row5_col0" class="data row5 col0">weighted avg</td>
-<td id="T_87e54_row5_col1" class="data row5 col1">0.665735</td>
-<td id="T_87e54_row5_col2" class="data row5 col2">0.669291</td>
-<td id="T_87e54_row5_col3" class="data row5 col3">0.666563</td>
-<td id="T_87e54_row5_col4" class="data row5 col4">381.000000</td>
+<td id="T_f80a8_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_f80a8_row5_col1" class="data row5 col1">0.665735</td>
+<td id="T_f80a8_row5_col2" class="data row5 col2">0.669291</td>
+<td id="T_f80a8_row5_col3" class="data row5 col3">0.666563</td>
+<td id="T_f80a8_row5_col4" class="data row5 col4">381.000000</td>
 </tr>
 </tbody>
 </table>
@@ -2851,127 +2843,127 @@ Length: 7, dtype: str</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_69d94 table {
+#T_70a1c table {
   border-collapse: collapse;
 }
-#T_69d94 th {
+#T_70a1c th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_69d94  td {
+#T_70a1c  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_69d94" class="caption-top table table-sm table-striped small">
+<table id="T_70a1c" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_69d94_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_69d94_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
-<th id="T_69d94_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
+<th id="T_70a1c_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_70a1c_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">cecha</th>
+<th id="T_70a1c_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">wagi</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_69d94_row0_col0" class="data row0 col0">2</td>
-<td id="T_69d94_row0_col1" class="data row0 col1">overall_survival_months</td>
-<td id="T_69d94_row0_col2" class="data row0 col2">0.107362</td>
+<td id="T_70a1c_row0_col0" class="data row0 col0">2</td>
+<td id="T_70a1c_row0_col1" class="data row0 col1">overall_survival_months</td>
+<td id="T_70a1c_row0_col2" class="data row0 col2">0.107362</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row1_col0" class="data row1 col0">12</td>
-<td id="T_69d94_row1_col1" class="data row1 col1">inferred_menopausal_state</td>
-<td id="T_69d94_row1_col2" class="data row1 col2">0.084799</td>
+<td id="T_70a1c_row1_col0" class="data row1 col0">12</td>
+<td id="T_70a1c_row1_col1" class="data row1 col1">inferred_menopausal_state</td>
+<td id="T_70a1c_row1_col2" class="data row1 col2">0.084799</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row2_col0" class="data row2 col0">0</td>
-<td id="T_69d94_row2_col1" class="data row2 col1">age_at_diagnosis</td>
-<td id="T_69d94_row2_col2" class="data row2 col2">0.079936</td>
+<td id="T_70a1c_row2_col0" class="data row2 col0">0</td>
+<td id="T_70a1c_row2_col1" class="data row2 col1">age_at_diagnosis</td>
+<td id="T_70a1c_row2_col2" class="data row2 col2">0.079936</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row3_col0" class="data row3 col0">8</td>
-<td id="T_69d94_row3_col1" class="data row3 col1">cohort</td>
-<td id="T_69d94_row3_col2" class="data row3 col2">0.067453</td>
+<td id="T_70a1c_row3_col0" class="data row3 col0">8</td>
+<td id="T_70a1c_row3_col1" class="data row3 col1">cohort</td>
+<td id="T_70a1c_row3_col2" class="data row3 col2">0.067453</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row4_col0" class="data row4 col0">22</td>
-<td id="T_69d94_row4_col1" class="data row4 col1">type_of_breast_surgery</td>
-<td id="T_69d94_row4_col2" class="data row4 col2">0.055697</td>
+<td id="T_70a1c_row4_col0" class="data row4 col0">22</td>
+<td id="T_70a1c_row4_col1" class="data row4 col1">type_of_breast_surgery</td>
+<td id="T_70a1c_row4_col2" class="data row4 col2">0.055697</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row5_col0" class="data row5 col0">1</td>
-<td id="T_69d94_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
-<td id="T_69d94_row5_col2" class="data row5 col2">0.046406</td>
+<td id="T_70a1c_row5_col0" class="data row5 col0">1</td>
+<td id="T_70a1c_row5_col1" class="data row5 col1">lymph_nodes_examined_positive</td>
+<td id="T_70a1c_row5_col2" class="data row5 col2">0.046406</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row6_col0" class="data row6 col0">9</td>
-<td id="T_69d94_row6_col1" class="data row6 col1">er_status</td>
-<td id="T_69d94_row6_col2" class="data row6 col2">0.038933</td>
+<td id="T_70a1c_row6_col0" class="data row6 col0">9</td>
+<td id="T_70a1c_row6_col1" class="data row6 col1">er_status</td>
+<td id="T_70a1c_row6_col2" class="data row6 col2">0.038933</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row7_col0" class="data row7 col0">3</td>
-<td id="T_69d94_row7_col1" class="data row7 col1">nottingham_prognostic_index</td>
-<td id="T_69d94_row7_col2" class="data row7 col2">0.037413</td>
+<td id="T_70a1c_row7_col0" class="data row7 col0">3</td>
+<td id="T_70a1c_row7_col1" class="data row7 col1">nottingham_prognostic_index</td>
+<td id="T_70a1c_row7_col2" class="data row7 col2">0.037413</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row8_col0" class="data row8 col0">16</td>
-<td id="T_69d94_row8_col1" class="data row8 col1">primary_tumor_laterality</td>
-<td id="T_69d94_row8_col2" class="data row8 col2">0.037383</td>
+<td id="T_70a1c_row8_col0" class="data row8 col0">16</td>
+<td id="T_70a1c_row8_col1" class="data row8 col1">primary_tumor_laterality</td>
+<td id="T_70a1c_row8_col2" class="data row8 col2">0.037383</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row9_col0" class="data row9 col0">14</td>
-<td id="T_69d94_row9_col1" class="data row9 col1">pr_status</td>
-<td id="T_69d94_row9_col2" class="data row9 col2">0.037008</td>
+<td id="T_70a1c_row9_col0" class="data row9 col0">14</td>
+<td id="T_70a1c_row9_col1" class="data row9 col1">pr_status</td>
+<td id="T_70a1c_row9_col2" class="data row9 col2">0.037008</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row10_col0" class="data row10 col0">11</td>
-<td id="T_69d94_row10_col1" class="data row10 col1">her2_status</td>
-<td id="T_69d94_row10_col2" class="data row10 col2">0.034389</td>
+<td id="T_70a1c_row10_col0" class="data row10 col0">11</td>
+<td id="T_70a1c_row10_col1" class="data row10 col1">her2_status</td>
+<td id="T_70a1c_row10_col2" class="data row10 col2">0.034389</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row11_col0" class="data row11 col0">24</td>
-<td id="T_69d94_row11_col1" class="data row11 col1">3-gene_classifier_subtype</td>
-<td id="T_69d94_row11_col2" class="data row11 col2">0.033565</td>
+<td id="T_70a1c_row11_col0" class="data row11 col0">24</td>
+<td id="T_70a1c_row11_col1" class="data row11 col1">3-gene_classifier_subtype</td>
+<td id="T_70a1c_row11_col2" class="data row11 col2">0.033565</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row12_col0" class="data row12 col0">21</td>
-<td id="T_69d94_row12_col1" class="data row12 col1">er_status_measured_by_ihc</td>
-<td id="T_69d94_row12_col2" class="data row12 col2">0.033024</td>
+<td id="T_70a1c_row12_col0" class="data row12 col0">21</td>
+<td id="T_70a1c_row12_col1" class="data row12 col1">er_status_measured_by_ihc</td>
+<td id="T_70a1c_row12_col2" class="data row12 col2">0.033024</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row13_col0" class="data row13 col0">10</td>
-<td id="T_69d94_row13_col1" class="data row13 col1">her2_status_measured_by_snp6</td>
-<td id="T_69d94_row13_col2" class="data row13 col2">0.032536</td>
+<td id="T_70a1c_row13_col0" class="data row13 col0">10</td>
+<td id="T_70a1c_row13_col1" class="data row13 col1">her2_status_measured_by_snp6</td>
+<td id="T_70a1c_row13_col2" class="data row13 col2">0.032536</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row14_col0" class="data row14 col0">13</td>
-<td id="T_69d94_row14_col1" class="data row14 col1">integrative_cluster</td>
-<td id="T_69d94_row14_col2" class="data row14 col2">0.030003</td>
+<td id="T_70a1c_row14_col0" class="data row14 col0">13</td>
+<td id="T_70a1c_row14_col1" class="data row14 col1">integrative_cluster</td>
+<td id="T_70a1c_row14_col2" class="data row14 col2">0.030003</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row15_col0" class="data row15 col0">17</td>
-<td id="T_69d94_row15_col1" class="data row15 col1">neoplasm_histologic_grade</td>
-<td id="T_69d94_row15_col2" class="data row15 col2">0.029797</td>
+<td id="T_70a1c_row15_col0" class="data row15 col0">17</td>
+<td id="T_70a1c_row15_col1" class="data row15 col1">neoplasm_histologic_grade</td>
+<td id="T_70a1c_row15_col2" class="data row15 col2">0.029797</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row16_col0" class="data row16 col0">4</td>
-<td id="T_69d94_row16_col1" class="data row16 col1">tumor_size</td>
-<td id="T_69d94_row16_col2" class="data row16 col2">0.029324</td>
+<td id="T_70a1c_row16_col0" class="data row16 col0">4</td>
+<td id="T_70a1c_row16_col1" class="data row16 col1">tumor_size</td>
+<td id="T_70a1c_row16_col2" class="data row16 col2">0.029324</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row17_col0" class="data row17 col0">7</td>
-<td id="T_69d94_row17_col1" class="data row17 col1">pam50_+_claudin-low_subtype</td>
-<td id="T_69d94_row17_col2" class="data row17 col2">0.029170</td>
+<td id="T_70a1c_row17_col0" class="data row17 col0">7</td>
+<td id="T_70a1c_row17_col1" class="data row17 col1">pam50_+_claudin-low_subtype</td>
+<td id="T_70a1c_row17_col2" class="data row17 col2">0.029170</td>
 </tr>
 <tr class="odd">
-<td id="T_69d94_row18_col0" class="data row18 col0">5</td>
-<td id="T_69d94_row18_col1" class="data row18 col1">mutation_count</td>
-<td id="T_69d94_row18_col2" class="data row18 col2">0.028672</td>
+<td id="T_70a1c_row18_col0" class="data row18 col0">5</td>
+<td id="T_70a1c_row18_col1" class="data row18 col1">mutation_count</td>
+<td id="T_70a1c_row18_col2" class="data row18 col2">0.028672</td>
 </tr>
 <tr class="even">
-<td id="T_69d94_row19_col0" class="data row19 col0">23</td>
-<td id="T_69d94_row19_col1" class="data row19 col1">cellularity</td>
-<td id="T_69d94_row19_col2" class="data row19 col2">0.027480</td>
+<td id="T_70a1c_row19_col0" class="data row19 col0">23</td>
+<td id="T_70a1c_row19_col1" class="data row19 col1">cellularity</td>
+<td id="T_70a1c_row19_col2" class="data row19 col2">0.027480</td>
 </tr>
 </tbody>
 </table>
@@ -2982,74 +2974,74 @@ Length: 7, dtype: str</code></pre>
 <section id="model-losowy" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="model-losowy"><span class="header-section-number">4.4</span> Model losowy</h2>
 <p>Jako punkt odniesienia wykonano 1000 losowych permutacji na zbiorze testowym, przydzielono oryginalne indeksy zmiennej wynikowej i policzono średnie metryki:</p>
-<div id="53cc7a71" class="cell" data-execution_count="28">
+<div id="0ef8845d" class="cell" data-execution_count="28">
 <div class="cell-output cell-output-display">
 <style type="text/css">
-#T_8dedc table {
+#T_739a3 table {
   border-collapse: collapse;
 }
-#T_8dedc th {
+#T_739a3 th {
   border: 1px solid black;
   padding: 5px;
 }
-#T_8dedc  td {
+#T_739a3  td {
   border: 1px solid black;
   padding: 5px;
 }
 </style>
 
-<table id="T_8dedc" class="caption-top table table-sm table-striped small">
+<table id="T_739a3" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_8dedc_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th id="T_8dedc_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
-<th id="T_8dedc_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
-<th id="T_8dedc_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
-<th id="T_8dedc_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
+<th id="T_739a3_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Unnamed: 0</th>
+<th id="T_739a3_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">precision</th>
+<th id="T_739a3_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">recall</th>
+<th id="T_739a3_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">f1-score</th>
+<th id="T_739a3_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">support</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_8dedc_row0_col0" class="data row0 col0">Died of Disease</td>
-<td id="T_8dedc_row0_col1" class="data row0 col1">0.370968</td>
-<td id="T_8dedc_row0_col2" class="data row0 col2">0.370968</td>
-<td id="T_8dedc_row0_col3" class="data row0 col3">0.370968</td>
-<td id="T_8dedc_row0_col4" class="data row0 col4">124.000000</td>
+<td id="T_739a3_row0_col0" class="data row0 col0">Died of Disease</td>
+<td id="T_739a3_row0_col1" class="data row0 col1">0.370968</td>
+<td id="T_739a3_row0_col2" class="data row0 col2">0.370968</td>
+<td id="T_739a3_row0_col3" class="data row0 col3">0.370968</td>
+<td id="T_739a3_row0_col4" class="data row0 col4">124.000000</td>
 </tr>
 <tr class="even">
-<td id="T_8dedc_row1_col0" class="data row1 col0">Died of Other Causes</td>
-<td id="T_8dedc_row1_col1" class="data row1 col1">0.218750</td>
-<td id="T_8dedc_row1_col2" class="data row1 col2">0.218750</td>
-<td id="T_8dedc_row1_col3" class="data row1 col3">0.218750</td>
-<td id="T_8dedc_row1_col4" class="data row1 col4">96.000000</td>
+<td id="T_739a3_row1_col0" class="data row1 col0">Died of Other Causes</td>
+<td id="T_739a3_row1_col1" class="data row1 col1">0.218750</td>
+<td id="T_739a3_row1_col2" class="data row1 col2">0.218750</td>
+<td id="T_739a3_row1_col3" class="data row1 col3">0.218750</td>
+<td id="T_739a3_row1_col4" class="data row1 col4">96.000000</td>
 </tr>
 <tr class="odd">
-<td id="T_8dedc_row2_col0" class="data row2 col0">Living</td>
-<td id="T_8dedc_row2_col1" class="data row2 col1">0.378882</td>
-<td id="T_8dedc_row2_col2" class="data row2 col2">0.378882</td>
-<td id="T_8dedc_row2_col3" class="data row2 col3">0.378882</td>
-<td id="T_8dedc_row2_col4" class="data row2 col4">161.000000</td>
+<td id="T_739a3_row2_col0" class="data row2 col0">Living</td>
+<td id="T_739a3_row2_col1" class="data row2 col1">0.378882</td>
+<td id="T_739a3_row2_col2" class="data row2 col2">0.378882</td>
+<td id="T_739a3_row2_col3" class="data row2 col3">0.378882</td>
+<td id="T_739a3_row2_col4" class="data row2 col4">161.000000</td>
 </tr>
 <tr class="even">
-<td id="T_8dedc_row3_col0" class="data row3 col0">accuracy</td>
-<td id="T_8dedc_row3_col1" class="data row3 col1">0.335958</td>
-<td id="T_8dedc_row3_col2" class="data row3 col2">0.335958</td>
-<td id="T_8dedc_row3_col3" class="data row3 col3">0.335958</td>
-<td id="T_8dedc_row3_col4" class="data row3 col4">0.335958</td>
+<td id="T_739a3_row3_col0" class="data row3 col0">accuracy</td>
+<td id="T_739a3_row3_col1" class="data row3 col1">0.335958</td>
+<td id="T_739a3_row3_col2" class="data row3 col2">0.335958</td>
+<td id="T_739a3_row3_col3" class="data row3 col3">0.335958</td>
+<td id="T_739a3_row3_col4" class="data row3 col4">0.335958</td>
 </tr>
 <tr class="odd">
-<td id="T_8dedc_row4_col0" class="data row4 col0">macro avg</td>
-<td id="T_8dedc_row4_col1" class="data row4 col1">0.322867</td>
-<td id="T_8dedc_row4_col2" class="data row4 col2">0.322867</td>
-<td id="T_8dedc_row4_col3" class="data row4 col3">0.322867</td>
-<td id="T_8dedc_row4_col4" class="data row4 col4">381.000000</td>
+<td id="T_739a3_row4_col0" class="data row4 col0">macro avg</td>
+<td id="T_739a3_row4_col1" class="data row4 col1">0.322867</td>
+<td id="T_739a3_row4_col2" class="data row4 col2">0.322867</td>
+<td id="T_739a3_row4_col3" class="data row4 col3">0.322867</td>
+<td id="T_739a3_row4_col4" class="data row4 col4">381.000000</td>
 </tr>
 <tr class="even">
-<td id="T_8dedc_row5_col0" class="data row5 col0">weighted avg</td>
-<td id="T_8dedc_row5_col1" class="data row5 col1">0.335958</td>
-<td id="T_8dedc_row5_col2" class="data row5 col2">0.335958</td>
-<td id="T_8dedc_row5_col3" class="data row5 col3">0.335958</td>
-<td id="T_8dedc_row5_col4" class="data row5 col4">381.000000</td>
+<td id="T_739a3_row5_col0" class="data row5 col0">weighted avg</td>
+<td id="T_739a3_row5_col1" class="data row5 col1">0.335958</td>
+<td id="T_739a3_row5_col2" class="data row5 col2">0.335958</td>
+<td id="T_739a3_row5_col3" class="data row5 col3">0.335958</td>
+<td id="T_739a3_row5_col4" class="data row5 col4">381.000000</td>
 </tr>
 </tbody>
 </table>

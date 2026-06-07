@@ -121,27 +121,6 @@ mcar_cat_clin = [
         "overall_survival"
     ]
 ]
-from sklearn.pipeline import Pipeline
-mcar_num_pipe = Pipeline([
-    ("imputer", SimpleImputer(strategy="median")),
-    ('scaler', StandardScaler())
-])
-
-mar_num_pipe = Pipeline([
-    ("imputer", IterativeImputer(
-        random_state=2026,
-        max_iter=20
-    )),
-    ('scaler', StandardScaler())
-])
-
-mcar_cat_pipe = Pipeline([
-    ("imputer", SimpleImputer(strategy="most_frequent"))
-])
-
-mar_cat_pipe = Pipeline([
-    ("imputer", SimpleImputer(strategy="most_frequent"))
-])
 
 # =====================================================
 # LISTY CECH
@@ -186,12 +165,29 @@ X_val_clin, X_test_clin, y_val, y_test = train_test_split(
 
 preprocessor_clin = ColumnTransformer(
     transformers=[
-        ("mcar_num_clin", mcar_num_pipe, mcar_num_clin),
-        ("mar_num", mar_num_pipe, mar_num_clin),
-        ("mcar_cat", mcar_cat_pipe, mcar_cat_clin),
-        ("mar_cat", mar_cat_pipe, mar_cat_clin)
+        (
+            "mar_num",
+            IterativeImputer(random_state=2026),
+            mar_num_clin
+        ),
+        (
+            "mcar_num",
+            StandardScaler(),
+            mcar_num_clin
+        ),
+        (
+            "mar_cat",
+            SimpleImputer(strategy="most_frequent"),
+            mar_cat_clin
+        ),
+        (
+            "mcar_cat",
+            "passthrough",
+            mcar_cat_clin
+        )
     ],
-    remainder="drop"
+    remainder="drop",
+    verbose_feature_names_out=False
 )
 
 X_train_clin_final = preprocessor_clin.fit_transform(
@@ -245,140 +241,120 @@ print("Razem:", len(feature_names_clin))
 from catboost import CatBoostClassifier
 from catboost import Pool
 
-# model = CatBoostClassifier(
-#      loss_function="MultiClass",
-#      eval_metric="TotalF1",
-#      custom_metric=[
-#          "Accuracy"
-#      ],
-#      iterations=1000,
-#      depth=4,
-#      learning_rate=0.03,
-#      l2_leaf_reg=10,
-#      random_strength=5,
-#      min_data_in_leaf=15,
-#      border_count=20,
-#      random_seed=2026,
-#      verbose=100
-#  )
-#
-# train_pool=Pool(
-#     X_train_clin_final,
-#     y_train,
-#     feature_names=feature_names_clin,
-#     cat_features=cat_features_clin
-#
-# )
-# val_pool = Pool(
-#     X_val_clin_final,
-#     y_val,
-#     feature_names=feature_names_clin,
-#     cat_features=cat_features_clin
-# )
-# model.fit(
-#     train_pool,
-#     eval_set=val_pool,
-#     use_best_model=True
-# )
-# imp_clin=list(model.get_feature_importance())
-#
-# feat_clin=feature_names_clin
-# import pandas as pd
-# wagi_cech_clin=pd.DataFrame({
-#     'wagi':imp_clin,
-#     'cechy':feat_clin
-# }).sort_values('wagi', ascending=False)
-#
-# wagi_cech_clin.to_csv('wagi_catboost_clin.csv', sep=';')
-# model.save_model("catboost_model_clin.cbm")
-#
-#
-# results_clin=model.get_evals_result()
-#
-#
-#
-# dane = {}
-#
-# for zbior, metryki in results_clin.items():
-#     prefix = 'train' if zbior == 'learn' else 'val'
-#
-#     for nazwa, wartosci in metryki.items():
-#         dane[f'{prefix}_{nazwa}'] = wartosci
-#
-# wyniki_model_clin = pd.DataFrame(dane)
-#
-# wyniki_model_clin.to_csv('wyniki_model_clin.csv', sep=';')
-# import matplotlib.pyplot as plt
-# import matplotlib
-# matplotlib.use('AGG')
-#
-# plt.figure(figsize=(12,6))
-#
-# for col in wyniki_model_clin.columns:
-#     plt.plot(
-#         wyniki_model_clin.index,
-#         wyniki_model_clin[col],
-#         label=col
-#     )
-#
-# plt.xlabel("Liczba drzew")
-# plt.ylabel("Wartość metryki")
-# plt.title("Metryki podczas uczenia")
-# plt.legend()
-# plt.grid(True)
-# plt.savefig('Metryki_over_drzewa_clin.png')
-# plt.close()
-# from sklearn.metrics import classification_report
-# #
-# y_pred_val2 = model.predict(X_val_clin_final)
-# #
-# classification_report_test_clin = classification_report(
-#     y_val,
-#     y_pred_val2,
-#     output_dict=True
-# )
-#
-# classification_report_test_clin = pd.DataFrame(
-#     classification_report_test_clin
-# ).T
-#
-# classification_report_test_clin.to_csv('metryki_walidcja_clin.csv', sep=';')
-#
-# #print(print(model.get_best_iteration()))
-# best_score_clin=model.get_best_score()
-# best_score_clin=pd.DataFrame(best_score_clin)
-# best_score_clin.to_csv('total_metryki_clin.csv', sep=';')
-#
-# params_clin=model.get_params()
-# params_clin=pd.DataFrame(params_clin)
-#
-#
-# import os
-# os.environ["PATH"] += r";C:\Program Files\Graphviz\bin"
-# graph_clin = model.plot_tree(tree_idx=0, pool=train_pool)
-#
-# graph_clin.render(
-#     filename="cat_tree_clin",
-#     format="png",
-#     cleanup=True
-# )
+model = CatBoostClassifier(
+     loss_function="MultiClass",
+     eval_metric="TotalF1",
+     custom_metric=[
+         "Accuracy"
+     ],
+     iterations=1000,
+     depth=4,
+     learning_rate=0.03,
+     l2_leaf_reg=10,
+     random_strength=5,
+     min_data_in_leaf=15,
+     border_count=20,
+     random_seed=2026,
+     verbose=100
+ )
 
-test_pool = Pool(
-    X_test_clin_final,
+train_pool=Pool(
+    X_train_clin_final,
+    y_train,
+    feature_names=feature_names_clin,
+    cat_features=cat_features_clin
+
+)
+val_pool = Pool(
+    X_val_clin_final,
+    y_val,
+    feature_names=feature_names_clin,
     cat_features=cat_features_clin
 )
+model.fit(
+    train_pool,
+    eval_set=val_pool,
+    use_best_model=True
+)
+imp_clin=list(model.get_feature_importance())
 
-model=CatBoostClassifier()
-model.load_model('catboost_model_clin.cbm')
-y_pred_test=model.predict(test_pool)
+feat_clin=feature_names_clin
+import pandas as pd
+wagi_cech_clin=pd.DataFrame({
+    'wagi':imp_clin,
+    'cechy':feat_clin
+}).sort_values('wagi', ascending=False)
 
+wagi_cech_clin.to_csv('wagi_catboost_clin.csv', sep=';')
+model.save_model("catboost_model_clin.cbm")
+
+
+results_clin=model.get_evals_result()
+
+
+
+dane = {}
+
+for zbior, metryki in results_clin.items():
+    prefix = 'train' if zbior == 'learn' else 'val'
+
+    for nazwa, wartosci in metryki.items():
+        dane[f'{prefix}_{nazwa}'] = wartosci
+
+wyniki_model_clin = pd.DataFrame(dane)
+
+wyniki_model_clin.to_csv('wyniki_model_clin.csv', sep=';')
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('AGG')
+
+plt.figure(figsize=(12,6))
+
+for col in wyniki_model_clin.columns:
+    plt.plot(
+        wyniki_model_clin.index,
+        wyniki_model_clin[col],
+        label=col
+    )
+
+plt.xlabel("Liczba drzew")
+plt.ylabel("Wartość metryki")
+plt.title("Metryki podczas uczenia")
+plt.legend()
+plt.grid(True)
+plt.savefig('Metryki_over_drzewa_clin.png')
+plt.close()
 from sklearn.metrics import classification_report
-
-classification_report_c_clin_test=classification_report(
-    y_test,
-    y_pred_test,
+#
+y_pred_val2 = model.predict(X_val_clin_final)
+#
+classification_report_test_clin = classification_report(
+    y_val,
+    y_pred_val2,
     output_dict=True
 )
-classification_report_c_clin_test=pd.DataFrame(classification_report_c_clin_test).T
 
-classification_report_c_clin_test.to_csv('metryki_c_clin_test.csv', sep=';')
+classification_report_test_clin = pd.DataFrame(
+    classification_report_test_clin
+).T
+
+classification_report_test_clin.to_csv('metryki_walidcja_clin.csv', sep=';')
+
+#print(print(model.get_best_iteration()))
+best_score_clin=model.get_best_score()
+best_score_clin=pd.DataFrame(best_score2)
+best_score_clin.to_csv('total_metryki_clin.csv', sep=';')
+
+params_clin=model.get_params()
+params_clin=pd.DataFrame(params_clin)
+
+
+import os
+os.environ["PATH"] += r";C:\Program Files\Graphviz\bin"
+graph_clin = model.plot_tree(tree_idx=0, pool=train_pool)
+
+graph_clin.render(
+    filename="cat_tree_clin",
+    format="png",
+    cleanup=True
+)
