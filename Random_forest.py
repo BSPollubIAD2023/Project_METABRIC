@@ -304,9 +304,48 @@ with open('random_forest.pkl', 'rb') as f:
 
 from sklearn.metrics import classification_report
 
-y_pred_test=model.predict(X_test_final)
+# y_pred_test=model.predict(X_test_final)
+#
+# classification_report_rf_test=classification_report(y_test, y_pred_test, output_dict=True)
+#
+# classification_report_rf_test=pd.DataFrame(classification_report_rf_test).T
+# classification_report_rf_test.to_csv('metryki_rf_test.csv', sep=';')
 
-classification_report_rf_test=classification_report(y_test, y_pred_test, output_dict=True)
 
-classification_report_rf_test=pd.DataFrame(classification_report_rf_test).T
-classification_report_rf_test.to_csv('metryki_rf_test.csv', sep=';')
+
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
+import matplotlib.pyplot as plt
+
+
+y_prob_test = model.predict_proba(X_test_final)
+
+
+classes = np.unique(y_test)
+y_test_bin = label_binarize(y_test, classes=classes)
+
+plt.figure(figsize=(8, 6))
+
+for i in range(len(classes)):
+    fpr, tpr, _ = roc_curve(
+        y_test_bin[:, i],
+        y_prob_test[:, i]
+    )
+
+    roc_auc = auc(fpr, tpr)
+
+    plt.plot(
+        fpr,
+        tpr,
+        label=f'Klasa {classes[i]} (AUC = {roc_auc:.3f})'
+    )
+
+
+plt.plot([0, 1], [0, 1], 'k--')
+
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Krzywe ROC dla Random Forest')
+plt.legend()
+plt.tight_layout()
+plt.savefig('roc_rf_test.png')

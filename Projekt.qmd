@@ -322,29 +322,18 @@ się w dalszej części.
 
 ## Przeżywalność, grupa wiekowa, typ operacji i kombinacja terapii
 
-Na wykresie przedstawiono rozkłady czasu przeżycia całkowitego w
+Na wykresie przedstawiono rozkłady czasu przeżycia prognozowanego w
 miesiącach dla różnych kombinacji terapii, z podziałem na grupy wiekowe
 oraz rodzaj przeprowadzonego zabiegu chirurgicznego. ![Czas przeżycia w
 zależności od terapii, wieku i rodzaju operacji](fig.png)
 
-Przeżywalność w podziale na wiek: w grupie 60+ nieomal nie ma żywych
-pacjentek - nie wynika to jednak koniecznie z typu operacji czyli
-terapii, a po prostu z diagnozy w późnym wieku. Z kolei w grupie 20-40
-przeżywa zdecydowanie więcej kobiet niż w 40-60. Warto też zauważyć, że
-w niemal każdym przypadku (wieku, terapii etc.) śmierć spowodowana
-postępem nowotoworu następuje znacznie później niż zgon spowodowany
-ewentualnymi innymi schorzeniami bądź powikłaniami - na przeżywalność
-wpływają również współistniejące lub poprzedzające schorzenia.
+Analiza prognozowanego czasu przeżycia wykazała, że wartości tej zmiennej różniły się pomiędzy grupami wiekowymi, typami zabiegów chirurgicznych oraz kombinacjami stosowanych terapii. Widoczna była duża zmienność wyników w obrębie poszczególnych kategorii, co wskazuje na heterogeniczny charakter badanej populacji.
 
-Przeżywalność jest większa w grupie operacji oszczędzającej;
-niekoniecznie sugeruje to jej wyższość nad mastektomią - prawdopodobnie
-jest możliwa tylko u pacjentek o lepszych rokowaniach.
+Zarówno w grupie pacjentek po zabiegu oszczędzającym pierś, jak i po mastektomii, nie zaobserwowano jednoznacznej przewagi jednej metody chirurgicznej pod względem przewidywanego czasu przeżycia. Sugeruje to, że rokowanie pacjentek zależy od współdziałania wielu czynników klinicznych oraz zastosowanego leczenia.
 
-W grupie 20-40 najdłuższym przeżyciem cechuje się albo sama
-radioterapia, albo brak jakiejkolwiek terapii. Warto jednak pamiętać, że
-wybór bardziej agresywnej kombinacji terapii i operacji niekoniecznie
-skutkuje gorszymi rokowaniami, tylko zdarza się w cięższych przypadkach,
-które same w sobie już slabo rokują.
+Widoczne różnice pomiędzy poszczególnymi kombinacjami terapii wskazują, że sposób leczenia może wpływać na przewidywany czas przeżycia pacjentek. Jednocześnie szerokie rozstępy międzykwartylowe i obecność wartości odstających świadczą o znacznym zróżnicowaniu indywidualnego rokowania.
+
+Najwyższe mediany prognozowanego czasu przeżycia obserwowano dla wybranych kombinacji terapii zarówno w grupie pacjentek poddanych zabiegowi oszczędzającemu pierś, jak i po mastektomii, jednak zależności te nie były jednakowe we wszystkich grupach wiekowych.
 
 ## Rozkład zmiennej wynikowej ze względu na rodzaj terapii
 
@@ -358,7 +347,7 @@ od powagi ich sytuacji.
 ## Lata przeżycia od diagnozy
 
 Dla pacjentów którzy zmarli w wyniku raka poniższy wykres przedstawia
-rozkład prawdopodobieństwa lat przeżytych od diagnozy
+rozkład prawdopodobieństwa prognozowanych lat przeżycia od diagnozy
 
 ![](Czas_przezycia.png)
 
@@ -370,7 +359,7 @@ Zbadano współzmienność zmiennych klinicznych.
 
 Współczynniki korelacji nie przedstawiają znaczących wartośći, jednak
 wnioski które można wyciągnąć są raczej zgodne z ogólną intuicją. Na
-przykład średnia ilość prognozowanych misięcy przeżycia zmniejsza się
+przykład średnia ilość prognozowanych miesięcy przeżycia zmniejsza się
 wraz ze wzrostem liczby zajętych węzłów chłonnych (*overall survival
 months* \~ *lymph_nodes_examined_positive*), identycznie dla miesięcy
 przeżycia i rozmiaru guza (*overall survival months* \~ *tumor size*).
@@ -399,8 +388,7 @@ p.style.set_table_styles([
 display(p)
 ```
 
-Liczności poziomów zmiennej wynikowej są w miarę podobne, przynajmniej
-akceptowalne i nie wymagają modyfikacji.
+Liczności poziomów zmiennej wynikowej różnią się od siebie dlatego w dalszych częściach pracy nad modelami należy uwzględnić inne metryki niż tylko dokładność klasyfikacji.
 
 ## Rozkład zmiennych klinicznych
 
@@ -694,19 +682,19 @@ dane=pd.read_csv('dane2.csv', sep=';')
 dane['pam50_+_claudin-low_subtype'].unique()
 ```
 
-Przypisano cyfry: 1. *Claudin-low*
+Przypisano cyfry: 0. *Claudin-low*
 
-2.  *LumA*
+1.  *LumA*
 
-3.  *LumB*
+2.  *LumB*
 
-4.  *Her2*
+3.  *Her2*
 
-5.  *Normal*
+4.  *Normal*
 
-6.  *Basal*
+5.  *Basal*
 
-7.  *NC*
+6.  *NC*
 
 Celem analizy nie była interpretacja osi UMAP1 i UMAP2, ponieważ nie
 posiadają one bezpośredniego znaczenia biologicznego. Analizie poddano
@@ -723,12 +711,6 @@ komponentach ICA pozwalają na częściowe różnicowanie podtypów PAM50,
 choć granice pomiędzy klasami pozostają w znacznym stopniu nakładające
 się.
 
-Wynik ten jest zgodny z biologicznym charakterem klasyfikacji PAM50.
-Poszczególne podtypy raka piersi nie stanowią całkowicie odrębnych
-jednostek, lecz reprezentują kontinuum zmian molekularnych. Obserwowane
-grupowanie sugeruje, że komponenty ICA uchwyciły część sygnałów
-odpowiadających za zróżnicowanie profili ekspresji genów pomiędzy
-podtypami nowotworu.
 
 # Budowa modelu przewidującego poziom zmiennej wynikowej
 
@@ -749,7 +731,7 @@ Dane podzielono na zbiór treningowy, walidacyjny i testowy w proporcji
 
 ### Budowa pierwszego modelu
 
-Model zbuodwano na poniższych parametrach:
+Model zbudowano na poniższych parametrach które zostały strojone w oparciu o jak najwyższe f1-score dla zbioru walidacyjnego ale bez zbyt dużej różnicy na zbiorze treningowym aby uniknąć przetrenowania. Starano się dobrać jak najgłębsze drzewa ze względu na dużą liczbę zmiennych, niskim learning rate i co za tym idzie jak największą liczbę drzew. Aby uniknąć przeuczenia zastosowano karę za złożoność i minimalną liczbę pacjentów do budowy liścia aby model nie skupiał się na pojedyńczych szczegółach.
 
 ```{python}
 import pandas as pd
@@ -955,6 +937,8 @@ Konkurentem dla Cat boost jest Random Forest. Zastosowano porządkowe
 zakodowanie klas zmiennych kategorycznych, ponieważ OneHotEncoder
 zwiększył by wymiarowość.
 
+Testowano różne kombinacje parametrów modelu, a ostateczną konfigurację wybrano na podstawie najwyższych wartości metryk uzyskanych na zbiorze walidacyjnym, i jak najmniejszym przeuczeniu.
+
 Parametry:
 
 ```{python}
@@ -1028,7 +1012,7 @@ display(
 ```
 
 Random forest sprawdza się delikatnie gorzej niż Cat boost, winowajcą
-może być *ordinal encoding*
+może być porządkowe zakodowanie.
 
 Model zbudowany na identycznych parametrach tylko dla zmiennych
 klinicznych.
@@ -1085,12 +1069,12 @@ Ponownie dominuje *overall_survival_months*.
 
 ## XG Boost
 
-Kolejnym modelem będzie *eXtreme Gradient Boosting*. W tym wypadku nie
+Kolejnym modelem będzie *XG Boost*. W tym wypadku nie
 tylko kategoryczne predyktory zostały zakodowane porządkowo ale również
 zmienna wyjściowa przyjmuje teraz wartości 0,1,2 odpowiednio dla *Died
 of Disease*, *Died of Other Causes*, *Living*.
 
-Parametry:
+Parametry zostały dobrane tak jak poprzednio aby uzyskać jak najlepsze wyniki na zbiorze walidacyjnym.
 
 ```{python}
 import pandas as pd
@@ -1268,3 +1252,28 @@ sugerują, że prawie na pewno pacjent przeżyje.
 Poniżej wizualizacja modeli pod względem f1-score i dokładności:
 
 ![](Metryki.png)
+
+
+## Krzywa Roc 
+
+Poniżej wykres przedstawiający krzywą Roc dla najlepszego modelu czyli lasu losowego:
+
+![](roc_rf_test.png)
+
+Model Rf:
+- w 82.6% przypadków przypisuje wyższe prawdopodobieństwo przeżycia pacjentom którzy naprawdę przeżyli,
+
+- analogicznie 80.5% dla zmarłych z innych przyczyn,
+
+- dla pacjentów zmarłych z powodu raka w 76.6% przypadków przypisuje wyższe prawdopodobieństwo pacjentom rzeczywiście zmarłym z tego    powodu
+
+
+# Podobne prace
+
+Podobna praca na identycznym zbiorze została wykonana przez :https://www.kaggle.com/raghadalharbi z tym, że zmienną wynikową był *overall survival* więc był to problem dwuklasowy, w naszej pracy jest to problem trójklasowy. W wymienionym projekcie zastosowano podział na test i trening z walidacją krzyżową.
+
+Ostateczne wnioski autora, wyniki i rekomendacje:
+
+*Using machine learning models on genetic data has the potential to improve our understanding of cancers and survival prediction. Huge open-source datasets are available for public to analyze and hopefully get some insights. The model with the best preformace was XGBoost with max_depth=5 and min_child_weight=1 that was trained with the full dataframe with the addition of all of the combination of all genetic data values. The accuacy score was 0.779 and the AUC was 0.76. To enhance this project, increase the number of samples, include mutations and raw genetic data into the modeling part, and maybe try some deep learning models.*
+
+Link do publikacji: https://www.kaggle.com/code/raghadalharbi/breast-cancer-survival-prediction-acc-0-779

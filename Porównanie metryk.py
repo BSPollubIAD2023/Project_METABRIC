@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 m_c=pd.read_csv('metryki_c_test.csv', sep=';')
 m_c_clin=pd.read_csv('metryki_c_clin_test.csv', sep=';')
@@ -43,19 +44,37 @@ plt.tight_layout()
 plt.savefig('Porównanie_metryk.png')
 plt.close()
 
-
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from adjustText import adjust_text
+fig, ax = plt.subplots(figsize=(12,8))
+sns.scatterplot(
+    data=Porównanie_metryk,
+    x='Dokladnosc',
+    y='F1-score',
+    hue='Model',
+    s=100,
+    ax=ax
+)
 
-plt.figure(figsize=(12, 8))
+
+# ---------- przybliżenie ----------
+axins = inset_axes(ax,
+                   width="35%",
+                   height="35%",
+                   loc="upper right")
 
 sns.scatterplot(
     data=Porównanie_metryk,
     x='Dokladnosc',
     y='F1-score',
     hue='Model',
-    s=10,
-    alpha=1
+    legend=False,
+    s=100,
+    ax=axins
 )
+
+axins.set_xlim(0.62, 0.67)
+axins.set_ylim(0.62, 0.67)
+
 plt.tight_layout()
-plt.savefig('Metryki.png')
-plt.close()
+plt.savefig("Metryki.png")
