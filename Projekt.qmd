@@ -214,6 +214,38 @@ display(p)
 
 Tylko około 40% wierszy jest całkowicie pełnych
 
+
+# Przegląd literatury
+1. Przegląd literatury
+Rak piersi jest najczęściej diagnozowanym nowotworem złośliwym wśród kobiet na świecie. Według danych GLOBOCAN z 2022 roku stanowi około 23,8% wszystkich nowych przypadków nowotworów u kobiet [1]. Ze względu na znaczną heterogeniczność molekularną i kliniczną, dokładna predykcja przebiegu choroby pozostaje jednym z kluczowych wyzwań współczesnej onkologii. Tradycyjne narzędzia prognostyczne - pomimo szerokiego zastosowania - mają istotne ograniczenia w zakresie indywidualizacji prognoz, co stanowi główną motywację do zastosowania metod uczenia maszynowego w tym obszarze. Ich zastosowanie pozwala również na bardziej skomplikowane przewidywania nie tylko samego przeżycia, ale też długości i jakości życia.
+
+2. Uczenie maszynowe w predykcji przeżywalności chorych na raka piersi
+Zastosowanie metod uczenia maszynowego do predykcji przeżywalności pacjentek z rakiem piersi jest intensywnie badane od ponad dekady. Jednym z najważniejszych zbiorów danych w tej dziedzinie jest METABRIC (Molecular Taxonomy of Breast Cancer International Consortium), zawierający dane kliniczne, genomowe i ekspresyjne niemal dwóch tysięcy pacjentek. Jego dostępność przyczyniła się do powstania wielu prac porównujących skuteczność różnych algorytmów klasyfikacyjnych.
+Wczesne badania na zbiorze METABRIC wykazały, że modele oparte na ekspresji genów pozwalają przewidzieć odpowiedź na terapię hormonalną i chemioterapię z dokładnością sięgającą 85,5% dla klasyfikatora Random Forest [2]. Późniejsze prace poszerzyły spektrum stosowanych metod: Banu i in. (2023) [3] zastosowali nadzorowane uczenie maszynowe do predykcji przeżywalności pacjentek z potrójnie negatywnym rakiem piersi (TNBC) w kohorcie METABRIC, identyfikując kliniczne i genetyczne cechy związane z lepszym rokowaniem. 
+W literaturze coraz wyraźniej zaznacza się tendencja do integrowania danych klinicznych z danymi genomowymi. Zhang i in. (2022)[4] zbudowali model CatBoost łączący dane dotyczące mutacji punktowych, liczby mutacji genowych i zmienności liczby kopii DNA, trenowany na zbiorze METABRIC i walidowany zewnętrznie na zbiorze TCGA, uzyskując AUC = 0,70 na zbiorze testowym. Podobne wnioski płyną z pracy Song i in. (2024)[5], w której XGBoost osiągnął AUC = 0,813 na danych klinicznych 6477 pacjentek, wyraźnie przewyższając tradycyjne narzędzia prognostyczne takie jak NPI. Autorzy wskazali wiek, rozmiar guza, status węzłów chłonnych i status receptorów hormonalnych jako najistotniejsze predyktory.
+
+3. Indeks Prognostyczny Nottingham
+Indeks Prognostyczny Nottingham (Nottingham Prognostic Index, NPI) jest jednym z najdłużej stosowanych klinicznych narzędzi stratyfikacji rokowania w raku piersi. Został opracowany w 1982 roku przez Haybittle'a i współpracowników na podstawie retrospektywnej analizy wieloczynnikowej 387 pacjentek z pierwotnym operacyjnym rakiem piersi (Haybittle i in., 1982)[6]. Spośród dziewięciu analizowanych czynników prognostycznych jedynie trzy okazały się niezależnie istotne statystycznie: rozmiar guza, stopień histologiczny i status węzłów chłonnych. Na ich podstawie skonstruowano wzór:
+NPI = 0,2 × S + N + G
+gdzie S oznacza wielkość guza w centymetrach, N — status węzłów chłonnych (0 węzłów = 1, 1–3 węzły = 2, powyżej 3 węzłów = 3), a G — stopień złośliwości histologicznej (G1 = 1, G2 = 2, G3 = 3). Wyniki powyżej 5 oznaczają najgorszą prognozę podczas gdy wartości poniżej 2,4 są prognozą pozytywną i charakteryzują się bardzo dużą przżywalnością.
+Mimo swojej użyteczności NPI ma istotne ograniczenia. Nadaje równe wagi trzem składowym bez uwzględnienia biologicznej heterogeniczności nowotworu i nie integruje informacji molekularnych, co sprawia, że słabiej różnicuje rokowanie w podgrupach.
+W kontekście uczenia maszynowego NPI funkcjonuje zarówno jako jedna z cech predykcyjnych, jak i jako punkt odniesienia dla nowych modeli. Badanie Song i in. (2024)[5] bezpośrednio porównało NPI z modelami ML i stwierdziło, że XGBoost istotnie przewyższa NPI pod względem AUC na danych klinicznych, podczas gdy tradycyjny indeks charakteryzuje się wysoką czułością, lecz niską swoistością, co prowadzi do potencjalnego nadrozpoznawania i nadleczenia. W niniejszym projekcie NPI występuje jako jedna ze zmiennych o wysokiej wadze we wszystkich zbudowanych modelach, co jest zgodne z jego ugruntowaną rolą w klinicznej prognostyce raka piersi.
+
+4. Bibliografia
+
+[1 ] Bray F. i in. (2024). Global cancer statistics 2022: GLOBOCAN estimates. CA Cancer J Clin, 74(3), 229–263.
+
+[2] Gökmen-Polar Y. i in. (2017). Predicting Outcomes of Hormone and Chemotherapy in the METABRIC Study by Biochemically-inspired 
+Machine Learning. npj Breast Cancer, 3, 15.
+
+[3] Banu A. i in. (2023). Predicting Overall Survival in METABRIC Cohort Using Machine Learning. Studies in Health Technology and Informatics, 305, 632–635.
+
+[4] Zhang i in. (2022). Machine learning enables accurate prediction of breast cancer five-year survival using somatic genomic variants. bioRxiv, 2022.05.22.492994.
+
+[5] Song X. i in. (2024). Prognostic prediction of breast cancer patients using machine learning models: a retrospective analysis. Gland Surgery, 13(9), 1575–1587.
+
+[6] Haybittle J.L. i in. (1982). A prognostic index in primary breast cancer. British Journal of Cancer, 45(3), 361–366.
+
 # Eksploracja zbioru
 
 ## Mechanizm braków danych
@@ -1344,11 +1376,12 @@ Ostateczne wnioski autora, wyniki i rekomendacje:
 
 Link do publikacji: https://www.kaggle.com/code/raghadalharbi/breast-cancer-survival-prediction-acc-0-779
 
+
 # Podsumowanie
 Porównanie modeli wykazało, że uwzględnienie informacji genetycznych wraz z danymi klinicznymi prowadziło do poprawy jakości predykcji względem modeli wykorzystujących wyłącznie dane kliniczne. Najlepsze wyniki uzyskano dla modeli wykorzystujących połączone dane kliniczne i informacje o mutacjach genowych po redukcji wymiarowości metodą FastICA.
 
 Uzyskane wyniki potwierdzają, że dane molekularne stanowią istotne źródło informacji wspomagające prognozowanie przebiegu choroby. Jednocześnie należy podkreślić, że przewidywanie przyczyny zgonu pacjentów z rakiem piersi pozostaje problemem złożonym, a na końcowy wynik wpływa wiele czynników, które nie zawsze są w pełni reprezentowane w dostępnych danych.
 
-# Dodatkowa literatura
 
-https://docs.google.com/document/d/14Kzt9FlHz5i1lGliaLM0_LI_2RxsXfNW2p_qiISvi74/edit?usp=sharing
+
+
